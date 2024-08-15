@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'THSarabun';
+    src: url('./font/THChakraPetchBold.ttf') format('truetype');
+}
+
+body {
+    font-family: 'THSarabun', sans-serif;
+}
