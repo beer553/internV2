@@ -16,29 +16,29 @@ function Homepage() {
 
   return (
     <div>
-      
       <header>
         <NavbarManpower />
       </header>
 
       <div className="dashboard">
         <div className="welcome">
-          <img src="/src/img/star.png" className="profile-img" alt="Profile" />
+          <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" className="profile-img" alt="Profile" />
           <div className="welcome-text">
             <h2 className='DX'>DX Manpower Management</h2>
             <p className='SC'>Hello, Scrum Master STAR 👋</p>
           </div>
         </div>
+
         <div className="dashboard-1">
           <div className="card">
             <div className="number6">6</div>
-            <img src="https://cdn-icons-png.flaticon.com/128/1478/1478951.png" className='Team' />
+            {/* <img src="https://cdn-icons-png.flaticon.com/128/1478/1478951.png" className='Team' alt="Team" /> */}
             <div className="label-1-">Developer Team (TTL)</div>
             <div className="blue-line"></div>
           </div>
           <div className="card">
             <div className="number3-1">3</div>
-            <div><img src="https://cdn-icons-png.flaticon.com/128/1320/1320909.png" className='Team-1' /></div>
+            {/* <div><img src="https://cdn-icons-png.flaticon.com/128/1320/1320909.png" className='Team-1' alt="Developer" /></div> */}
             <div className="label-2-">Developer This Year</div>
             <div className="orange-line"></div>
           </div>
@@ -49,11 +49,11 @@ function Homepage() {
               </div>
               <div className="project-details">
                 <div className="project-item">
-                  <img src="https://cdn-icons-png.flaticon.com/128/5956/5956592.png" alt="Project" className='PJZ' />
+                  {/* <img src="https://cdn-icons-png.flaticon.com/128/5956/5956592.png" alt="Project" className='PJZ' /> */}
                   <span>Project</span>
                 </div>
-                <div className="project-item-1-">
-                  <img src="https://cdn-icons-png.flaticon.com/128/15189/15189145.png" alt="Scrum" className='Sc-1' />
+                <div className="project-item2">
+                  {/* <img src="https://cdn-icons-png.flaticon.com/128/15189/15189145.png" alt="Scrum" className='Sc-1' /> */}
                   <span>Daily Scrum</span>
                 </div>
               </div>
@@ -70,7 +70,7 @@ function Homepage() {
               <div className="number10">10</div>
               <div className="labelz">
                 <div className="icon-1" onClick={gotoProductBacklog}>
-                  <img src="https://cdn-icons-png.flaticon.com/128/5084/5084624.png" alt="Product Backlog Icon" className='BLZ' />
+                  {/* <img src="https://cdn-icons-png.flaticon.com/128/5084/5084624.png" alt="Product Backlog Icon" className='BLZ' /> */}
                 </div>
                 <div>Product Backlog</div>
               </div>
@@ -122,7 +122,7 @@ function Homepage() {
           </table>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
