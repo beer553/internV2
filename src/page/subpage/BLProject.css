@@ -1,0 +1,138 @@
+.product-backlog {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.h1-1 {
+  color: #5C5A5A;
+  font-size: 35px;
+}
+
+.h2-1 {
+  margin-top: 10px;
+  color: #5C5A5A;
+  font-size: 18px;
+}
+
+.h3-1 {
+  margin-top: 10px;
+  color: #5C5A5A;
+  font-size: 25px; 
+}
+
+.backlog-table {
+  margin: 20px auto;
+  width: 100%;
+  overflow-x: auto; 
+}
+
+.table-container {
+  max-width: 100%;
+  overflow-x: auto; 
+}
+
+.fixed-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto; 
+}
+
+.fixed-table th, .fixed-table td {
+  padding: 10px;
+  text-align: center;
+  white-space: nowrap; 
+}
+
+.fixed-table th {
+  background-color: #f2f2f2;
+  font-size: 14px;
+}
+
+.fixed-table td {
+  font-size: 16px;
+
+}
+
+.img-KM {
+  max-width: 100px;
+  object-fit: cover;
+}
+
+.add-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-right: -1310px;
+  width: 40px;
+  margin-top: 40px;
+}
+
+.save-button {
+  background-color: #26DE81;
+  color: white;
+  border-radius: 8px;
+  height: 35px;
+  width: 90px;
+  margin-left: 1300px;
+  margin-top: 20px;
+}
+
+.file-input {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.file-input input[type="file"] {
+  display: none;
+}
+
+.file-input img {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.IP-1 {
+  border-radius: 4px;
+  height: 30px;
+  width: 130px;
+  border: 2px solid #ccc;
+}
+
+.IP-2 {
+  border-radius: 4px;
+  height: 30px;
+  width: 130px;
+  border: 2px solid #ccc;
+}
+
+.footer-1 {
+  text-align: center;
+  font-size: 16px;
+  background-color: rgb(50, 50, 50);
+  color: rgb(255, 255, 255);
+  width: 100%;
+  margin-top: 264px;
+}
+
+.back-1 {
+  width: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.back-th {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.back-th-1 {
+  display: flex;
+  align-items: center;
+  margin-left: 80px;
+}
