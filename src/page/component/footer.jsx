@@ -2,7 +2,7 @@ import React from 'react'
 
 function footer() {
   return (
-    <div className="bg-black text-white p-3 text-center text-lg mt-10">
+    <div className="bg-black text-white p-3 text-center text-lg mt-0">
         <p>ติดต่อสอบถาม DX Manpower Management</p>
         <p className='text-blue-500'>คุณสุพรรษา มูลศิริ supansak@scg.com</p>
         <p>Digital Transformation Architect (Data Driven-TS)</p>
