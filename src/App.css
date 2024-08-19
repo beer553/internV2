@@ -1,4 +1,4 @@
-@font-face {
+font-face {
     font-family: 'THSarabun';
     src: url('./font/THChakraPetchBold.ttf') format('truetype');
 }
@@ -11,15 +11,15 @@ body {
     height: 100%;
 }
 .banner-container {
-    position: relative; 
     width: 100%;
-    height: 300px; 
-    overflow: hidden; 
+    height: 320px; 
+    position: relative;
+    /* overflow: hidden;  */
 }
 .banner-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit:cover;
 }
 .input_data_container {
     margin: 50px;

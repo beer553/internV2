@@ -23,6 +23,7 @@ import Homepage from './page/subpage/Homepage';
 // import PDBacklog from './page/mentor/PDBacklog';
 // import BLProject from './page/mentor/BLProject';
 import Input_data_intern from './page/intern/input_data_intern'
+import Upload_doc_intern from './page/intern/upload_doc_intern';
    
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/Homepage" element={<Homepage />} />
           <Route path="/input_data_intern" element={<Input_data_intern />} />
+          <Route path="/upload_doc_intern" element={<Upload_doc_intern />} />
           {/* <Route path="/login" element={<Login />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/benefit" element={<Benefit />} />

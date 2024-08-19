@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Footer from '../component/footer';
 
 function input_data_intern() {
@@ -39,466 +40,415 @@ function input_data_intern() {
     const [datestart, setDatestart] = useState('');
     const [dateend, setDateend] = useState('');
     const [profile, setProfile] = useState(null);
-    const [showConfirmation, setShowConfirmation] = useState(false);
-    // const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-    };
-    const handleTitleChange = (event) => {
-        setTitle(event.target.value);
-    };
-    const handleFirstNameChange = (event) => {
-        setFirstName(event.target.value);
-    };
-    const handleLastNameChange = (event) => {
-        setLastName(event.target.value);
-    };
-    const handleNicknameChange = (event) => {
-        setNickname(event.target.value);
-    };
-    const handleTitleEngChange = (event) => {
-        setTitleEng(event.target.value);
-    };
-    const handleFirstNameEngChange = (event) => {
-        setFirstNameEng(event.target.value);
-    };
-    const handleLastNameEngChange = (event) => {
-        setLastNameEng(event.target.value);
-    };
-    const handleNicknameEngChange = (event) => {
-        setNicknameEng(event.target.value);
-    };
-    const handleAgeChange = (event) => {
-        setAge(event.target.value);
-    };
-    const handleBirthDateChange = (event) => {
-        setBirthDate(event.target.value);
-    };
-    const handleIdCardChange = (event) => {
-        setIdCard(event.target.value);
-    };
-    const handleNationalityChange = (event) => {
-        setNationality(event.target.value);
-    };
-    const handleReligionChange = (event) => {
-        setReligion(event.target.value);
-    };
-    const handlePhoneChange = (event) => {
-        setPhone(event.target.value);
-    };
-    const handleFacebookChange = (event) => {
-        setFacebook(event.target.value);
-    };
-    const handleLineIdChange = (event) => {
-        setLineId(event.target.value);
-    };
-    const handleEmail2Change = (event) => {
-        setEmail2(event.target.value);
-    };
-    const handleEmail3Change = (event) => {
-        setEmail3(event.target.value);
-    };
-    const handleGenderChange = (event) => {
-        setGender(event.target.value);
-    };
-    const handleAddressChange = (event) => {
-        setAddress(event.target.value);
-    };
-    const handleCurrentAddressChange = (event) => {
-        setCurrentAddress(event.target.value);
-    };
-    const handleCurrentEducationChange = (event) => {
-        setCurrentEducation(event.target.value);
-    };
-    const handleFacultyChange = (event) => {
-        setFaculty(event.target.value);
-    };
-    const handleMajorChange = (event) => {
-        setMajor(event.target.value);
-    };
-    const handleEducationLevelChange = (event) => {
-        setEducationLevel(event.target.value);
-    };
-    const handleEducationLevellChange = (event) => {
-        setEducationLevell(event.target.value);
-    };
-    const handleGpaChange = (event) => {
-        setGpa(event.target.value);
-    };
-    const handleHobbiesChange = (event) => {
-        setHobbies(event.target.value);
-    };
-    const handleSpecialSkillsChange = (event) => {
-        setSpecialSkills(event.target.value);
-    };
-    const handlePositionChange = (event) => {
-        setPosition(event.target.value);
-    };
-    const handleGoodJobChange = (event) => {
-        const selectedJob = event.target.value;
-        setGoodjob(selectedJob);
-        if (selectedJob !== 'Other') {
-            setOtherJob('');
-        }
-    };
-    const handleProgramChange = (event) => {
-        const selectedprogram = event.target.value;
-        setprogram(selectedprogram);
-        if (selectedprogram !== 'Other') {
-            setOtherprogram('');
-        }
-    };
-    const handledatestartChange = (event) => {
-        setDatestart(event.target.value);
-    };
-    const handledateendChange = (event) => {
-        setDateend(event.target.value);
-    };
-    const handleProfileChange = (event) => {
-        const selectedProfile = event.target.files[0];
-        setProfile(selectedProfile);
-    };
-    const handleConfirmation = () => {
-        setShowConfirmation(true);
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('firstName', firstName);
+        formData.append('lastName', lastName);
+        formData.append('nickname', nickname);
+        formData.append('titleEng', titleEng);
+        formData.append('firstNameEng', firstNameEng);
+        formData.append('lastNameEng', lastNameEng);
+        formData.append('nicknameEng', nicknameEng);
+        formData.append('age', age);
+        formData.append('birthDate', birthDate);
+        formData.append('idCard', idCard);
+        formData.append('nationality', nationality);
+        formData.append('religion', religion);
+        formData.append('phone', phone);
+        formData.append('facebook', facebook);
+        formData.append('lineId', lineId);
+        formData.append('email2', email2);
+        formData.append('email3', email3);
+        formData.append('gender', gender);
+        formData.append('address', address);
+        formData.append('currentAddress', currentAddress);
+        formData.append('currentEducation', currentEducation);
+        formData.append('faculty', faculty);
+        formData.append('major', major);
+        formData.append('educationLevel', educationLevel);
+        formData.append('educationLevell', educationLevell);
+        formData.append('gpa', gpa);
+        formData.append('hobbies', hobbies);
+        formData.append('specialSkills', specialSkills);
+        formData.append('position', position);
+        formData.append('goodjob', goodjob);
+        formData.append('otherJob', otherJob);
+        formData.append('program', program);
+        formData.append('otherprogram', otherprogram);
+        formData.append('datestart', datestart);
+        formData.append('dateend', dateend);
+        formData.append('profile', profile);
+
+        axios.post('http://localhost/your_project_name/insert_data.php', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        .then((response) => {
+            alert(response.data.message || 'Data inserted successfully!');
+        })
+        .catch((error) => {
+            console.error('There was an error!', error);
+        });
     };
     return (
         <>
-            <div className="banner-container w-full">
-                <img src="/src/img/intern.jpeg" alt="Banner Image" className="w-full h-auto" />
+            <div className='banner-container'>
+                <img src="/src/img/banner1.jpg" alt="Banner Image" className="w-full h-auto" />
             </div>
-            <div className="navbar flex justify-between items-center h-30" style={{backgroundColor:'#333'}}>
-                <div className="logo-container flex items-center">
-                    <img src="/src/img/Siam_Cement_Group_Logo.svg.png" alt="Logo" className="h-16" style={{ margin: '10px' }} />
+            <div className="navbar flex justify-between items-center h-21 bg-gray-800">
+                <div className="flex items-center ml-5">
+                    <img src="/src/img/Siam_Cement_Group_Logo.svg.png" alt="Logo" className="h-16 m-4 " />
                 </div>
-                <div className="right flex items-center ml-8">
-                    <div className="username-container mr-10 text-white text-right">
-                        <p>Intern<br />ชวัลรัตน์ บุญญา</p>
+                <div className="flex items-center ml-8">
+                    <div className="mr-5 text-white text-right ">
+                        <p className='text-left' style={{ height: '30px' }}>Intern</p>
+                        <p>Chawanrat Boonya</p>
                     </div>
-                      <div style={{backgroundColor:'white', width:'3px', height:'60px', marginRight:'30px'}}></div>
-                    <a href="logout.php" className="logout text-white mr-20">ออกจากระบบ</a>
+                    <div className="bg-white w-px h-16 mx-4"></div>
+                    <a href="logout.php" className="text-white mr-12 ">Logout</a>
                 </div>
             </div>
-            <div className='input_data_container' >
-                <div className='bg-white' style={{ borderRadius: '5px', boxShadow0: '2px 4px rgba(0, 0, 0, 0.1)', width: '100%' }}>
-                    <h3 className='text-left text-4xl p-5 w-full pr-0'>กรอกข้อมูลส่วนตัว</h3>
-                </div>
-                <div className='bg-white' style={{ borderRadius: '5px', boxShadow0: '2px 4px rgba(0, 0, 0, 0.1)', width: '100%', marginTop: '30px' }}>
-                    <form className='from-group-2' onSubmit={handleSubmit}>
-                        <div className='prefix-1'>
-                            <div><p className='p1'>คำนำหน้าชื่อ</p></div>
-                            <select className='select' value={title} onChange={handleTitleChange} required>
+            <div className="max-w-[95%] mx-auto mt-12 mb-5  p-3 bg-white shadow-lg rounded-lg text-left " style={{ fontSize: '40px' }}>
+                <h3 className='ml-5'>
+                    กรอกข้อมูลส่วนตัว
+                </h3>
+            </div>
+            <div className="max-w-[95%] mx-auto my-6 p-8 bg-white shadow-lg rounded-lg">
+                <form className="space-y-6 text-left" onSubmit={handleSubmit}>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">คำนำหน้าชื่อ</label>
+                            <select className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" style={{ height: '62px' }} value={title} onChange={(e) => setTitle(e.target.value)} required>
                                 <option value="">เลือกคำนำหน้าชื่อ</option>
                                 <option value="นาย">นาย</option>
                                 <option value="นาง">นาง</option>
                                 <option value="นางสาว">นางสาว</option>
                             </select>
                         </div>
-                        <div className='name-1'>
-                            <div><p className='p1'>ชื่อ</p></div>
-                            <input className='firstname' type="text" value={firstName} onChange={handleFirstNameChange} placeholder="ชื่อ" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">ชื่อ</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="ชื่อจริง" required />
                         </div>
-                        <div className='last-name'>
-                            <div><p className='p1'>นามสกุล</p></div>
-                            <input className='last' type="text" value={lastName} onChange={handleLastNameChange} placeholder="นามสกุล" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">นามสกุล</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="นามสกุล" required />
                         </div>
-                        <div className='nickname'>
-                            <div><p className='p1'>ชื่อเล่น</p></div>
-                            <input className='nick' type="text" value={nickname} onChange={handleNicknameChange} placeholder="ชื่อเล่น" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">ชื่อเล่น</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="ชื่อเล่น" required />
                         </div>
-                        <div className='form-item'>
-                            <div><p className='p1'>Title</p></div>
-                            <select className='selectt' value={titleEng} onChange={handleTitleEngChange} required>
-                                <option value="">Select Title</option>
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">Prefix</label>
+                            <select className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" style={{ height: '62px' }} value={titleEng} onChange={(e) => setTitleEng(e.target.value)} required>
+                                <option value="">Select Prefix</option>
                                 <option value="Mr.">Mr.</option>
                                 <option value="Mrs.">Mrs.</option>
                                 <option value="Ms.">Ms.</option>
                             </select>
                         </div>
-                        <div className='firstname-1'>
-                            <div><p className='p1'>Name</p></div>
-                            <input className='firstname-2' type="text" value={firstNameEng} onChange={handleFirstNameEngChange} placeholder="First Name" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">Name</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={firstNameEng} onChange={(e) => setFirstNameEng(e.target.value)} placeholder="First Name" required />
                         </div>
-                        <div className='lastname-1'>
-                            <div><p className='p1'>Last Name</p></div>
-                            <input className='lastname-2' type="text" value={lastNameEng} onChange={handleLastNameEngChange} placeholder="Last Name" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">Last Name</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={lastNameEng} onChange={(e) => setLastNameEng(e.target.value)} placeholder="Last Name" required />
                         </div>
-                        <div className='nickname-1'>
-                            <div><p className='p1'>Nickname</p></div>
-                            <input className='nickname-2' type="text" value={nicknameEng} onChange={handleNicknameEngChange} placeholder="Nickname" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">Nickname</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={nicknameEng} onChange={(e) => setNicknameEng(e.target.value)} placeholder="Nickname" required />
                         </div>
-                        <div className='age'>
-                            <div><p className='p1'>อายุ</p></div>
-                            <input className='age-1' type="text" value={age} onChange={handleAgeChange} placeholder="อายุ/Age" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">อายุ</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={age} onChange={(e) => setAge(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='birth-date'>
-                            <div><p className='p1'>วันเกิด</p></div>
-                            <input className='birth-date-1' type="date" value={birthDate} onChange={handleBirthDateChange} required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">วันเกิด</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} required />
                         </div>
-                        <div className='id-card'>
-                            <div><p className='p1'>เลขบัตรประชาชน</p></div>
-                            <input className='id-card-1' type="text" value={idCard} onChange={handleIdCardChange} placeholder="เลขบัตรประชาชน" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">เลขบัตรประชาชน</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={idCard} onChange={(e) => setIdCard(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='nationality'>
-                            <div><p className='p1'>สัญชาติ</p></div>
-                            <input className='nationality-1' type="text" value={nationality} onChange={handleNationalityChange} placeholder="สัญชาติ" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">สัญชาติ</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={nationality} onChange={(e) => setNationality(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='religion'>
-                            <div><p className='p1'>ศาสนา</p></div>
-                            <input className='religion-1' type="text" value={religion} onChange={handleReligionChange} placeholder="ศาสนา" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">ศาสนา</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={religion} onChange={(e) => setReligion(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='phone'>
-                            <div><p className='p1'>เบอร์โทรศัพท์</p></div>
-                            <input className='phone-1' type="text" value={phone} onChange={handlePhoneChange} placeholder="เบอร์โทรศัพท์" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">เบอร์โทรศัพท์</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='facebook'>
-                            <div><p className='p1'>Facebook</p></div>
-                            <input className='facebook-1' type="text" value={facebook} onChange={handleFacebookChange} placeholder="Facebook" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">Facebook</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='lineId'>
-                            <div><p className='p1'>ID Line</p></div>
-                            <input className='lineId-1' type="text" value={lineId} onChange={handleLineIdChange} placeholder="ID Line" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">ID Line</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={lineId} onChange={(e) => setLineId(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='email2'>
-                            <div><p className='p1'>Email (สำหรับสื่อสารโครงการ)</p></div>
-                            <input className='email2-1' type="email" value={email2} onChange={handleEmail2Change} placeholder="Email" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">Email (สำหรับสื่อสารโครงการ)</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="email" value={email2} onChange={(e) => setEmail2(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='email3'>
-                            <div><p className='p1'>Email (ใช้สำหรับ Microsoft Teames)</p></div>
-                            <input className='email3-1' type="email" value={email3} onChange={handleEmail3Change} placeholder="Email" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">Email (ใช้สำหรับ Microsoft Teams)</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="email" value={email3} onChange={(e) => setEmail3(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='gender'>
-                            <div><p className='p1'>เพศ</p></div>
-                            <label className='gender-1'>
-                                <input
-                                    type="checkbox"
-                                    value="ชาย"
-                                    checked={gender === 'ชาย'}
-                                    onChange={() => setGender('ชาย')}
-                                />
-                                ชาย
-                            </label>
-                            <label className='gender-1'>
-                                <input
-                                    type="checkbox"
-                                    value="หญิง"
-                                    checked={gender === 'หญิง'}
-                                    onChange={() => setGender('หญิง')}
-                                />
-                                หญิง
-                            </label>
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">เพศ</label>
+                            <select className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" style={{ height: '62px' }} value={titleEng} onChange={(e) => setTitleEng(e.target.value)} required>
+                                <option value="">เลือกเพศ</option>
+                                <option value="Mr.">ชาย</option>
+                                <option value="Mrs.">หญิง</option>
+                            </select>
                         </div>
-                        <div className='address'>
-                            <div><p className='p1'>ที่อยู่ตามบัตรประชาชน</p></div>
-                            <input className='address-1' type="text" value={address} onChange={handleAddressChange} placeholder="ที่อยู่ตามบัตรประชาชน" required />
+                        <div className="col-span-2">
+                            <label className="block text-xl font-medium text-gray-700">ที่อยู่ตามบัตรประชาชน</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='current-address'>
-                            <div><p className='p1'>ที่อยู่ปัจจุบัน</p></div>
-                            <input className='current-address-1' type="text" value={currentAddress} onChange={handleCurrentAddressChange} placeholder="ที่อยู่ปัจจุบัน" required />
+                        <div className="col-span-2">
+                            <label className="block text-xl font-medium text-gray-700">ที่อยู่ปัจจุบัน</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={currentAddress} onChange={(e) => setCurrentAddress(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='education'>
-                            <div><p className='p1'>สถานศึกษาปัจจุบัน</p></div>
-                            <input className='education-1' type="text" value={currentEducation} onChange={handleCurrentEducationChange} placeholder="สถานศึกษาปัจจุบัน" required />
+                        <div className="col-span-2">
+                            <label className="block text-xl font-medium text-gray-700">สถานศึกษาปัจจุบัน</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={currentEducation} onChange={(e) => setCurrentEducation(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='faculty'>
-                            <div><p className='p1'>คณะ</p></div>
-                            <input className='faculty-1' type="text" value={faculty} onChange={handleFacultyChange} placeholder="คณะ" required />
+                        <div className="col-span-2">
+                            <label className="block text-xl font-medium text-gray-700">คณะ</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={faculty} onChange={(e) => setFaculty(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='major'>
-                            <div><p className='p1'>สาขา</p></div>
-                            <input className='major-1' type="text" value={major} onChange={handleMajorChange} placeholder="สาขา" required />
+                        <div className="col-span-2">
+                            <label className="block text-xl font-medium text-gray-700">สาขา</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={major} onChange={(e) => setMajor(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='education-level'>
-                            <div><p className='p1'>วุฒิการศึกษา</p></div>
-                            <input className='education-level-1' type="text" value={educationLevel} onChange={handleEducationLevelChange} placeholder="วุฒิการศึกษา" required />
+                        <div className="col-span-2">
+                            <label className="block text-xl font-medium text-gray-700">วุฒิการศึกษา</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={educationLevel} onChange={(e) => setEducationLevel(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='education-levell'>
-                            <div><p className='p1'>ระดับการศึกษา</p></div>
-                            <input className='education-levell-1' type="text" value={educationLevell} onChange={handleEducationLevellChange} placeholder="ระดับการศึกษา" required />
+                        <div className="col-span-2">
+                            <label className="block text-xl font-medium text-gray-700">ระดับการศึกษา</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={educationLevell} onChange={(e) => setEducationLevell(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='gpa'>
-                            <div><p className='p1'>เกรดเฉลี่ยรวม</p></div>
-                            <input className='gpa-1' type="text" value={gpa} onChange={handleGpaChange} placeholder="เกรดเฉลี่ยรวม" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">เกรดเฉลี่ยรวม</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={gpa} onChange={(e) => setGpa(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='hobbies'>
-                            <div><p className='p1'>งานอดิเรก</p></div>
-                            <input className='hobbies-1' type="text" value={hobbies} onChange={handleHobbiesChange} placeholder="งานอดิเรก" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">งานอดิเรก</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={hobbies} onChange={(e) => setHobbies(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='special-skills'>
-                            <div><p className='p1'>ความสามารถพิเศษ</p></div>
-                            <input className='special-skills-1' type="text" value={specialSkills} onChange={handleSpecialSkillsChange} placeholder="ความสามารถพิเศษ" required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">ความสามารถพิเศษ</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={specialSkills} onChange={(e) => setSpecialSkills(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='position'>
-                            <div><p className='p1'>ตำแหน่งที่สมัคร</p></div>
-                            <input className='position-1' type="text" value={position} onChange={handlePositionChange} placeholder="ตำแหน่งที่สมัคร" required />
+                        <div className="col-span-2">
+                            <label className="block text-xl font-medium text-gray-700">ตำแหน่งที่สมัคร</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={position} onChange={(e) => setPosition(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className='goodjob'>
-                            <div><p className='p1'>โปรดเลือกสายงานที่ถนัด</p></div>
-                            <label className='goodjob-1'>
-                                <input
-                                    type="checkbox"
-                                    value="Frontend"
-                                    checked={goodjob === 'Frontend'}
-                                    onChange={() => setGoodjob('Frontend')}
-                                />
-                                Frontend
-                            </label>
-                            <label className='goodjob-1'>
-                                <input
-                                    type="checkbox"
-                                    value="Backtend"
-                                    checked={goodjob === 'Backtend'}
-                                    onChange={() => setGoodjob('Backtend')}
-                                />
-                                Backend
-                            </label>
-                            <label className='goodjob-1'>
-                                <input
-                                    type="checkbox"
-                                    value="Data Analysis"
-                                    checked={goodjob === 'Data Analysis'}
-                                    onChange={() => setGoodjob('Data Analysis')}
-                                />
-                                Data Analysis
-                            </label>
-                            <label className='goodjob-1'>
-                                <input
-                                    type="checkbox"
-                                    value="Data Management"
-                                    checked={goodjob === 'Data Management'}
-                                    onChange={() => setGoodjob('Data Management')}
-                                />
-                                Data Management
-                            </label>
-                            <label className='goodjob-1'>
-                                <input
-                                    type="checkbox"
-                                    value="Full stack"
-                                    checked={goodjob === 'Full stack'}
-                                    onChange={() => setGoodjob('Full stack')}
-                                />
-                                Full stack
-                            </label>
-                            <label className='goodjob-1'>
-                                <input
-                                    type="checkbox"
-                                    value="Other"
-                                    checked={goodjob === 'Other'}
-                                    onChange={handleGoodJobChange}
-                                />
-                                อื่นๆ
-                            </label>
-                            {goodjob === 'Other' && (
-                                <input
-                                    type="text"
-                                    value={otherJob}
-                                    onChange={(e) => setOtherJob(e.target.value)}
-                                    placeholder="โปรดระบุ"
-                                    required
-                                />
-                            )}
+                        <div className="col-span-4">
+                            <label className="block text-xl font-medium text-gray-700">โปรดเลือกสายงานที่ถนัด</label>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Frontend"
+                                        checked={goodjob === 'Frontend'}
+                                        onChange={() => setGoodjob('Frontend')}
+                                    />
+                                    <span className="ml-2 text-xl">Frontend</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Backend"
+                                        checked={goodjob === 'Backend'}
+                                        onChange={() => setGoodjob('Backend')}
+                                    />
+                                    <span className="ml-2 text-xl">Backend</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Data Analysis"
+                                        checked={goodjob === 'Data Analysis'}
+                                        onChange={() => setGoodjob('Data Analysis')}
+                                    />
+                                    <span className="ml-2 text-xl">Data Analysis</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Data Management"
+                                        checked={goodjob === 'Data Management'}
+                                        onChange={() => setGoodjob('Data Management')}
+                                    />
+                                    <span className="ml-2 text-xl">Data Management</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Full stack"
+                                        checked={goodjob === 'Full stack'}
+                                        onChange={() => setGoodjob('Full stack')}
+                                    />
+                                    <span className="ml-2 text-xl">Full stack</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Other"
+                                        checked={goodjob === 'Other'}
+                                        onChange={(e) => {
+                                            setGoodjob('Other');
+                                            setOtherJob('');
+                                        }}
+                                    />
+                                    <span className="ml-2 text-xl">อื่นๆ</span>
+                                </label>
+                                {goodjob === 'Other' && (
+                                    <input
+                                        className=" block w-full p-4 border  border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl"
+                                        type="text"
+                                        value={otherJob}
+                                        onChange={(e) => setOtherJob(e.target.value)}
+                                        placeholder="โปรดระบุ"
+                                        required
+                                    />
+                                )}
+                            </div>
                         </div>
-                        <div className='program'>
-                            <div><p className='p1'>โปรแกรมหรืองานที่ถนัด (เลือก 3 ข้อ)</p></div>
-                            <label className='program-1'>
-                                <input
-                                    type="checkbox"
-                                    value="Figma"
-                                    checked={program === 'Figma'}
-                                    onChange={() => setprogram('Figma')}
-                                />
-                                Figma
-                            </label>
-                            <label className='program-1'>
-                                <input
-                                    type="checkbox"
-                                    value="React"
-                                    checked={program === 'React'}
-                                    onChange={() => setprogram('React')}
-                                />
-                                React
-                            </label>
-                            <label className='program-1'>
-                                <input
-                                    type="checkbox"
-                                    value="PHP"
-                                    checked={program === 'PHP'}
-                                    onChange={() => setprogram('PHP')}
-                                />
-                                PHP
-                            </label>
-                            <label className='program-1'>
-                                <input
-                                    type="checkbox"
-                                    value="VS code"
-                                    checked={program === 'VS code'}
-                                    onChange={() => setprogram('VS code')}
-                                />
-                                VS Code
-                            </label>
-                            <label className='program-1'>
-                                <input
-                                    type="checkbox"
-                                    value="SQL Server"
-                                    checked={program === 'SQL Server'}
-                                    onChange={() => setprogram('SQL Server')}
-                                />
-                                SQL Server
-                            </label>
-                            <label className='program-1'>
-                                <input
-                                    type="checkbox"
-                                    value="DocKer"
-                                    checked={program === 'DocKer'}
-                                    onChange={() => setprogram('DocKer')}
-                                />
-                                DocKer
-                            </label>
-                            <label className='program-1'>
-                                <input
-                                    type="checkbox"
-                                    value="Other"
-                                    checked={program === 'Other'}
-                                    onChange={handleProgramChange}
-                                />
-                                อื่นๆ
-                            </label>
-                            {program === 'Other' && (
-                                <input
-                                    type="text"
-                                    value={otherprogram}
-                                    onChange={(e) => setOtherprogram(e.target.value)}
-                                    placeholder="โปรดระบุ"
-                                    required
-                                />
-                            )}
+                        <div className="col-span-4">
+                            <label className="block text-xl font-medium text-gray-700">โปรแกรมหรืองานที่ถนัด (เลือก 3 ข้อ)</label>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Figma"
+                                        checked={program === 'Figma'}
+                                        onChange={() => setprogram('Figma')}
+                                    />
+                                    <span className="ml-2 text-xl">Figma</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="React"
+                                        checked={program === 'React'}
+                                        onChange={() => setprogram('React')}
+                                    />
+                                    <span className="ml-2 text-xl">React</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="PHP"
+                                        checked={program === 'PHP'}
+                                        onChange={() => setprogram('PHP')}
+                                    />
+                                    <span className="ml-2 text-xl">PHP</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="VS code"
+                                        checked={program === 'VS code'}
+                                        onChange={() => setprogram('VS code')}
+                                    />
+                                    <span className="ml-2 text-xl">VS Code</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="SQL Server"
+                                        checked={program === 'SQL Server'}
+                                        onChange={() => setprogram('SQL Server')}
+                                    />
+                                    <span className="ml-2 text-xl">SQL Server</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Docker"
+                                        checked={program === 'Docker'}
+                                        onChange={() => setprogram('Docker')}
+                                    />
+                                    <span className="ml-2 text-xl">Docker</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        className="form-radio"
+                                        value="Other"
+                                        checked={program === 'Other'}
+                                        onChange={(e) => {
+                                            setprogram('Other');
+                                            setOtherprogram('');
+                                        }}
+                                    />
+                                    <span className="ml-2 text-xl">อื่นๆ</span>
+                                </label>
+                                {program === 'Other' && (
+                                    <input
+                                        className="mt-2 block w-full p-4 border  border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl"
+                                        type="text"
+                                        value={otherprogram}
+                                        onChange={(e) => setOtherprogram(e.target.value)}
+                                        placeholder="โปรดระบุ"
+                                        required
+                                    />
+                                )}
+                            </div>
                         </div>
-                        <div className='datestart'>
-                            <div><p className='p1'>วัน/เดือน/ปี ที่เริ่มฝึกงาน</p></div>
-                            <input className='datestart-1' type="date" value={datestart} onChange={handledatestartChange} required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">วัน/เดือน/ปี ที่เริ่มฝึกงาน</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="date" value={datestart} onChange={(e) => setDatestart(e.target.value)} required />
                         </div>
-                        <div className='dateend'>
-                            <div><p className='p1'>วัน/เดือน/ปี ที่ฝึกงานวันสุดท้าย</p></div>
-                            <input className='dateend-1' type="date" value={dateend} onChange={handledateendChange} required />
+                        <div>
+                            <label className="block text-xl font-medium text-gray-700">วัน/เดือน/ปี ที่ฝึกงานวันสุดท้าย</label>
+                            <input className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="date" value={dateend} onChange={(e) => setDateend(e.target.value)} required />
                         </div>
-                        <div className='profile-picture'>
-                            <div><p className='p1'>ภาพโปรไฟล์</p></div>
+                        <div className="col-span-4">
+                            <label className="block text-xl font-medium text-gray-700">ภาพโปรไฟล์</label>
                             <input
-                                className='image-upload'
+                                className="mt-2 block w-full p-4 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl"
                                 type="file"
                                 accept="image/*"
-                                onChange={handleProfileChange}
+                                onChange={(e) => setProfile(e.target.files[0])}
                             />
                         </div>
                         {profile && (
-                            <div className="preview">
-                                <p className="p1">ตัวอย่างรูปภาพ</p>
-                                <img src={URL.createObjectURL(profile)} alt="Preview" className="preview-image" />
+                            <div className="mt-4 col-span-4">
+                                <p className="text-xl font-medium text-gray-700">ตัวอย่างรูปภาพ</p>
+                                <img src={URL.createObjectURL(profile)} alt="Preview" className="mt-2 rounded-md shadow-md" />
                             </div>
                         )}
-                        <button className='applyintern' type="submit">ยืนยันการสมัคร</button>
-                    </form>
-                </div>
+                        <button className="mt-8 col-span-4  text-white py-3 px-6 rounded-md shadow-sm " type="submit" style={{ backgroundColor: 'rgb(104, 172, 1)' }}>
+                            บันทึกข้อมูล
+                        </button>
+                    </div>
+                </form>
             </div>
             <Footer />
         </>
