@@ -1,19 +1,18 @@
-.product-backlog {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+/* BLProject.css */
+
+.MBL {
+  
 }
 
 .h1-1 {
   color: #5C5A5A;
-  font-size: 35px;
+  font-size: 40px;
 }
 
 .h2-1 {
   margin-top: 10px;
   color: #5C5A5A;
-  font-size: 18px;
+  font-size: 25px;
 }
 
 .h3-1 {
@@ -23,7 +22,7 @@
 }
 
 .backlog-table {
-  margin: 20px auto;
+  margin: 0px auto;
   width: 100%;
   overflow-x: auto; 
 }
@@ -34,56 +33,59 @@
 }
 
 .fixed-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto; 
-}
-
-.fixed-table th, .fixed-table td {
-  padding: 10px;
-  text-align: center;
-  white-space: nowrap; 
+  table-layout: fixed; /* กำหนดให้ตารางมีขนาดคงที่ */
+  width: 100%; /* ให้ตารางมีความกว้างเต็มพื้นที่ที่มี */
 }
 
 .fixed-table th {
-  background-color: #f2f2f2;
-  font-size: 14px;
+  width: 150px; /* ความกว้างของเซลล์ */
+  height: 30px; /* ความสูงของเซลล์ */
+  box-sizing: border-box; /* เพื่อให้ padding รวมอยู่ในขนาดของเซลล์ */
+  line-height: 1; /* ปรับระยะห่างระหว่างบรรทัด */
+  background-color: #fdfdfd;
+  text-align: center;
+  font-size: 25px;
+  padding: 8px; 
 }
 
 .fixed-table td {
-  font-size: 16px;
+  height: 30px; /* ความสูงของเซลล์ */
+  padding: 10px; /* ระยะห่างภายในเซลล์ */
+  box-sizing: border-box; /* เพื่อให้ padding รวมอยู่ในขนาดของเซลล์ */
+  line-height: 0.9; /* ปรับระยะห่างระหว่างบรรทัด */
+  text-align: center;
+  font-size: 20px;
+}
 
+.linetable {
+  border-bottom: 2px solid #000000;
 }
 
 .img-KM {
-  max-width: 100px;
+  max-width: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.add-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 18px;
+.img-KM-1 {
+  margin-left: 0px;
+  margin-top: 6px;
+}
+
+.UL-IM {
+  margin-left: 50px;
+  display: block;
+  margin-top: 11px;
   cursor: pointer;
-  margin-right: -1310px;
-  width: 40px;
-  margin-top: 40px;
-}
-
-.save-button {
-  background-color: #26DE81;
-  color: white;
-  border-radius: 8px;
-  height: 35px;
-  width: 90px;
-  margin-left: 1300px;
-  margin-top: 20px;
 }
 
 .file-input {
   display: inline-block;
   position: relative;
-  cursor: pointer;
+  width: 100%; /* ปรับความกว้างให้เต็มเซลล์ */
+  height: 110px; /* ความสูงของเซลล์ที่รองรับรูปภาพและปุ่ม Delete */
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .file-input input[type="file"] {
@@ -97,27 +99,33 @@
   cursor: pointer;
 }
 
-.IP-1 {
-  border-radius: 4px;
+input[type="date"] {
+  background-color: rgb(255, 255, 255); /* เปลี่ยนสีพื้นหลังของปฏิทิน */
+  color: rgb(0, 0, 0); /* เปลี่ยนสีข้อความในปฏิทิน */
+  border: 2px solid #ccc; /* เปลี่ยนสีของเส้นขอบ */
+  padding: 5px;
+  border-radius: 5px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* เปลี่ยนสีของไอคอนปฏิทิน */
+}
+
+.IP-1, .IP-2 {
+  background-color: white;
+  width: 100%; /* กำหนดความกว้างให้เต็มพื้นที่ที่มี */
+  box-sizing: border-box; /* เพื่อป้องกันการเกินขอบ */
+  white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ */
+  overflow: hidden; /* ซ่อนข้อความที่ยาวเกิน */
+  text-overflow: ellipsis; /* แสดง ... เมื่อข้อความยาวเกิน */
+  border-radius: 5px;
   height: 30px;
-  width: 130px;
   border: 2px solid #ccc;
 }
 
-.IP-2 {
-  border-radius: 4px;
+.td {
   height: 30px;
   width: 130px;
-  border: 2px solid #ccc;
-}
-
-.footer-1 {
-  text-align: center;
-  font-size: 16px;
-  background-color: rgb(50, 50, 50);
-  color: rgb(255, 255, 255);
-  width: 100%;
-  margin-top: 264px;
 }
 
 .back-1 {
@@ -126,13 +134,58 @@
   cursor: pointer;
 }
 
-.back-th {
-  font-size: 16px;
-  font-weight: bold;
-}
-
 .back-th-1 {
   display: flex;
   align-items: center;
   margin-left: 80px;
+  margin-top: 12px;
+  padding: 10px;
 }
+
+.edit-icon {
+  margin-left: 53px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+
+.delete-icon {
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  margin-top: 7px;
+}
+
+.add-buttonz {
+  margin-left: 1400px;
+  width: 40px;
+  height: 40px;
+  margin-top: 30px;
+  margin-bottom: 60px;
+  cursor: pointer;
+}
+
+.save-button {
+  background-color: #26DE81;
+  color: white;
+  border-radius: 8px;
+  height: 35px;
+  width: 90px;
+  margin-left: 0px;
+  margin-top: -3px;
+}
+
+.option-todo {
+  color: blue;
+}
+
+.option-done {
+  color: green;
+}
+
+
+
+

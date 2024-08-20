@@ -1,75 +1,39 @@
-.product-backlog {
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
+.body-PDB {
+ background-color: white;
 }
 
-.header-left {
+.back-button-container {
   display: flex;
-  align-items: center;
+  justify-content: flex-end; /* ดันปุ่มไปด้านขวาสุด */
 }
 
-.hamburger-menu img {
-  width: 30px;
-  margin-right: 20px;
-}
-
-.header-center {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.search-container {
-  position: relative;
-  width: 120px;
-  max-width: 500px;
-  margin: auto;
-}
-
-.search- {
-  width: 300px;
-  padding: 8px 12px 8px 40px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-sizing: border-box;
-  transition: border 0.3s ease;
-  margin-left: -100px;
-}
-
-.search-icon {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  top: 50%;
-  left: 18px;
-  transform: translateY(-50%);
-  opacity: 0.5;
-  margin-left: -105px;
-}
-
-.mentor {
-  text-align: right;
-}
-
-.back {
+.back-PDB {
   width: 30px;
   height: 30px;
-  margin-left: 1300px;
+  margin-right: 60px;
   margin-top: 20px;
   cursor: pointer;
+  
 }
 
 .table-1 {
   width: 90%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 7px;
   margin-top: 60px;
   margin-left: 75px;
 }
 
-.th-1,
+.th-1,.td-1 {
+  padding: 8px;
+  text-align: center;
+  font-size: 25px;
+}
+
 .td-1 {
   padding: 8px;
   text-align: center;
+  font-size: 20px;
 }
 
 .status {
@@ -85,20 +49,10 @@
 .backlog-icon {
   width: 35px;
   height: 35px;
-  background-image: url('https://cdn-icons-png.flaticon.com/128/5084/5084624.png');
+  background-image: url('/src/img/backlog.png');
   background-size: cover;
   display: inline-block;
   cursor: pointer;
-}
-
-.footer-2 {
-  text-align: center;
-  font-size: 16px;
-  background-color: rgb(50, 50, 50);
-  color: rgb(255, 255, 255);
-  width: 100%;
-  margin-bottom: 0px;
-  margin-top: -66px;
 }
 
 .BL {
@@ -114,7 +68,7 @@
 }
 
 .main-1 {
-  height: 700px;
+ height: 500px;
 }
 
 .BL-img {
@@ -122,6 +76,3 @@
   color: #5C5A5A;
 }
 
-.table-2 {
-  border-bottom: 2px solid #000000;
-}

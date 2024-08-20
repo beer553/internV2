@@ -17,12 +17,13 @@ import Home from './page/intern/home';
 // import Assignproject from './page/mentor/assignproject'
 // import Scrum from './page/mentor/srcum';
 // import ScrumDiary from './page/mentor/scrumdiary';
-import Homepage from './page/subpage/Homepage';
 // import Homepage_1 from './page/mentor/Homepage_1';
-// import IDP from './page/mentor/IDP';
-// import PDBacklog from './page/mentor/PDBacklog';
-// import BLProject from './page/mentor/BLProject';
-import Input_data_intern from './page/intern/input_data_intern'
+    import PDBacklog from './page/subpage/PDBacklog';
+    import BLProject from './page/subpage/BLProject';
+    import IDP from './page/subpage/IDP';
+    import Homepage from './page/subpage/Homepage';
+    import Input_data_intern from './page/intern/input_data_intern';
+
    
 
 function App() {
@@ -30,28 +31,28 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Homepage />} />
+          {/* <Route path="/login" element={<Login />} /> */}
+          {/* <Route path="/apply" element={<Apply />} /> */}
+          {/* <Route path="/benefit" element={<Benefit />} /> */}
+          {/* <Route path="/consider" element={<Consider />} /> */}
+          {/* <Route path="/interview" element={<Interview />} /> */}
+          {/* <Route path="/doc" element={<Doc />} /> */}
+          {/* <Route path="/doc2" element={<Doc2 />} /> */}
+          {/* <Route path="/doc3" element={<Doc3 />} /> */}
+          {/* <Route path="/welcome" element={<Welcome />} /> */}
+          {/* <Route path="/welcome2" element={<Welcome2 />} /> */}
+          {/* <Route path="/welcome3" element={<Welcome3 />} /> */}
+          {/* <Route path="/project" element={<Project />} /> */}
+          {/* <Route path="/assignproject" element={<Assignproject />} /> */}
+          {/* <Route path="/scrum" element={<Scrum />} /> */}
+          {/* <Route path="/scrumdiary" element={<ScrumDiary />} />  */}
+          {/* <Route path="/Homepage_1" element={<Homepage_1 />} /> */}
           <Route path="/Homepage" element={<Homepage />} />
-          <Route path="/input_data_intern" element={<Input_data_intern />} />
-          {/* <Route path="/login" element={<Login />} />
-          <Route path="/apply" element={<Apply />} />
-          <Route path="/benefit" element={<Benefit />} />
-          <Route path="/consider" element={<Consider />} />
-          <Route path="/interview" element={<Interview />} />
-          <Route path="/doc" element={<Doc />} />
-          <Route path="/doc2" element={<Doc2 />} />
-          <Route path="/doc3" element={<Doc3 />} />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/welcome2" element={<Welcome2 />} />
-          <Route path="/welcome3" element={<Welcome3 />} />
-          <Route path="/project" element={<Project />} />
-          <Route path="/assignproject" element={<Assignproject />} />
-          <Route path="/scrum" element={<Scrum />} />
-          <Route path="/scrumdiary" element={<ScrumDiary />} /> 
-          <Route path="/Homepage_1" element={<Homepage_1 />} />
           <Route path="/IDP" element={<IDP />} />
           <Route path="/PDBacklog" element={<PDBacklog />} />
-          <Route path="/BLProject" element={<BLProject />} /> */}
+          <Route path="/BLProject" element={<BLProject />} />
+          <Route path="/input_data_intern" element={<Input_data_intern />} />
         </Routes>
       </Router>
     </div>
