@@ -4,7 +4,7 @@ const NavbarIntern = ({ currentPage, username }) => {
     return (
         <>
             <div className="banner-container w-full">
-                <img src="/src/img/intern.jpeg" alt="Banner Image" className="w-full h-auto" />
+                <img src="/src/img/nav2.jpg" alt="Banner Image" className="w-full h-auto" />
             </div>
             <div className="navbar flex justify-between items-center bg-black h-30">
                 <div className="logo-container flex items-center">
