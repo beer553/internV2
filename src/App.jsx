@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Home from './page/intern/home';
+// import Home from './page/intern/home';
 // import Login from './page/intern/login';
 // import Apply from './page/intern/Apply';
 // import Benefit from './page/intern/benefit';
@@ -18,11 +18,11 @@ import Home from './page/intern/home';
 // import Scrum from './page/mentor/srcum';
 // import ScrumDiary from './page/mentor/scrumdiary';
 // import Homepage_1 from './page/mentor/Homepage_1';
+// import Input_data_intern from './page/intern/input_data_intern';
+    import IDP from './page/subpage/IDP';
     import PDBacklog from './page/subpage/PDBacklog';
     import BLProject from './page/subpage/BLProject';
-    import IDP from './page/subpage/IDP';
     import Homepage from './page/subpage/Homepage';
-    import Input_data_intern from './page/intern/input_data_intern';
 
    
 
@@ -48,11 +48,11 @@ function App() {
           {/* <Route path="/scrum" element={<Scrum />} /> */}
           {/* <Route path="/scrumdiary" element={<ScrumDiary />} />  */}
           {/* <Route path="/Homepage_1" element={<Homepage_1 />} /> */}
-          <Route path="/Homepage" element={<Homepage />} />
+          {/* <Route path="/input_data_intern" element={<Input_data_intern />} /> */}
           <Route path="/IDP" element={<IDP />} />
+          <Route path="/Homepage" element={<Homepage />} />
           <Route path="/PDBacklog" element={<PDBacklog />} />
           <Route path="/BLProject" element={<BLProject />} />
-          <Route path="/input_data_intern" element={<Input_data_intern />} />
         </Routes>
       </Router>
     </div>

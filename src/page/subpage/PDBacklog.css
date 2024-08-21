@@ -10,8 +10,8 @@
 .back-PDB {
   width: 30px;
   height: 30px;
-  margin-right: 60px;
-  margin-top: 20px;
+  margin-left: 800px;
+  margin-top: 80px;
   cursor: pointer;
   
 }
@@ -49,7 +49,7 @@
 .backlog-icon {
   width: 35px;
   height: 35px;
-  background-image: url('/src/img/backlog.png');
+  background-image: url('/src/img/img_icon/backlog.png');
   background-size: cover;
   display: inline-block;
   cursor: pointer;
@@ -59,11 +59,12 @@
   width: 130px;
   height: 130px;
   margin-left: 100px;
+  margin-top: 30px;
 }
 
 .BL-1 {
   margin-left: 40px;
-  margin-top: 25px;
+  margin-top: 35px;
   font-size: 65px;
 }
 
