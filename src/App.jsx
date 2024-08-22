@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Home from './page/intern/home';
-// import Login from './page/intern/login';
+import Login from './page/login';
 // import Apply from './page/intern/Apply';
 // import Benefit from './page/intern/benefit';
 // import Consider from './page/intern/consider';
@@ -31,7 +31,8 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<Home/>} />
           <Route path="/Homepage" element={<Homepage />} />
           <Route path="/input_data_intern" element={<Input_data_intern />} />
           <Route path="/upload_doc_intern" element={<Upload_doc_intern />} />

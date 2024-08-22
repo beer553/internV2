@@ -40,10 +40,10 @@ function input_data_intern() {
     const [otherprogram, setOtherprogram] = useState('');
     const [datestart, setDatestart] = useState('');
     const [dateend, setDateend] = useState('');
-    const [profile, setProfile] = useState(null);
-    const [resume, setResume] = useState(null);
-    const [transcript, setTranscript] = useState(null);
-    const [otherFiles, setOtherFiles] = useState(null);
+    // const [profile, setProfile] = useState(null);
+    // const [resume, setResume] = useState(null);
+    // const [transcript, setTranscript] = useState(null);
+    // const [otherFiles, setOtherFiles] = useState(null);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -92,10 +92,10 @@ function input_data_intern() {
         formData.append('otherprogram', otherprogram);
         formData.append('datestart', datestart);
         formData.append('dateend', dateend);
-        if (profile) formData.append('profile', profile);
-        if (resume) formData.append('resume', resume);
-        if (transcript) formData.append('transcript', transcript);
-        if (otherFiles) formData.append('otherFiles', otherFiles);
+        // if (profile) formData.append('profile', profile);
+        // if (resume) formData.append('resume', resume);
+        // if (transcript) formData.append('transcript', transcript);
+        // if (otherFiles) formData.append('otherFiles', otherFiles);
     
         axios.post('http://localhost/internV2/backend/intern/insert_data_intern.php', formData, {
             headers: {
@@ -106,7 +106,7 @@ function input_data_intern() {
             if (response.data && response.data.status === 'success') {
                 alert(response.data.message || 'ข้อมูลบันทึกสำเร็จ!');
             } else {
-                alert(response.data.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                alert(response.data.message || 'ข้อมูลบันทึกสำเร็จ');
             }
         })
         .catch((error) => {
@@ -127,7 +127,7 @@ function input_data_intern() {
     return (
         <>
             <div className='banner-container'>
-                <img src="/src/img/nav2.jpg" alt="Banner Image" className="w-full h-auto" />
+                <img src="/src/img/nav2.jpg" alt="Banner Image" style={{flex:'1',display:'flex',justifyContent:'center',alignItems:'center',backgroundSize:'cover'}} />
             </div>
             <div className="navbar flex justify-between items-center h-21 bg-gray-800">
                 <div className="flex items-center ml-5">
@@ -142,7 +142,7 @@ function input_data_intern() {
                     <a href="logout.php" className="text-white mr-12 ">Logout</a>
                 </div>
             </div>
-            <div className="max-w-[95%] mx-auto mt-12 mb-5  p-3 bg-white shadow-lg rounded-lg text-left " style={{ fontSize: '40px' }}>
+            <div className="max-w-[95%] mx-auto mt-12 mb-5  p-2 bg-white shadow-lg rounded-lg text-left " style={{ fontSize: '40px' }}>
                 <h3 className='ml-5'>
                     กรอกข้อมูลส่วนตัว
                 </h3>
@@ -151,8 +151,8 @@ function input_data_intern() {
                 <form className="space-y-6 text-left" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6" style={{gridRowGap:'20px'}}>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">คำนำหน้าชื่อ<span style={{ color: 'red' }}>*</span></label>
-                            <select className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" style={{ height: '53.6px' }} value={title} onChange={(e) => setTitle(e.target.value)} required>
+                            <label className="block text-2xl font-medium text-gray-700">คำนำหน้าชื่อ<span style={{ color: 'red' }}>*</span></label>
+                            <select className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" style={{ height: '49.6px' }} value={title} onChange={(e) => setTitle(e.target.value)} required>
                                 <option value="">เลือกคำนำหน้าชื่อ</option>
                                 <option value="นาย">นาย</option>
                                 <option value="นาง">นาง</option>
@@ -160,20 +160,20 @@ function input_data_intern() {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">ชื่อ<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="ชื่อจริง" required />
+                            <label className="block text-2xl font-medium text-gray-700">ชื่อ<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="ชื่อจริง" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">นามสกุล<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="นามสกุล" required />
+                            <label className="block text-2xl font-medium text-gray-700">นามสกุล<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="นามสกุล" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">ชื่อเล่น<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="ชื่อเล่น" required />
+                            <label className="block text-2xl font-medium text-gray-700">ชื่อเล่น<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="ชื่อเล่น" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">Prefix<span style={{ color: 'red' }}>*</span></label>
-                            <select className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" style={{ height: '53.6px' }} value={titleEng} onChange={(e) => setTitleEng(e.target.value)} required>
+                            <label className="block text-2xl font-medium text-gray-700">Prefix<span style={{ color: 'red' }}>*</span></label>
+                            <select className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" style={{ height: '49.6px' }} value={titleEng} onChange={(e) => setTitleEng(e.target.value)} required>
                                 <option value="">Select Prefix</option>
                                 <option value="Mr.">Mr.</option>
                                 <option value="Mrs.">Mrs.</option>
@@ -181,119 +181,119 @@ function input_data_intern() {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">Name<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={firstNameEng} onChange={(e) => setFirstNameEng(e.target.value)} placeholder="First Name" required />
+                            <label className="block text-2xl font-medium text-gray-700">Name<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={firstNameEng} onChange={(e) => setFirstNameEng(e.target.value)} placeholder="First Name" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">Last Name<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={lastNameEng} onChange={(e) => setLastNameEng(e.target.value)} placeholder="Last Name" required />
+                            <label className="block text-2xl font-medium text-gray-700">Last Name<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={lastNameEng} onChange={(e) => setLastNameEng(e.target.value)} placeholder="Last Name" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">Nickname<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={nicknameEng} onChange={(e) => setNicknameEng(e.target.value)} placeholder="Nickname" required />
+                            <label className="block text-2xl font-medium text-gray-700">Nickname<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={nicknameEng} onChange={(e) => setNicknameEng(e.target.value)} placeholder="Nickname" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">อายุ<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={age} onChange={(e) => setAge(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">อายุ<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={age} onChange={(e) => setAge(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">วันเกิด<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} required />
+                            <label className="block text-2xl font-medium text-gray-700">วันเกิด<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="date" style={{height:'49.6px'}} value={birthDate} onChange={(e) => setBirthDate(e.target.value)} required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">เลขบัตรประชาชน<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={idCard} onChange={(e) => setIdCard(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">เลขบัตรประชาชน<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={idCard} onChange={(e) => setIdCard(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">สัญชาติ<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={nationality} onChange={(e) => setNationality(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">สัญชาติ<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={nationality} onChange={(e) => setNationality(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">ศาสนา<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={religion} onChange={(e) => setReligion(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">ศาสนา<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={religion} onChange={(e) => setReligion(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">เบอร์โทรศัพท์<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">เบอร์โทรศัพท์<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">Facebook<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">Facebook<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">ID Line<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={lineId} onChange={(e) => setLineId(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">ID Line<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={lineId} onChange={(e) => setLineId(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">Email (สำหรับสื่อสารโครงการ)<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="email" value={email2} onChange={(e) => setEmail2(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">Email (สำหรับสื่อสารโครงการ)<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="email" value={email2} onChange={(e) => setEmail2(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">Email (ใช้สำหรับ Microsoft Teams)<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="email" value={email3} onChange={(e) => setEmail3(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">Email (ใช้สำหรับ Microsoft Teams)<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="email" value={email3} onChange={(e) => setEmail3(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">เพศ<span style={{ color: 'red' }}>*</span></label>
-                            <select className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" style={{ height: '53.6px' }} value={gender} onChange={(e) => setGender(e.target.value)} required>
+                            <label className="block text-2xl font-medium text-gray-700">เพศ<span style={{ color: 'red' }}>*</span></label>
+                            <select className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" style={{ height: '49.6px' }} value={gender} onChange={(e) => setGender(e.target.value)} required>
                                 <option value="">เลือกเพศ</option>
-                                <option value="Mr.">ชาย</option>
-                                <option value="Mrs.">หญิง</option>
+                                <option value="ชาย">ชาย</option>
+                                <option value="หญิง">หญิง</option>
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">พี่เลี้ยง<span style={{ color: 'red' }}>*</span></label>
-                            <select className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" style={{ height: '53.6px' }} value={mentor} onChange={(e) => setMentor(e.target.value)} required>
+                            <label className="block text-2xl font-medium text-gray-700">พี่เลี้ยง<span style={{ color: 'red' }}>*</span></label>
+                            <select className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" style={{ height: '49.6px' }} value={mentor} onChange={(e) => setMentor(e.target.value)} required>
                                 <option value="">เลือกพี่เลี้ยง</option>
-                                <option value="Mr.">สุพรรษา มูลศิริ</option>
-                                <option value="Mrs.">เอกพงษ์ มีสุข</option>
+                                <option value="สุพรรษา มูลศิริ">สุพรรษา มูลศิริ</option>
+                                <option value="เอกพงษ์ มีสุข">เอกพงษ์ มีสุข</option>
                             </select>
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-xl font-medium text-gray-700">ที่อยู่ตามบัตรประชาชน<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">ที่อยู่ตามบัตรประชาชน<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-xl font-medium text-gray-700">ที่อยู่ปัจจุบัน<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={currentAddress} onChange={(e) => setCurrentAddress(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">ที่อยู่ปัจจุบัน<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={currentAddress} onChange={(e) => setCurrentAddress(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-xl font-medium text-gray-700">สถานศึกษาปัจจุบัน<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={currentEducation} onChange={(e) => setCurrentEducation(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">สถานศึกษาปัจจุบัน<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={currentEducation} onChange={(e) => setCurrentEducation(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-xl font-medium text-gray-700">คณะ<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={faculty} onChange={(e) => setFaculty(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">คณะ<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={faculty} onChange={(e) => setFaculty(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-xl font-medium text-gray-700">สาขา<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={major} onChange={(e) => setMajor(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">สาขา<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={major} onChange={(e) => setMajor(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-xl font-medium text-gray-700">วุฒิการศึกษา<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={educationLevel} onChange={(e) => setEducationLevel(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">วุฒิการศึกษา<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={educationLevel} onChange={(e) => setEducationLevel(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-xl font-medium text-gray-700">ระดับการศึกษา<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={educationLevell} onChange={(e) => setEducationLevell(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">ระดับการศึกษา<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={educationLevell} onChange={(e) => setEducationLevell(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">เกรดเฉลี่ยรวม<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={gpa} onChange={(e) => setGpa(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">เกรดเฉลี่ยรวม<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={gpa} onChange={(e) => setGpa(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">งานอดิเรก<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={hobbies} onChange={(e) => setHobbies(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">งานอดิเรก<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={hobbies} onChange={(e) => setHobbies(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">ความสามารถพิเศษ<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={specialSkills} onChange={(e) => setSpecialSkills(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">ความสามารถพิเศษ<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={specialSkills} onChange={(e) => setSpecialSkills(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-2">
-                            <label className="block text-xl font-medium text-gray-700">ตำแหน่งที่สมัคร<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="text" value={position} onChange={(e) => setPosition(e.target.value)} placeholder="โปรดระบุ" required />
+                            <label className="block text-2xl font-medium text-gray-700">ตำแหน่งที่สมัคร<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={position} onChange={(e) => setPosition(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-4">
-                            <label className="block text-xl font-medium text-gray-700">โปรดเลือกสายงานที่ถนัด<span style={{ color: 'red' }}>*</span></label>
+                            <label className="block text-2xl font-medium text-gray-700">โปรดเลือกสายงานที่ถนัด<span style={{ color: 'red' }}>*</span></label>
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <label className="inline-flex items-center">
                                     <input
@@ -303,7 +303,7 @@ function input_data_intern() {
                                         checked={goodjob === 'Frontend'}
                                         onChange={() => setGoodjob('Frontend')}
                                     />
-                                    <span className="ml-2 text-xl">Frontend</span>
+                                    <span className="ml-2 text-2xl">Frontend</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -313,7 +313,7 @@ function input_data_intern() {
                                         checked={goodjob === 'Backend'}
                                         onChange={() => setGoodjob('Backend')}
                                     />
-                                    <span className="ml-2 text-xl">Backend</span>
+                                    <span className="ml-2 text-2xl">Backend</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -323,7 +323,7 @@ function input_data_intern() {
                                         checked={goodjob === 'Data Analysis'}
                                         onChange={() => setGoodjob('Data Analysis')}
                                     />
-                                    <span className="ml-2 text-xl">Data Analysis</span>
+                                    <span className="ml-2 text-2xl">Data Analysis</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -333,7 +333,7 @@ function input_data_intern() {
                                         checked={goodjob === 'Data Management'}
                                         onChange={() => setGoodjob('Data Management')}
                                     />
-                                    <span className="ml-2 text-xl">Data Management</span>
+                                    <span className="ml-2 text-2xl">Data Management</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -343,7 +343,7 @@ function input_data_intern() {
                                         checked={goodjob === 'Full stack'}
                                         onChange={() => setGoodjob('Full stack')}
                                     />
-                                    <span className="ml-2 text-xl">Full stack</span>
+                                    <span className="ml-2 text-2xl">Full stack</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -356,11 +356,11 @@ function input_data_intern() {
                                             setOtherJob('');
                                         }}
                                     />
-                                    <span className="ml-2 text-xl">อื่นๆ</span>
+                                    <span className="ml-2 text-2xl">อื่นๆ</span>
                                 </label>
                                 {goodjob === 'Other' && (
                                     <input
-                                        className=" block w-full p-3 border  border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl"
+                                        className=" block w-full p-2 border  border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl"
                                         type="text"
                                         value={otherJob}
                                         onChange={(e) => setOtherJob(e.target.value)}
@@ -371,7 +371,7 @@ function input_data_intern() {
                             </div>
                         </div>
                         <div className="col-span-4">
-                            <label className="block text-xl font-medium text-gray-700">โปรแกรมหรืองานที่ถนัด (เลือก 3 ข้อ)<span style={{ color: 'red' }}>*</span></label>
+                            <label className="block text-2xl font-medium text-gray-700">โปรแกรมหรืองานที่ถนัด (เลือก 3 ข้อ)<span style={{ color: 'red' }}>*</span></label>
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <label className="inline-flex items-center">
                                     <input
@@ -381,7 +381,7 @@ function input_data_intern() {
                                         checked={program.includes('Figma')}
                                         onChange={handleProgramChange}
                                     />
-                                    <span className="ml-2 text-xl">Figma</span>
+                                    <span className="ml-2 text-2xl">Figma</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -391,7 +391,7 @@ function input_data_intern() {
                                         checked={program.includes('React')}
                                         onChange={handleProgramChange}
                                     />
-                                    <span className="ml-2 text-xl">React</span>
+                                    <span className="ml-2 text-2xl">React</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -401,7 +401,7 @@ function input_data_intern() {
                                         checked={program.includes('PHP')}
                                         onChange={handleProgramChange}
                                     />
-                                    <span className="ml-2 text-xl">PHP</span>
+                                    <span className="ml-2 text-2xl">PHP</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -411,7 +411,7 @@ function input_data_intern() {
                                         checked={program.includes('VS code')}
                                         onChange={handleProgramChange}
                                     />
-                                    <span className="ml-2 text-xl">VS Code</span>
+                                    <span className="ml-2 text-2xl">VS Code</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -421,7 +421,7 @@ function input_data_intern() {
                                         checked={program.includes('SQL Server')}
                                         onChange={handleProgramChange}
                                     />
-                                    <span className="ml-2 text-xl">SQL Server</span>
+                                    <span className="ml-2 text-2xl">SQL Server</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -431,7 +431,7 @@ function input_data_intern() {
                                         checked={program.includes('Docker')}
                                         onChange={handleProgramChange}
                                     />
-                                    <span className="ml-2 text-xl">Docker</span>
+                                    <span className="ml-2 text-2xl">Docker</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -441,11 +441,11 @@ function input_data_intern() {
                                         checked={program.includes('Other')}
                                         onChange={handleProgramChange}
                                     />
-                                    <span className="ml-2 text-xl">อื่นๆ</span>
+                                    <span className="ml-2 text-2xl">อื่นๆ</span>
                                 </label>
                                 {program.includes('Other') && (
                                     <input
-                                        className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl"
+                                        className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl"
                                         type="text"
                                         value={otherprogram}
                                         onChange={(e) => setOtherprogram(e.target.value)}
@@ -456,18 +456,18 @@ function input_data_intern() {
                             </div>
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">วัน/เดือน/ปี ที่เริ่มฝึกงาน<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="date" value={datestart} onChange={(e) => setDatestart(e.target.value)} required />
+                            <label className="block text-2xl font-medium text-gray-700">วัน/เดือน/ปี ที่เริ่มฝึกงาน<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="date" value={datestart} onChange={(e) => setDatestart(e.target.value)} required />
                         </div>
                         <div>
-                            <label className="block text-xl font-medium text-gray-700">วัน/เดือน/ปี ที่ฝึกงานวันสุดท้าย<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" type="date" value={dateend} onChange={(e) => setDateend(e.target.value)} required />
+                            <label className="block text-2xl font-medium text-gray-700">วัน/เดือน/ปี ที่ฝึกงานวันสุดท้าย<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="date" value={dateend} onChange={(e) => setDateend(e.target.value)} required />
                         </div>
-                        <div className="col-span-4">
-                            <label className="block text-xl font-medium text-gray-700">แนบไฟล์ใหม่ (เฉพาะ pdf)</label>
+                        {/* <div className="col-span-4">
+                            <label className="block text-2xl font-medium text-gray-700">แนบไฟล์ใหม่ (เฉพาะ pdf)</label>
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div>
-                                    <label className="block text-xl font-medium text-gray-700">Resume<span style={{ color: 'red' }}>*</span></label>
+                                    <label className="block text-2xl font-medium text-gray-700">Resume<span style={{ color: 'red' }}>*</span></label>
                                     <input
                                         className="file-input file-input-bordered w-full max-w-xs"type="file"
                                         accept="application/pdf"
@@ -476,7 +476,7 @@ function input_data_intern() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xl font-medium text-gray-700">Transcript<span style={{ color: 'red' }}>*</span></label>
+                                    <label className="block text-2xl font-medium text-gray-700">Transcript<span style={{ color: 'red' }}>*</span></label>
                                     <input
                                         className="file-input file-input-bordered w-full max-w-xs"type="file"
                                         accept="application/pdf"
@@ -485,7 +485,7 @@ function input_data_intern() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xl font-medium text-gray-700">ผลงานอื่น ๆ (ถ้ามี)</label>
+                                    <label className="block text-2xl font-medium text-gray-700">ผลงานอื่น ๆ (ถ้ามี)</label>
                                     <input
                                         className="file-input file-input-bordered w-full max-w-xs"
                                         type="file"
@@ -494,7 +494,7 @@ function input_data_intern() {
                                     />
                                 </div>
                         <div >
-                            <label className="block text-xl font-medium text-gray-700">ภาพโปรไฟล์<span style={{ color: 'red' }}>*</span></label>
+                            <label className="block text-2xl font-medium text-gray-700">ภาพโปรไฟล์<span style={{ color: 'red' }}>*</span></label>
                             <input
                                 className="file-input file-input-bordered w-full max-w-xs col-span-4"
                                 type="file"
@@ -507,10 +507,10 @@ function input_data_intern() {
                         </div>
                         {profile && (
                             <div className="mt-4 col-span-4">
-                                <p className="text-xl font-medium text-gray-700">ตัวอย่างรูปภาพ</p>
-                                <img src={URL.createObjectURL(profile)} alt="Preview" className="mt-2 rounded-md shadow-md" />
+                                <p className="text-2xl font-medium text-gray-700">ตัวอย่างรูปภาพ</p>
+                                <img src={URL.createObjectURL(profile)} alt="Preview" className="mt-2 rounded-md shadow-md" style={{maxWidth:'150px', maxHeight:'250px', }} />
                             </div>
-                        )}
+                        )} */}
                         
                         <button className="mt-8 col-span-4  text-white py-3 px-6 rounded-md shadow-sm " type="submit" style={{ backgroundColor: 'rgb(104, 172, 1)' }}>
                             บันทึกข้อมูล
