@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import NavbarIntern from '../component/navbar_intern';
 import Footer from '../component/footer';
 
 function input_data_intern() {
@@ -40,10 +41,10 @@ function input_data_intern() {
     const [otherprogram, setOtherprogram] = useState('');
     const [datestart, setDatestart] = useState('');
     const [dateend, setDateend] = useState('');
-    // const [profile, setProfile] = useState(null);
-    // const [resume, setResume] = useState(null);
-    // const [transcript, setTranscript] = useState(null);
-    // const [otherFiles, setOtherFiles] = useState(null);
+    const [profile, setProfile] = useState(null);
+    const [resume, setResume] = useState(null);
+    const [transcript, setTranscript] = useState(null);
+    const [otherFiles, setOtherFiles] = useState(null);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -92,10 +93,10 @@ function input_data_intern() {
         formData.append('otherprogram', otherprogram);
         formData.append('datestart', datestart);
         formData.append('dateend', dateend);
-        // if (profile) formData.append('profile', profile);
-        // if (resume) formData.append('resume', resume);
-        // if (transcript) formData.append('transcript', transcript);
-        // if (otherFiles) formData.append('otherFiles', otherFiles);
+        if (profile) formData.append('profile', profile);
+        if (resume) formData.append('resume', resume);
+        if (transcript) formData.append('transcript', transcript);
+        if (otherFiles) formData.append('otherFiles', otherFiles);
     
         axios.post('http://localhost/internV2/backend/intern/insert_data_intern.php', formData, {
             headers: {
@@ -126,22 +127,7 @@ function input_data_intern() {
     
     return (
         <>
-            <div className='banner-container'>
-                <img src="/src/img/nav2.jpg" alt="Banner Image" style={{flex:'1',display:'flex',justifyContent:'center',alignItems:'center',backgroundSize:'cover'}} />
-            </div>
-            <div className="navbar flex justify-between items-center h-21 bg-gray-800">
-                <div className="flex items-center ml-5">
-                    <img src="/src/img/Siam_Cement_Group_Logo.svg.png" alt="Logo" className="h-16 m-4 " />
-                </div>
-                <div className="flex items-center ml-8">
-                    <div className="mr-5 text-white text-right ">
-                        <p className='text-left' style={{ height: '30px' }}>Team Development</p>
-                        <p style={{color:'	#c0c0c0	'}}>Chawanrat Boonya</p>
-                    </div>
-                    <div className="bg-white w-px h-16 mx-4"></div>
-                    <a href="logout.php" className="text-white mr-12 ">Logout</a>
-                </div>
-            </div>
+            <NavbarIntern/>
             <div className="max-w-[95%] mx-auto mt-12 mb-5  p-2 bg-white shadow-lg rounded-lg text-left " style={{ fontSize: '40px' }}>
                 <h3 className='ml-5'>
                     กรอกข้อมูลส่วนตัว
@@ -463,7 +449,7 @@ function input_data_intern() {
                             <label className="block text-2xl font-medium text-gray-700">วัน/เดือน/ปี ที่ฝึกงานวันสุดท้าย<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="date" value={dateend} onChange={(e) => setDateend(e.target.value)} required />
                         </div>
-                        {/* <div className="col-span-4">
+                        <div className="col-span-4">
                             <label className="block text-2xl font-medium text-gray-700">แนบไฟล์ใหม่ (เฉพาะ pdf)</label>
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div>
@@ -510,7 +496,7 @@ function input_data_intern() {
                                 <p className="text-2xl font-medium text-gray-700">ตัวอย่างรูปภาพ</p>
                                 <img src={URL.createObjectURL(profile)} alt="Preview" className="mt-2 rounded-md shadow-md" style={{maxWidth:'150px', maxHeight:'250px', }} />
                             </div>
-                        )} */}
+                        )}
                         
                         <button className="mt-8 col-span-4  text-white py-3 px-6 rounded-md shadow-sm " type="submit" style={{ backgroundColor: 'rgb(104, 172, 1)' }}>
                             บันทึกข้อมูล
