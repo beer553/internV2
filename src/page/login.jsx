@@ -19,97 +19,92 @@ function Login() {
     event.preventDefault();
 
     try {
-        const response = await axios.post('http://localhost/internV2/backend/login.php', {
-            username: username,
-            password: password,
-        });
+      const response = await axios.post('http://localhost/internV2/backend/login.php', {
+        username: username,
+        password: password,
+      });
 
-        // แยกข้อมูลที่ส่งกลับมา
-        const rawData = response.data;
-        console.log('Raw Data:', rawData);
+      // แยกข้อมูลที่ส่งกลับมา
+      const rawData = response.data;
+      console.log('Raw Data:', rawData);
 
-        // พยายามแยก JSON ออกมา
-        const parts = rawData.split('}{').join('},{');
-        const jsonData = JSON.parse(`[${parts}]`);
+      // พยายามแยก JSON ออกมา
+      const parts = rawData.split('}{').join('},{');
+      const jsonData = JSON.parse(`[${parts}]`);
 
-        // ใช้เฉพาะข้อมูลส่วนที่สอง
-        const data = jsonData[1];
-        console.log('Parsed Data:', data);
+      // ใช้เฉพาะข้อมูลส่วนที่สอง
+      const data = jsonData[1];
+      console.log('Parsed Data:', data);
 
-        if (data.status === 'success' && data.role) {
-            // เก็บข้อมูลใน localStorage
-            localStorage.setItem('username', username);
-            localStorage.setItem('role', data.role);
+      if (data.status === 'success' && data.role) {
+        // เก็บข้อมูลใน localStorage
+        localStorage.setItem('username', username);
+        localStorage.setItem('role', data.role);
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Login Successful',
-                showConfirmButton: false,
-            });
-
-            setTimeout(() => {
-                if (data.role === 'intern') {
-                    window.location.href = "/input_data_intern";
-                } else if (data.role === 'mentor') {
-                    window.location.href = "/Homepage";
-                }
-            }, 2000);
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Login Failed',
-                text: data.message || 'Unexpected error occurred.',
-            });
-        }
-    } catch (error) {
-        console.log('Error during login:', error);
         Swal.fire({
-            icon: 'error',
-            title: 'Login Error',
-            text: 'An error occurred while trying to login.',
+          icon: 'success',
+          title: 'Login Successful',
+          showConfirmButton: false,
         });
+
+        setTimeout(() => {
+          if (data.role === 'intern') {
+            window.location.href = "/input_data_intern";
+          } else if (data.role === 'mentor') {
+            window.location.href = "/Homepage";
+          }
+        }, 2000);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: data.message || 'Unexpected error occurred.',
+        });
+      }
+    } catch (error) {
+      console.log('Error during login:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Error',
+        text: 'An error occurred while trying to login.',
+      });
     }
-};
+  };
+  const handleRegister = async (event) => {
+    event.preventDefault();
 
-
-
-
-
-const handleRegister = async (event) => {
-  event.preventDefault();
-
-  if (!username) {
+    if (!username) {
       Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: 'Username is required',
+        icon: 'error',
+        title: 'Registration Failed',
+        text: 'Username is required',
       });
       return;
-  }
+    }
 
-  if (!userId) {
+    if (!userId) {
       Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: 'User ID is required',
+        icon: 'error',
+        title: 'Registration Failed',
+        text: 'User ID is required',
       });
       return;
-  }
+    }
 
-  if (!password) {
+    if (!password) {
       Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: 'Password is required',
+        icon: 'error',
+        title: 'Registration Failed',
+        text: 'Password is required',
       });
       return;
-  }
+    }
 
-  try {
+    try {
       const response = await axios.post('http://localhost/internV2/backend/register.php', {
-          username: username,
-          user_id: userId,
-          password: password,
+        username: username,
+        user_id: userId,
+        password: password,
       });
 
       // แยกข้อมูลที่ส่งกลับมา
@@ -125,34 +120,33 @@ const handleRegister = async (event) => {
       console.log('Parsed Data:', data);
 
       if (data.status === 'success') {
-          Swal.fire({
-              icon: 'success',
-              title: 'Registration Successful',
-              text: `Welcome, ${username}! Your role is ${data.role}.`,
-              confirmButtonText: 'OK'
-            }).then(() => {
-                // เมื่อผู้ใช้กด OK จะกลับไปที่ฟอร์มล็อกอิน
-                setIsRegistering(false);
-            });
+        Swal.fire({
+          icon: 'success',
+          title: 'Registration Successful',
+          text: `Welcome, ${username}! Your role is ${data.role}.`,
+          confirmButtonText: 'OK'
+        }).then(() => {
+          // เมื่อผู้ใช้กด OK จะกลับไปที่ฟอร์มล็อกอิน
+          setIsRegistering(false);
+        });
 
-          // คุณสามารถนำ role ไปใช้เพื่อจัดการสิทธิ์ใน frontend ได้ตามต้องการ
+        // คุณสามารถนำ role ไปใช้เพื่อจัดการสิทธิ์ใน frontend ได้ตามต้องการ
       } else {
-          Swal.fire({
-              icon: 'error',
-              title: 'Registration Failed',
-              text: data.message,
-          });
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: data.message,
+        });
       }
-  } catch (error) {
+    } catch (error) {
       console.log('Error during registration:', error);
       Swal.fire({
-          icon: 'error',
-          title: 'Registration Error',
-          text: 'An error occurred while trying to register.',
+        icon: 'error',
+        title: 'Registration Error',
+        text: 'An error occurred while trying to register.',
       });
-  }
-};
-
+    }
+  };
 
   return (
     <>
@@ -180,7 +174,6 @@ const handleRegister = async (event) => {
                   : "Sign in to your account"}
             </h2>
           </div>
-
           {!isSettingPassword && !isRegistering ? (
             <form className="mt-8 space-y-6" onSubmit={handleLogin}>
               <div className="rounded-md shadow-sm space-y-4">
@@ -217,7 +210,6 @@ const handleRegister = async (event) => {
                   />
                 </div>
               </div>
-
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
@@ -233,7 +225,6 @@ const handleRegister = async (event) => {
                     Remember me
                   </label>
                 </div>
-
                 <div className="text-xl">
                   <a
                     href="#"
@@ -244,7 +235,6 @@ const handleRegister = async (event) => {
                   </a>
                 </div>
               </div>
-
               <div>
                 <button
                   type="submit"
@@ -253,7 +243,6 @@ const handleRegister = async (event) => {
                   Sign In
                 </button>
               </div>
-
               <div className="text-center mt-6">
                 <a
                   href="#"
@@ -324,7 +313,6 @@ const handleRegister = async (event) => {
                   />
                 </div>
               </div>
-
               <div>
                 <button
                   type="submit"
@@ -343,7 +331,6 @@ const handleRegister = async (event) => {
                 </button>
               </div> */}
             </form>
-
           ) : (
             <form className="mt-8 space-y-6" onSubmit={handleSetPassword}>
               <div className="rounded-md shadow-sm space-y-4">
@@ -364,7 +351,6 @@ const handleRegister = async (event) => {
                   />
                 </div>
               </div>
-
               <div>
                 <button
                   type="submit"
@@ -373,7 +359,6 @@ const handleRegister = async (event) => {
                   Set Password
                 </button>
               </div>
-
               <div className="text-center mt-6">
                 <a
                   href="#"

@@ -29,6 +29,7 @@ import Upload_doc_intern from './page/intern/upload_doc_intern';
 function App() {
   return (
     <div className="App">
+      {/* <AuthProvider> */}
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -57,6 +58,7 @@ function App() {
           <Route path="/BLProject" element={<BLProject />} /> */}
         </Routes>
       </Router>
+      {/* </AuthProvider> */}
     </div>
   );
 }

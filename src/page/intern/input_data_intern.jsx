@@ -12,13 +12,14 @@ function input_data_intern() {
     const [firstNameEng, setFirstNameEng] = useState('');
     const [lastNameEng, setLastNameEng] = useState('');
     const [nicknameEng, setNicknameEng] = useState('');
+    const [internId, setInternId] = useState('');
     const [age, setAge] = useState('');
     const [birthDate, setBirthDate] = useState('');
     const [idCard, setIdCard] = useState('');
     const [nationality, setNationality] = useState('');
     const [religion, setReligion] = useState('');
     const [phone, setPhone] = useState('');
-    const [facebook, setFacebook] = useState('');
+    // const [facebook, setFacebook] = useState('');
     const [lineId, setLineId] = useState('');
     const [email2, setEmail2] = useState('');
     const [email3, setEmail3] = useState('');
@@ -64,13 +65,14 @@ function input_data_intern() {
         formData.append('firstNameEng', firstNameEng);
         formData.append('lastNameEng', lastNameEng);
         formData.append('nicknameEng', nicknameEng);
+        formData.append('internid', internId);
         formData.append('age', age);
         formData.append('birthDate', birthDate);
         formData.append('idCard', idCard);
         formData.append('nationality', nationality);
         formData.append('religion', religion);
         formData.append('phone', phone);
-        formData.append('facebook', facebook);
+        // formData.append('facebook', facebook);
         formData.append('lineId', lineId);
         formData.append('email2', email2);
         formData.append('email3', email3);
@@ -107,7 +109,7 @@ function input_data_intern() {
             if (response.data && response.data.status === 'success') {
                 alert(response.data.message || 'ข้อมูลบันทึกสำเร็จ!');
             } else {
-                alert(response.data.message || 'ข้อมูลบันทึกสำเร็จ');
+                alert(response.data.message || 'ข้อมูลบันทึกไม่สำเร็จ');
             }
         })
         .catch((error) => {
@@ -179,6 +181,10 @@ function input_data_intern() {
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={nicknameEng} onChange={(e) => setNicknameEng(e.target.value)} placeholder="Nickname" required />
                         </div>
                         <div>
+                            <label className="block text-2xl font-medium text-gray-700">รหัสนักศึกษาฝึกงาน<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={internId} onChange={(e) => setInternId(e.target.value)} placeholder="โปรดระบุ" required />
+                        </div>
+                        <div>
                             <label className="block text-2xl font-medium text-gray-700">อายุ<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={age} onChange={(e) => setAge(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
@@ -202,10 +208,10 @@ function input_data_intern() {
                             <label className="block text-2xl font-medium text-gray-700">เบอร์โทรศัพท์<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div>
+                        {/* <div>
                             <label className="block text-2xl font-medium text-gray-700">Facebook<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="โปรดระบุ" required />
-                        </div>
+                        </div> */}
                         <div>
                             <label className="block text-2xl font-medium text-gray-700">ID Line<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={lineId} onChange={(e) => setLineId(e.target.value)} placeholder="โปรดระบุ" required />
@@ -498,7 +504,7 @@ function input_data_intern() {
                             </div>
                         )}
                         
-                        <button className="mt-8 col-span-4  text-white py-3 px-6 rounded-md shadow-sm " type="submit" style={{ backgroundColor: 'rgb(104, 172, 1)' }}>
+                        <button className="mt-8 col-span-4  text-white py-1 px-4 rounded-md shadow-sm " type="submit" style={{ backgroundColor: 'rgb(104, 172, 1)' }}>
                             บันทึกข้อมูล
                         </button>
                     </div>

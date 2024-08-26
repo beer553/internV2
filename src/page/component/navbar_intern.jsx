@@ -18,6 +18,16 @@ const NavbarIntern = () => {
         }
     }, []);
 
+    // ฟังก์ชันสำหรับทำการ Logout
+    const handleLogout = () => {
+        // ล้างข้อมูลใน localStorage
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+
+        // นำผู้ใช้กลับไปที่หน้า login
+        window.location.href = '/';
+    };
+
     // ตรวจสอบ role และกำหนดข้อความที่จะแสดง
     const roleDisplay = role === 'intern' ? 'Team Development' : role === 'mentor' ? 'Scrum Master' : 'Unknown Role';
 
@@ -44,7 +54,7 @@ const NavbarIntern = () => {
                         <p style={{color:'#c0c0c0'}}>{username}</p>
                     </div>
                     <div className="bg-white w-px h-16 mx-4"></div>
-                    <a href="logout.php" className="text-white mr-12">Logout</a>
+                    <button onClick={handleLogout} className="text-white mr-12">Logout</button>
                 </div>
             </div>
         </>
