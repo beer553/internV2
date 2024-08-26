@@ -15,14 +15,15 @@ import './App.css';
 // import Welcome3 from './page/intern/welcome3';
 // import Project from './page/mentor/project';
 // import Assignproject from './page/mentor/assignproject'
-// import Scrum from './page/mentor/srcum';
-// import ScrumDiary from './page/mentor/scrumdiary';
 // import Homepage_1 from './page/mentor/Homepage_1';
 // import Input_data_intern from './page/intern/input_data_intern';
+    import Dailyscrum from './page/subpage/Dailyscrum';
+    import AssignPJ from './page/subpage/AssignPJ';
     import IDP from './page/subpage/IDP';
     import PDBacklog from './page/subpage/PDBacklog';
     import BLProject from './page/subpage/BLProject';
     import Homepage from './page/subpage/Homepage';
+    import Project from './page/subpage/Project';
 
    
 
@@ -45,14 +46,15 @@ function App() {
           {/* <Route path="/welcome3" element={<Welcome3 />} /> */}
           {/* <Route path="/project" element={<Project />} /> */}
           {/* <Route path="/assignproject" element={<Assignproject />} /> */}
-          {/* <Route path="/scrum" element={<Scrum />} /> */}
-          {/* <Route path="/scrumdiary" element={<ScrumDiary />} />  */}
           {/* <Route path="/Homepage_1" element={<Homepage_1 />} /> */}
           {/* <Route path="/input_data_intern" element={<Input_data_intern />} /> */}
+          <Route path="/Dailyscrum" element={<Dailyscrum />} /> 
+          <Route path="/AssignPJ" element={<AssignPJ />} />
           <Route path="/IDP" element={<IDP />} />
           <Route path="/Homepage" element={<Homepage />} />
           <Route path="/PDBacklog" element={<PDBacklog />} />
           <Route path="/BLProject" element={<BLProject />} />
+          <Route path="/Project" element={<Project />} />
         </Routes>
       </Router>
     </div>

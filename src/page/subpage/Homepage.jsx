@@ -2,12 +2,12 @@ import React from 'react';
 import './Homepage.css';
 import { useNavigate } from 'react-router-dom'; // นำเข้า useNavigate สำหรับการนำทางไปยังหน้าต่างๆ
 import Footer from '../component/footer'; // นำเข้า Footer component
-import NavbarIntern from '../component/navbar_intern'; // นำเข้า NavbarIntern component
+import NavbarMentor from '../component/navbar_mentor'; // 
 
 function Homepage() {
   const navigate = useNavigate(); // สร้างตัวแปร navigate เพื่อใช้ในการเปลี่ยนหน้า
 
-  // ฟังก์ชันสำหรับนำทางไปยังหน้าโปรไฟล์
+  // ฟังก์ชันสำหรับนำทางไปยังหน้า IDP
   const goToPofilePage = () => {
     navigate('/IDP');
   };
@@ -17,10 +17,20 @@ function Homepage() {
     navigate('/PDBacklog');
   };
 
+  // ฟังก์ชันสำหรับนำทางไปยังหน้า Project
+  const gotoProject = () => {
+    navigate('/Project');
+  };
+
+  // ฟังก์ชันสำหรับนำทางไปยังหน้า Scrum
+  const gotoDailyscrum = () => {
+    navigate('/Dailyscrum');
+  };
+
   return (
     <div>
       <header>
-        <NavbarIntern /> {/* แสดง NavbarIntern */}
+        <NavbarMentor /> {/* แสดง NavbarIntern */}
       </header>
 
       <div className="dashboard">
@@ -49,10 +59,10 @@ function Homepage() {
                 <span>2</span> {/* จำนวนโปรเจกต์ */}
               </div>
               <div className="project-details">
-                <div className="project-item">
+                <div className="project-item" onClick={gotoProject}>
                   <span>Project</span> {/* คำว่า Project */}
                 </div>
-                <div className="project-item2">
+                <div className="project-item2" onClick={gotoDailyscrum }>
                   <span>Daily Scrum</span> {/* คำว่า Daily Scrum */}
                 </div>
               </div>
@@ -110,9 +120,9 @@ function Homepage() {
                   <td className={row.status.toLowerCase()}>{row.status}</td> {/* แสดงสถานะของนักศึกษา */}
                   <td>{row.timeline}</td> {/* แสดงระยะเวลาฝึกงาน */}
                   <td>{row.project}</td> {/* แสดงโปรเจกต์ที่นักศึกษาทำ */}
-                  <td><button> <img className='file' src="https://cdn-icons-png.flaticon.com/128/1157/1157026.png" alt="Profile" onClick={goToPofilePage} /></button></td> {/* ปุ่มเปิดโปรไฟล์ */}
-                  <td><img className='sprint' src="https://cdn-icons-png.flaticon.com/128/4727/4727519.png" alt="Sprint Review" /></td> {/* ไอคอน Sprint Review */}
-                  <td><img className='Eva' src="https://cdn-icons-png.flaticon.com/128/334/334345.png" alt="Evaluate" /></td> {/* ไอคอน Evaluate */}
+                  <td><button> <img className='file' src="/src//img/img_icon/folder.png" alt="Profile" onClick={goToPofilePage} /></button></td> {/* ปุ่มเปิดโปรไฟล์ */}
+                  <td><img className='sprint' src="/src/img/img_icon/review.png" alt="Sprint Review" /></td> {/* ไอคอน Sprint Review */}
+                  <td><img className='Eva' src="/src/img/img_icon/evaluate.png" alt="Evaluate" /></td> {/* ไอคอน Evaluate */}
                 </tr>
               ))}
             </tbody>

@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './IDP.css';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../component/footer';
-import NavbarIntern from '../component/navbar_intern';
+import NavbarMentor from '../component/navbar_mentor';
+import ImageModal from '../component/ImageModal';
 
 const Profile = () => {
   const navigate = useNavigate();
+  const [modalImageUrl, setModalImageUrl] = useState(null); // เพิ่ม state สำหรับเก็บ URL ของรูปภาพในโมดอล
 
   // ฟังก์ชันเพื่อกลับไปยังหน้า Homepage
   const Home = () => {
     navigate('/Homepage');
+  };
+
+  // ฟังก์ชันสำหรับเปิดโมดอลเมื่อคลิกที่รูปภาพ
+  const openModal = (imageUrl) => {
+    setModalImageUrl(imageUrl);
+  };
+
+  // ฟังก์ชันสำหรับปิดโมดอล
+  const closeModal = () => {
+    setModalImageUrl(null);
   };
 
   return (
@@ -17,7 +29,7 @@ const Profile = () => {
       <div>
         {/* ส่วน Header สำหรับ Navbar */}
         <header>
-          <NavbarIntern />
+          <NavbarMentor />
         </header>
         
         <main className="main-content">
@@ -25,12 +37,19 @@ const Profile = () => {
           <section className="personal-info">
             {/* รูปโปรไฟล์และรายละเอียดส่วนตัว */}
             <div className="personal-info-1">
-              <img src="/src/img/profile_IDP.png" className="profile-picture" alt="Profile" />
+              {/* เพิ่ม onClick เพื่อเปิดโมดอลเมื่อคลิกที่รูปภาพ */}
+              <img 
+                src="/src/img/profile_teerapat.png" 
+                className="profile-picture" 
+                alt="Profile"
+                onClick={() => openModal('/src/img/profile_IDP.png')}
+                style={{ cursor: 'pointer' }} // เพิ่ม cursor เป็น pointer เพื่อบอกผู้ใช้ว่ารูปภาพคลิกได้
+              />
               <div className="info">
                 <h2 className="data">ข้อมูลส่วนตัว</h2>
                 <p><strong>ID :</strong> G001-12345</p>
                 <p><strong>ชื่อ - นามสกุล :</strong> นายธีรภัทร์ วั่นเล่ง</p>
-                <p><strong>ชื่อเล่น :</strong> แดน</p>
+                <p><strong>ชื่อเล่น :</strong> แดนนี่</p>
                 <p><strong>อายุ :</strong> 19 ปี</p>
                 <p><strong>วันเกิด :</strong> 18 / 06 / 2548</p>
                 <p><strong>สัญชาติ :</strong> ไทย</p>
@@ -174,6 +193,7 @@ const Profile = () => {
         </main>
       </div>
       <Footer />
+      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={closeModal} /> {/* แสดง modal สำหรับรูปภาพ */}
     </>
   );
 };
