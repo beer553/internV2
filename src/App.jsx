@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-// import Home from './page/intern/home';
 // import Login from './page/intern/login';
 // import Apply from './page/intern/Apply';
 // import Benefit from './page/intern/benefit';
@@ -13,17 +12,16 @@ import './App.css';
 // import Welcome from './page/intern/welcome';
 // import Welcome2 from './page/intern/welcome2';
 // import Welcome3 from './page/intern/welcome3';
-// import Project from './page/mentor/project';
-// import Assignproject from './page/mentor/assignproject'
 // import Homepage_1 from './page/mentor/Homepage_1';
 // import Input_data_intern from './page/intern/input_data_intern';
-    import Dailyscrum from './page/subpage/Dailyscrum';
-    import AssignPJ from './page/subpage/AssignPJ';
-    import IDP from './page/subpage/IDP';
-    import PDBacklog from './page/subpage/PDBacklog';
-    import BLProject from './page/subpage/BLProject';
-    import Homepage from './page/subpage/Homepage';
-    import Project from './page/subpage/Project';
+    import Home from './page/intern/home';
+    import Dailyscrum from './page/mentor/Dailyscrum';
+    import AssignPJ from './page/mentor/AssignPJ';
+    import IDP from './page/mentor/IDP';
+    import PDBacklog from './page/mentor/PDBacklog';
+    import BLProject from './page/mentor/BLProject';
+    import Homepage from './page/mentor/Homepage';
+    import Project from './page/mentor/Project';
 
    
 
@@ -32,7 +30,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<Home />} />
           {/* <Route path="/login" element={<Login />} /> */}
           {/* <Route path="/apply" element={<Apply />} /> */}
           {/* <Route path="/benefit" element={<Benefit />} /> */}
@@ -48,6 +46,7 @@ function App() {
           {/* <Route path="/assignproject" element={<Assignproject />} /> */}
           {/* <Route path="/Homepage_1" element={<Homepage_1 />} /> */}
           {/* <Route path="/input_data_intern" element={<Input_data_intern />} /> */}
+          <Route path="/Home" element={<Home />} /> 
           <Route path="/Dailyscrum" element={<Dailyscrum />} /> 
           <Route path="/AssignPJ" element={<AssignPJ />} />
           <Route path="/IDP" element={<IDP />} />

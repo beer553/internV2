@@ -9,10 +9,6 @@ const Profile = () => {
   const navigate = useNavigate();
   const [modalImageUrl, setModalImageUrl] = useState(null); // เพิ่ม state สำหรับเก็บ URL ของรูปภาพในโมดอล
 
-  // ฟังก์ชันเพื่อกลับไปยังหน้า Homepage
-  const Home = () => {
-    navigate('/Homepage');
-  };
 
   // ฟังก์ชันสำหรับเปิดโมดอลเมื่อคลิกที่รูปภาพ
   const openModal = (imageUrl) => {
