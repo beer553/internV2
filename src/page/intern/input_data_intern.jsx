@@ -36,6 +36,7 @@ function input_data_intern() {
     const [hobbies, setHobbies] = useState('');
     const [specialSkills, setSpecialSkills] = useState('');
     const [position, setPosition] = useState('');
+    const [section, setSection] = useState('');
     const [goodjob, setGoodjob] = useState('');
     const [otherJob, setOtherJob] = useState('');
     const [program, setprogram] = useState([]);
@@ -89,6 +90,7 @@ function input_data_intern() {
         formData.append('hobbies', hobbies);
         formData.append('specialSkills', specialSkills);
         formData.append('position', position);
+        formData.append('section', section);
         formData.append('goodjob', goodjob);
         formData.append('otherJob', otherJob);
         formData.append('program', program.join(', '));
@@ -276,13 +278,17 @@ function input_data_intern() {
                             <label className="block text-2xl font-medium text-gray-700">งานอดิเรก<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={hobbies} onChange={(e) => setHobbies(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div>
+                        <div className="col-span-2">
                             <label className="block text-2xl font-medium text-gray-700">ความสามารถพิเศษ<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={specialSkills} onChange={(e) => setSpecialSkills(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div className="col-span-2">
+                        <div >
                             <label className="block text-2xl font-medium text-gray-700">ตำแหน่งที่สมัคร<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={position} onChange={(e) => setPosition(e.target.value)} placeholder="โปรดระบุ" required />
+                        </div>
+                        <div >
+                            <label className="block text-2xl font-medium text-gray-700">หน่วยงานที่ฝึก<span style={{ color: 'red' }}>*</span></label>
+                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={section} onChange={(e) => setSection(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
                         <div className="col-span-4">
                             <label className="block text-2xl font-medium text-gray-700">โปรดเลือกสายงานที่ถนัด<span style={{ color: 'red' }}>*</span></label>

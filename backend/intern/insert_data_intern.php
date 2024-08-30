@@ -68,9 +68,9 @@ try {
     // เตรียมคำสั่ง SQL สำหรับการบันทึกข้อมูล
     $stmt = $con->prepare("
         INSERT INTO intern_info (
-            title, firstName, lastName, nickname, titleEng, firstNameEng, lastNameEng, nicknameEng, user_id, age, birthDate, idCard, nationality, religion, phone, lineId, email2, email3, gender, mentor, address, currentAddress, currentEducation, faculty, major, educationLevel, educationLevell, gpa, hobbies, specialSkills, position, goodjob, otherJob, program, otherprogram, datestart, dateend, profile, resume, transcript, otherFiles
+            title, firstName, lastName, nickname, titleEng, firstNameEng, lastNameEng, nicknameEng, user_id, age, birthDate, idCard, nationality, religion, phone, lineId, email2, email3, gender, mentor, address, currentAddress, currentEducation, faculty, major, educationLevel, educationLevell, gpa, hobbies, specialSkills, position, section, goodjob, otherJob, program, otherprogram, datestart, dateend, profile, resume, transcript, otherFiles
         ) VALUES (
-            :title, :firstName, :lastName, :nickname, :titleEng, :firstNameEng, :lastNameEng, :nicknameEng, :internid, :age, :birthDate, :idCard, :nationality, :religion, :phone, :lineId, :email2, :email3, :gender, :mentor, :address, :currentAddress, :currentEducation, :faculty, :major, :educationLevel, :educationLevell, :gpa, :hobbies, :specialSkills, :position, :goodjob, :otherJob, :program, :otherprogram, :datestart, :dateend, :profile, :resume, :transcript, :otherFiles
+            :title, :firstName, :lastName, :nickname, :titleEng, :firstNameEng, :lastNameEng, :nicknameEng, :internid, :age, :birthDate, :idCard, :nationality, :religion, :phone, :lineId, :email2, :email3, :gender, :mentor, :address, :currentAddress, :currentEducation, :faculty, :major, :educationLevel, :educationLevell, :gpa, :hobbies, :specialSkills, :position, :section, :goodjob, :otherJob, :program, :otherprogram, :datestart, :dateend, :profile, :resume, :transcript, :otherFiles
         )
     ");
 
@@ -107,6 +107,7 @@ try {
     $stmt->bindParam(':hobbies', $_POST['hobbies']);
     $stmt->bindParam(':specialSkills', $_POST['specialSkills']);
     $stmt->bindParam(':position', $_POST['position']);
+    $stmt->bindParam(':section', $_POST['section']);
     $stmt->bindParam(':goodjob', $_POST['goodjob']);
     $stmt->bindParam(':otherJob', $_POST['otherJob']);
     $stmt->bindParam(':program', $_POST['program']);

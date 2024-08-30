@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful',
-                'role' => $user['role'] // ส่ง role กลับไปเพื่อใช้ในการจัดการสิทธิ์
+                'role' => $user['role'], // ส่ง role กลับไปเพื่อใช้ในการจัดการสิทธิ์
+                'user_id'=> $user['user_id']
             ]);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Invalid username or password']);

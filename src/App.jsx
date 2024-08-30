@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import { AuthProvider } from './context/AuthContext';
 import Home from './page/intern/home';
 import Login from './page/login';
 // import Apply from './page/intern/Apply';
@@ -29,7 +30,7 @@ import Upload_doc_intern from './page/intern/upload_doc_intern';
 function App() {
   return (
     <div className="App">
-      {/* <AuthProvider> */}
+      <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -58,7 +59,7 @@ function App() {
           <Route path="/BLProject" element={<BLProject />} /> */}
         </Routes>
       </Router>
-      {/* </AuthProvider> */}
+      </AuthProvider>
     </div>
   );
 }
