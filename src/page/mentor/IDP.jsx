@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './IDP.css';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../component/footer';
 import NavbarMentor from '../component/navbar_mentor';
@@ -7,181 +6,333 @@ import ImageModal from '../component/ImageModal';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const [modalImageUrl, setModalImageUrl] = useState(null); // เพิ่ม state สำหรับเก็บ URL ของรูปภาพในโมดอล
+  const [modalImageUrl, setModalImageUrl] = useState(null);
+  const [checkboxState, setCheckboxState] = useState({
+    frontend: true,
+    backend: false,
+    fullstack: false,
+    dataAnalysis: false,
+    dataManagement: false,
+    other: false,
+    figma: true,
+    react: true,
+    php: false,
+    vsCode: true,
+    sqlServer: false,
+    docker: false,
+  });
 
-
-  // ฟังก์ชันสำหรับเปิดโมดอลเมื่อคลิกที่รูปภาพ
   const openModal = (imageUrl) => {
     setModalImageUrl(imageUrl);
   };
 
-  // ฟังก์ชันสำหรับปิดโมดอล
   const closeModal = () => {
     setModalImageUrl(null);
   };
 
+  const handleCheckboxChange = (id) => {
+    setCheckboxState((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
+
+  const renderCheckbox = (id, label, checked, disabled) => (
+    <div className="flex items-center ml-1">
+      <input
+        type="checkbox"
+        id={id}
+        name={id}
+        checked={checked}
+        disabled={disabled}
+        onChange={() => handleCheckboxChange(id)}
+        className={`w-6 h-6 rounded border-2 ${checked ? 'bg-green-500 border-green-500' : 'bg-white border-gray-500'}`}
+      />
+      {checked && (
+        <span className="absolute w-2 h-3 border-white border-r-2 border-b-2 transform rotate-45 top-1 left-1"></span>
+      )}
+      <label htmlFor={id} className="ml-2 text-[20px] text-gray-800">
+        {label}
+      </label>
+    </div>
+  );
+
   return (
     <>
       <div>
-        {/* ส่วน Header สำหรับ Navbar */}
         <header>
           <NavbarMentor />
         </header>
-        
-        <main className="main-content">
-          {/* ข้อมูลส่วนตัว */}
-          <section className="personal-info">
-            {/* รูปโปรไฟล์และรายละเอียดส่วนตัว */}
-            <div className="personal-info-1">
-              {/* เพิ่ม onClick เพื่อเปิดโมดอลเมื่อคลิกที่รูปภาพ */}
-              <img 
-                src="/src/img/profile_teerapat.png" 
-                className="profile-picture" 
+
+        <main className="p-5">
+          <section className="flex justify-center mb-5">
+            <div className="flex p-5">
+              <img
+                src="/src/img/profile_teerapat.png"
+                className="w-96 h-96 rounded-lg mt-12 mr-16 cursor-pointer"
                 alt="Profile"
-                onClick={() => openModal('/src/img/profile_IDP.png')}
-                style={{ cursor: 'pointer' }} // เพิ่ม cursor เป็น pointer เพื่อบอกผู้ใช้ว่ารูปภาพคลิกได้
+                onClick={() => openModal('/src/img/profile_teerapat.png')}
               />
-              <div className="info">
-                <h2 className="data">ข้อมูลส่วนตัว</h2>
-                <p><strong>ID :</strong> G001-12345</p>
+              <div className="text-left text-black">
+                <h2 className="bg-orange-500 text-white p-2 rounded-lg text-center mb-5">ข้อมูลส่วนตัว</h2>
+                <p><strong>ID :</strong> 0001-123456</p>
                 <p><strong>ชื่อ - นามสกุล :</strong> นายธีรภัทร์ วั่นเล่ง</p>
                 <p><strong>ชื่อเล่น :</strong> แดนนี่</p>
                 <p><strong>อายุ :</strong> 19 ปี</p>
                 <p><strong>วันเกิด :</strong> 18 / 06 / 2548</p>
                 <p><strong>สัญชาติ :</strong> ไทย</p>
                 <p><strong>เบอร์มือถือ :</strong> 082-337-9677</p>
-                {/* แถบแสดงลายเส้นที่ตกแต่งหน้าโปรไฟล์ */}
-                <div className="pattern-container">
+                <div className="flex gap-2 mt-5">
                   {Array.from({ length: 13 }).map((_, index) => (
-                    <div key={index} className="pattern-bar"></div>
+                    <div key={index} className="w-4 h-11 bg-orange-500"></div>
                   ))}
                 </div>
               </div>
             </div>
           </section>
 
-          {/* ข้อมูลการสมัครงาน */}
-          <div className="form-container">
-            <div className="form-group">
-              <label>ตำแหน่งที่สมัคร</label>
-              <input type="text" placeholder="Digital Information" className="form-control" readOnly />
+          <div className="flex justify-between bg-white p-5 rounded-lg mb-5">
+            <div className="flex flex-col mb-4">
+              <label className="mb-1 text-[25px] text-left text-gray-800">ตำแหน่งที่สมัคร</label>
+              <input
+                type="text"
+                placeholder="Digital Information"
+                className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
+                readOnly
+              />
             </div>
-            <div className="form-group">
-              <label>สถานศึกษาปัจจุบัน</label>
-              <input type="text" placeholder="วิทยาลัยเทคนิคทุ่งสง" className="form-control" readOnly />
+            <div className="flex flex-col mb-4">
+              <label className="mb-1 text-[25px] text-left text-gray-800">สถานศึกษาปัจจุบัน</label>
+              <input
+                type="text"
+                placeholder="วิทยาลัยเทคนิคทุ่งสง"
+                className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
+                readOnly
+              />
             </div>
-            <div className="form-group">
-              <label>วันเดือนปีเริ่มฝึกงาน</label>
-              <input type="text" placeholder='13/5/2567' className="form-control" readOnly />
+            <div className="flex flex-col mb-4">
+              <label className="mb-1 text-[25px] text-left text-gray-800">วันเดือนปีเริ่มฝึกงาน</label>
+              <input
+                type="text"
+                placeholder="13/5/2567"
+                className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
+                readOnly
+              />
             </div>
-            <div className="form-group">
-              <label>วันเดือนปีฝึกงานวันสุดท้าย</label>
-              <input type="text" placeholder='31/1/2568' className="form-control" readOnly />
+            <div className="flex flex-col mb-4">
+              <label className="mb-1 text-[25px] text-left text-gray-800">วันเดือนปีฝึกงานวันสุดท้าย</label>
+              <input
+                type="text"
+                placeholder="31/1/2568"
+                className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
+                readOnly
+              />
             </div>
-            {/* การแสดงค่า GPA รวม */}
-            <div className="form-group gpa-group">
-              <label>GPA รวม</label>
-              <div className="gpa-display">4.00</div>
+            <div className="flex flex-col mb-4">
+              <label className="mb-1 text-[25px] text-left text-gray-800">GPA รวม</label>
+              <div className="border-2 border-green-600 rounded-lg p-2.5 text-[20px] text-green-600 w-64 text-center">
+                4.00
+              </div>
             </div>
           </div>
 
-          {/* เนื้อหาของฟอร์มด้านซ้ายและขวา */}
-          <div className="form-body">
-            <div className="form-left">
-              {/* ลิงก์สำหรับดู Resume, Transcript และข้อมูลอื่นๆ */}
-              <div className="form-section">
-                <a href="#resume">ดู Resume</a>
-                <img src="/src/img/img_icon/resume.png" className="icon" alt="Resume" />
+          <div className="flex justify-between">
+            <div className="flex-1 p-5 rounded-lg mx-2">
+              <div className="flex items-center mb-11">
+                <p className="text-[25px] text-black text-left">ดู Resume</p>
+                <img
+                  src="/src/img/img_icon/resume.png"
+                  className="w-10 h-10 ml-[330px]"
+                  alt="Resume"
+                />
               </div>
-              <div className="form-section">
-                <a href="#transcript">ดู Transcript</a>
-                <img src="/src/img/img_icon/transcript.png" className="icon" alt="Transcript" />
+              <div className="flex items-center mb-11">
+                <p className="text-[25px] text-black text-left">ดู Transcript</p>
+                <img
+                  src="/src/img/img_icon/transcription.png"
+                  className="w-10 h-10 ml-[308px]"
+                  alt="Transcript"
+                />
               </div>
-              <div className="form-section">
-                <a href="#additional-info">ดูประวัติส่วนตัวเพิ่มเติม</a>
-                <img src="/src/img/img_icon/user.png" className="icon" alt="Profile" />
+              <div className="flex items-center mb-11">
+                <p className="text-[25px] text-black text-left">ดูประวัติส่วนตัวเพิ่มเติม</p>
+                <img
+                  src="/src/img/img_icon/profile.png"
+                  className="w-10 h-10 ml-[240px]"
+                  alt="Profile"
+                />
               </div>
-              <div className="form-section">
-                <a href="#project-sample">ตัวอย่าง Project ที่เคยทำมา (โปรดส่งเป็นไฟล์ PDF)</a>
-                <img src="/src/img/img_icon/project.png" className="icon" alt="Project" />
+              <div className="flex items-center mb-11">
+                <p className="text-[25px] text-black text-left">
+                  ตัวอย่าง Project ที่เคยทำมา (โปรดส่งเป็นไฟล์ PDF)
+                </p>
+                <img
+                  src="/src/img/img_icon/project.png"
+                  className="w-10 h-10 ml-[38px]"
+                  alt="Project"
+                />
               </div>
-              <div className="form-section">
-                <a href="#github-link">ผลงาน link GitHub <span className='text-red-500'>*ถ้ามี</span></a> 
-                <img src="/src/img/img_icon/link.png" className="icon" alt="Github" />
+              <div className="flex items-center mb-11">
+                <p className="text-[25px] text-black text-left">
+                  ผลงาน link GitHub <span className="text-red-500">*ถ้ามี</span>
+                </p>
+                <img
+                  src="/src/img/img_icon/github.png"
+                  className="w-10 h-10 ml-[228px]"
+                  alt="Github"
+                />
               </div>
             </div>
 
-            {/* ฟอร์มด้านขวาสำหรับการกรอกเป้าหมายและเลือกความถนัด */}
-            <div className="form-right">
-              {/* กรอกเป้าหมาย */}
-              <div className="form-group">
-                <label>โปรดกรอกเป้าหมาย</label>
-                <textarea className="t-please" readOnly>
+            <div className="flex-1 p-5 rounded-lg mx-2">
+              <div className="flex flex-col mb-4">
+                <label className="mb-1 text-[25px] text-left text-gray-800">โปรดกรอกเป้าหมาย</label>
+                <textarea
+                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-2 w-full h-28 resize-none"
+                  readOnly
+                >
                   อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ
                 </textarea>
               </div>
-              {/* เลือกงานสายงานที่ถนัด (Frontend ถูกติ๊กไว้แล้ว) */}
-              <div className="form-group">
-                <label>โปรดเลือกงานสายงานที่ถนัด</label>
-                <div className="label-check">
-                  <div>
-                    <input type="checkbox" id="frontend" name="frontend" checked/>
-                    <label htmlFor="frontend" >Frontend</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="backend" name="backend" disabled/>
-                    <label htmlFor="backend">Backend</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="full-stack" name="full-stack" disabled/>
-                    <label htmlFor="full-stack">Full Stack</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="data-analysis" name="data-analysis" disabled/>
-                    <label htmlFor="data-analysis">Data Analysis</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="data-management" name="data-management" disabled/>
-                    <label htmlFor="data-management">Data Management</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="other" name="other" disabled/>
-                    <label htmlFor="other">อื่นๆ</label>
-                  </div>
+              <div className="flex flex-col mb-4">
+                <label className="mb-1 text-[25px] text-left text-gray-800">โปรดเลือกงานสายงานที่ถนัด</label>
+                <div className="grid grid-cols-3 gap-y-4 text-[20px]">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="frontend"
+                      checked={checkboxState.frontend}
+                      disabled={false}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    Frontend
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="backend"
+                      checked={checkboxState.backend}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    Backend
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="full-stack"
+                      checked={checkboxState.fullstack}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    Full Stack
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="data-analysis"
+                      checked={checkboxState.dataAnalysis}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    Data Analysis
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="data-management"
+                      checked={checkboxState.dataManagement}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    Data Management
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="other"
+                      checked={checkboxState.other}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    อื่นๆ
+                  </label>
                 </div>
               </div>
-              {/* เลือกโปรแกรมหรืองานที่ถนัดที่สุด (Figma, React, และ VS Code ถูกติ๊กไว้แล้ว) */}
-              <div className="form-group">
-                <label>โปรแกรมหรืองานที่ถนัด (3 อย่างที่ถนัดที่สุด)</label>
-                <div className="label-check-2">
-                  <div>
-                    <input type="checkbox" id="figma" name="figma" checked/>
-                    <label htmlFor="figma">Figma</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="react" name="react" checked/>
-                    <label htmlFor="react">React</label>
-                  </div>
-                  <div >
-                    <input type="checkbox" id="php" name="php" disabled />
-                    <label htmlFor="php">PHP</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="vs-code" name="vs-code" checked/>
-                    <label htmlFor="vs-code">VS Code</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="sql-server" name="sql-server" disabled/>
-                    <label htmlFor="sql-server">SQL Server</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="docker" name="docker" disabled/>
-                    <label htmlFor="docker">Docker</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="other-tool" name="other-tool" disabled/>
-                    <label htmlFor="other-tool">อื่นๆ</label>
-                  </div>
+
+              <div className="flex flex-col">
+                <label className="mb-1 text-[25px] text-left text-gray-800">โปรแกรมหรืองานที่ถนัด (3 อย่างที่ถนัดที่สุด)</label>
+                <div className="grid grid-cols-3 gap-y-4 text-[20px]">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="figma"
+                      checked={checkboxState.figma}
+                      disabled={false}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    Figma
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="react"
+                      checked={checkboxState.react}
+                      disabled={false}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    React
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="php"
+                      checked={checkboxState.php}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    PHP
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="vs-code"
+                      checked={checkboxState.vsCode}
+                      disabled={false}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    VS Code
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="sql-server"
+                      checked={checkboxState.sqlServer}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    SQL Server
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="docker"
+                      checked={checkboxState.docker}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    Docker
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="other"
+                      checked={checkboxState.other}
+                      disabled={true}
+                      className="mr-2 h-5 w-5 rounded-md"
+                    />
+                    อื่นๆ
+                  </label>
                 </div>
               </div>
             </div>
@@ -189,7 +340,7 @@ const Profile = () => {
         </main>
       </div>
       <Footer />
-      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={closeModal} /> {/* แสดง modal สำหรับรูปภาพ */}
+      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={closeModal} />
     </>
   );
 };

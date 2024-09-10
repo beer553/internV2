@@ -1,77 +1,82 @@
 import React from 'react';
-import './PDBacklog.css'; // นำเข้าไฟล์ CSS สำหรับจัดการรูปแบบของหน้า
-import { useNavigate } from 'react-router-dom'; // นำเข้า useNavigate สำหรับการนำทางไปยังหน้าต่างๆ
-import NavbarMentor from '../component/navbar_mentor'; // นำเข้า NavbarIntern component
-import Footer from '../component/footer'; // นำเข้า Footer component
+import { useNavigate } from 'react-router-dom';
+import NavbarMentor from '../component/navbar_mentor';
+import Footer from '../component/footer';
 
 const ProductBacklog = () => {
-  const navigate = useNavigate(); // สร้างตัวแปร navigate เพื่อใช้ในการเปลี่ยนหน้า
+  const navigate = useNavigate();
 
-  // ฟังก์ชันสำหรับนำทางกลับไปยังหน้า Homepage (เมื่อคลิกที่ปุ่มย้อนกลับ)
   const gotoHomepage = () => {
     navigate('/Homepage');
   };
 
-  // ฟังก์ชันสำหรับนำทางไปยังหน้า BLProject (เมื่อคลิกที่ไอคอน Backlog)
   const gotoBLProject = () => {
     navigate('/BLProject');
   };
 
   return (
-    <div className='body-PDB'>
+    <div className='bg-white'>
       <header>
-        <NavbarMentor /> {/* แสดง NavbarMentor */}
+        <NavbarMentor />
       </header>
-      
-      <main className='main-1'>
-        <div className='BL-img mt-5'>
-          <img src="/src/img/img_icon/backlog.png" alt="ProductBacklog" className='BL' /> {/* รูปภาพสำหรับ Product Backlog */}
-          <div className='BL-1'>Product Backlog</div> {/* ชื่อหน้า Product Backlog */}
-          <div className="back-button-container">
-            <img src="/src/img/img_icon/left-arrow.png" className="back-PDB" onClick={gotoHomepage} /> {/* ปุ่มย้อนกลับไปหน้า Homepage */}
+
+      <main>
+        <div className='flex mt-5 ml-5 text-gray-600'>
+          <div className='text-[80px] ml-20 text-[#5C5A5A] mb-3'>Product Backlog</div>
+          <div className='flex justify-end w-[60%]'>
+            <img src="/src/img/img_icon/left-arrow.png" className="w-8 h-8 mt-16 cursor-pointer" onClick={gotoHomepage} />
           </div>
         </div>
-        <table className='table-1'>
+        <table className='w-[90%] shadow-md rounded-lg mt-3 ml-[75px] text-black'>
           <thead>
             <tr className='linetable'>
-              <th className='th-1'>ลำดับ</th> {/* หัวข้อคอลัมน์: ลำดับ */}
-              <th className='th-1'>วันที่เริ่ม</th> {/* หัวข้อคอลัมน์: วันที่เริ่ม */}
-              <th className='th-1'>กำหนดรับ</th> {/* หัวข้อคอลัมน์: กำหนดรับ */}
-              <th className='th-1'>ชื่อโปรเจค</th> {/* หัวข้อคอลัมน์: ชื่อโปรเจค */}
-              <th className='th-1'>ผู้ดูแล</th> {/* หัวข้อคอลัมน์: ผู้ดูแล */}
-              <th className='th-1'>สถานะ</th> {/* หัวข้อคอลัมน์: สถานะ */}
-              <th className='th-1'>แผนงาน</th> {/* หัวข้อคอลัมน์: แผนงาน */}
-              <th className='th-1'>มอบหมายผู้รับผิดชอบ</th> {/* หัวข้อคอลัมน์: มอบหมายผู้รับผิดชอบ */}
-              <th className='th-1'>Backlog</th> {/* หัวข้อคอลัมน์: Backlog */}
+              <th className='p-2 text-center text-[25px]'>ลำดับ</th>
+              <th className='p-2 text-center text-[25px]'>วันที่เริ่ม</th>
+              <th className='p-2 text-center text-[25px]'>กำหนดรับ</th>
+              <th className='p-2 text-center text-[25px]'>ชื่อโปรเจค</th>
+              <th className='p-2 text-center text-[25px]'>ผู้ดูแล</th>
+              <th className='p-2 text-center text-[25px]'>สถานะ</th>
+              <th className='p-2 text-center text-[25px]'>แผนงาน</th>
+              <th className='p-2 text-center text-[25px]'>มอบหมายผู้รับผิดชอบ</th>
+              <th className='p-2 text-center text-[25px]'>Backlog</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td className='td-1'>1</td> {/* แสดงลำดับที่ 1 */}
-              <td className='td-1'>01/01/2024</td> {/* แสดงวันที่เริ่มต้น */}
-              <td className='td-1'>31/03/2024</td> {/* แสดงวันที่กำหนดรับ */}
-              <td className='td-1'>KM Selg-Learning</td> {/* แสดงชื่อโปรเจค */}
-              <td className='td-1'>สุพรรษา มูลศิริ</td> {/* แสดงชื่อผู้ดูแล */}
-              <td className='td-1'><span className="status active">กำลังดำเนินงาน</span></td> {/* แสดงสถานะของโปรเจค */}
-              <td className='td-1'>...</td> {/* แสดงแผนงาน (ในที่นี้ใช้เป็นสัญลักษณ์ ... เพื่อบอกว่าแผนงานนี้มีข้อมูลเพิ่มเติม) */}
-              <td className='td-1'>น้องแดนนี่, น้องกาฟิวส์, น้องเบียร์</td> {/* แสดงชื่อผู้รับผิดชอบ */}
-              <td><span className="backlog-icon" onClick={gotoBLProject}></span></td> {/* ไอคอน Backlog ที่คลิกได้เพื่อไปยังหน้า BLProject */}
+              <td className='p-2 text-center text-[20px]'>1</td>
+              <td className='p-2 text-center text-[20px]'>01/01/2024</td>
+              <td className='p-2 text-center text-[20px]'>31/03/2024</td>
+              <td className='p-2 text-center text-[20px]'>KM Selg-Learning</td>
+              <td className='p-2 text-center text-[20px]'>สุพรรษา มูลศิริ</td>
+              <td className='p-2 text-center'>
+                <span className="bg-[#4CAF50] text-white px-3 py-1 rounded-full text-[20px]">กำลังดำเนินงาน</span> {/* สถานะโปรเจค */}
+              </td>
+              <td className='p-2 text-center text-[20px]'>...</td>
+              <td className='p-2 text-center text-[20px]'>น้องแดนนี่, น้องกาฟิวส์, น้องเบียร์</td>
+              <td>
+                <span className="block w-9 h-9 mt-2 ml-7 bg-cover cursor-pointer" style={{ backgroundImage: "url('/src/img/img_icon/backlog-white.png')" }} onClick={gotoBLProject}></span>
+              </td>
             </tr>
             <tr>
-              <td className='td-1'>2</td> {/* แสดงลำดับที่ 2 */}
-              <td className='td-1'>01/01/2024</td> {/* แสดงวันที่เริ่มต้น */}
-              <td className='td-1'>31/03/2024</td> {/* แสดงวันที่กำหนดรับ */}
-              <td className='td-1'>Dashboard License</td> {/* แสดงชื่อโปรเจค */}
-              <td className='td-1'>สุพรรษา มูลศิริ</td> {/* แสดงชื่อผู้ดูแล */}
-              <td className='td-1'><span className="status active">กำลังดำเนินงาน</span></td> {/* แสดงสถานะของโปรเจค */}
-              <td className='td-1'>...</td> {/* แสดงแผนงาน (ในที่นี้ใช้เป็นสัญลักษณ์ ... เพื่อบอกว่าแผนงานนี้มีข้อมูลเพิ่มเติม) */}
-              <td className='td-1'>น้องเจ, น้องณเดช, น้องไนท์</td> {/* แสดงชื่อผู้รับผิดชอบ */}
-              <td><button><span className="backlog-icon" onClick={gotoBLProject}></span></button></td> {/* ไอคอน Backlog ที่คลิกได้เพื่อไปยังหน้า BLProject */}
+              <td className='p-2 text-center text-[20px]'>2</td>
+              <td className='p-2 text-center text-[20px]'>01/01/2024</td>
+              <td className='p-2 text-center text-[20px]'>31/03/2024</td>
+              <td className='p-2 text-center text-[20px]'>Dashboard License</td>
+              <td className='p-2 text-center text-[20px]'>สุพรรษา มูลศิริ</td>
+              <td className='p-2 text-center'>
+                <span className="bg-[#4CAF50] text-white px-3 py-1 rounded-full text-[20px]">กำลังดำเนินงาน</span> {/* สถานะโปรเจค */}
+              </td>
+              <td className='p-2 text-center text-[20px]'>...</td>
+              <td className='p-2 text-center text-[20px]'>น้องเจ, น้องณเดช, น้องไนท์</td>
+              <td>
+                <span className="block w-9 h-9 mt-2 ml-7 bg-cover cursor-pointer" style={{ backgroundImage: "url('/src/img/img_icon/backlog-white.png')" }} onClick={gotoBLProject}></span>
+              </td>
             </tr>
           </tbody>
         </table>
+        <div className='mb-10'></div>
       </main>
-      <Footer /> {/* แสดง Footer */}
+      <Footer />
     </div>
   );
 }

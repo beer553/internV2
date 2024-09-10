@@ -6,17 +6,16 @@ import NavbarMentor from '../component/navbar_mentor';
 import ImageModal from '../component/ImageModal';
 
 const ProductBacklog = () => {
-  const navigate = useNavigate(); // ใช้เพื่อเปลี่ยนหน้าเมื่อคลิกที่ปุ่ม
+  const navigate = useNavigate(); 
 
   const GotoPDBacklog = () => {
-    navigate('/PDBacklog'); // ฟังก์ชันเพื่อเปลี่ยนหน้าไปที่ PDBacklog
+    navigate('/PDBacklog'); 
   };
 
   const GotoDailyscrum = () => {
-    navigate('/Dailyscrum'); // ฟังก์ชันเพื่อเปลี่ยนหน้าไปที่ Dailyscrum
+    navigate('/Dailyscrum'); 
   };
 
-  // ตั้งค่า state สำหรับข้อมูลในตาราง
   const [tableData, setTableData] = useState([
     {
       order: 1,
@@ -35,15 +34,13 @@ const ProductBacklog = () => {
     }
   ]);
 
-  // สร้าง state เพื่อจัดการแถวใหม่ที่ผู้ใช้เพิ่มเข้ามา
   const [newRow, setNewRow] = useState(null);
-  const [editRowIndices, setEditRowIndices] = useState([]); // เก็บ index ของแถวที่กำลังถูกแก้ไข
-  const [orderCounter, setOrderCounter] = useState(tableData.length + 1); // ตัวนับสำหรับหมายเลขออร์เดอร์
-  const [modalImageUrl, setModalImageUrl] = useState(null); // สำหรับจัดการ URL ของรูปภาพในโมดอล
-  const beforeImgRef = useRef([]); // เก็บ reference ของ input ก่อนการแก้ไข
-  const afterImgRef = useRef([]); // เก็บ reference ของ input หลังการแก้ไข
+  const [editRowIndices, setEditRowIndices] = useState([]); 
+  const [orderCounter, setOrderCounter] = useState(tableData.length + 1); 
+  const [modalImageUrl, setModalImageUrl] = useState(null); 
+  const beforeImgRef = useRef([]); 
+  const afterImgRef = useRef([]); 
 
-  // ฟังก์ชันสำหรับเพิ่มแถวใหม่ในตาราง
   const addRow = () => {
     setNewRow({
       order: orderCounter,
@@ -62,29 +59,32 @@ const ProductBacklog = () => {
     });
   };
 
-  // ฟังก์ชันสำหรับบันทึกแถวใหม่ที่ถูกเพิ่มเข้ามา
   const saveRow = () => {
     const requiredFields = ['sprint', 'datestart', 'dateend', 'type', 'detail', 'beforeImg', 'afterImg', 'manday', 'responsible', 'status', 'increment', 'remark'];
     const isValid = requiredFields.every(field => newRow[field]);
 
     if (isValid) {
-      setTableData([...tableData, newRow]); // เพิ่มแถวใหม่เข้าไปในตาราง
-      setNewRow(null); // รีเซ็ตค่าแถวใหม่
-      setOrderCounter(orderCounter + 1); // เพิ่มตัวนับ order
+      setTableData([...tableData, newRow]); 
+      setNewRow(null); 
+      setOrderCounter(orderCounter + 1); 
     } else {
-      alert("กรุณากรอกข้อมูลให้ครบทุกช่องก่อนบันทึก"); // แสดงข้อความเตือนหากข้อมูลไม่ครบ
+      alert("กรุณากรอกข้อมูลให้ครบทุกช่องก่อนบันทึก"); 
     }
   };
 
-  // ฟังก์ชันสำหรับยกเลิกการเพิ่มแถวใหม่
   const cancelRow = () => {
     setNewRow(null);
-
   };
 
-  // ฟังก์ชันสำหรับจัดการการเปลี่ยนแปลงของค่าใน input ของแต่ละแถว
   const handleChange = (e, field, index = null) => {
-    const value = e.target.value;
+    let value = e.target.value;
+
+    // จัดรูปแบบวันที่เป็น "วัน/เดือน/ปี"
+    if (field === 'datestart' || field === 'dateend' || field === 'increment') {
+      const [year, month, day] = value.split('-');
+      value = `${day}/${month}/${year}`;
+    }
+    
     if (index !== null) {
       const updatedTableData = tableData.map((row, i) =>
         i === index ? { ...row, [field]: value } : row
@@ -95,7 +95,6 @@ const ProductBacklog = () => {
     }
   };
 
-  // ฟังก์ชันสำหรับจัดการการเปลี่ยนแปลงของรูปภาพ
   const handleImageChange = (e, field, index = null) => {
     const file = e.target.files[0];
     if (file) {
@@ -111,7 +110,6 @@ const ProductBacklog = () => {
     }
   };
 
-  // ฟังก์ชันสำหรับจัดการการลบรูปภาพ
   const handleImageDelete = (field, index = null) => {
     if (index !== null) {
       const updatedTableData = tableData.map((row, i) =>
@@ -128,58 +126,51 @@ const ProductBacklog = () => {
     }
   };
 
-  // ฟังก์ชันสำหรับแปลงวันที่ให้อยู่ในรูปแบบที่ต้องการ
   const formatDate = (dateString) => {
     if (!dateString) return "";
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-EN', options);
+    const [day, month, year] = dateString.split('/');
+    return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
   };
 
-  // ฟังก์ชันเริ่มต้นการแก้ไขแถว
   const startEdit = (index) => {
-    setEditRowIndices(prevIndices => [...prevIndices, index]); // เพิ่ม index ของแถวที่กำลังแก้ไขลงใน array
+    setEditRowIndices(prevIndices => [...prevIndices, index]); 
   };
 
-  // ฟังก์ชันสำหรับบันทึกการแก้ไขแถว
   const saveEdit = (index) => {
-    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index)); // ลบ index ของแถวที่แก้ไขเสร็จแล้วออกจาก array
+    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index)); 
   };
 
-  // ฟังก์ชันสำหรับลบแถว
   const deleteRow = (index) => {
-    const updatedTableData = tableData.filter((_, i) => i !== index); // กรองแถวที่ไม่ต้องการออก
+    const updatedTableData = tableData.filter((_, i) => i !== index); 
     setTableData(updatedTableData);
-    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index)); // ลบ index ของแถวที่ถูกลบออกจาก array
+    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index)); 
   };
 
-  // ฟังก์ชันสำหรับเปิดโมดอลเพื่อแสดงรูปภาพ
   const openModal = (imageUrl) => {
     setModalImageUrl(imageUrl);
   };
 
-  // ฟังก์ชันสำหรับปิดโมดอล
   const closeModal = () => {
     setModalImageUrl(null);
   };
 
   return (
-    <>
-      <NavbarMentor /> {/* แสดง Navbar */}
+    <div>
+      <NavbarMentor /> 
       <div>
 
         <main className='MBL'>
           <div className='h1-1'>ProductBacklog</div>
           <div className='h2-1'>น้องแดนนี่, น้องกาฟิวส์, น้องเบียร์</div>
           <div className='h3-1'>KM Selg-Learning</div>
-          <div className="flex justify-between items-center w-full mt-10 mb-10">
+          <div className="flex justify-between items-center w-full mt-5 mb-5">
             <img src="/src/img/img_icon/left-arrow.png" className='w-7 ml-10' onClick={GotoPDBacklog} />
-            {/* ปุ่มย้อนกลับหน้า PDBacklog */}
             <img src="/src/img/img_icon/left-arrow.png" className="w-7 mr-10 transform rotate-180" onClick={GotoDailyscrum} />
-            {/* ปุ่มย้อนกลับหน้า Dailyscrum*/}
+            
           </div>
 
           <section className="backlog-table">
-            <div className="table-container">
+            <div className="table-container text-black">
               <table className="fixed-table">
                 <thead >
                   <tr className='linetable'>
@@ -200,15 +191,18 @@ const ProductBacklog = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* แสดงข้อมูลแต่ละแถวในตาราง */}
                   {tableData.map((row, index) => (
                     <tr key={index}>
                       {editRowIndices.includes(index) ? (
                         <>
                           <td>{row.order}</td>
                           <td><input type="number" value={row.sprint} onChange={(e) => handleChange(e, 'sprint', index)} className='IP-1' min="0" step="1" /></td>
-                          <td><input type="date" value={row.datestart} onChange={(e) => handleChange(e, 'datestart', index)} className='IP-2' /></td>
-                          <td><input type="date" value={row.dateend} onChange={(e) => handleChange(e, 'dateend', index)} className='IP-2' /></td>
+                          <td className="relative">
+                            <input type="date" value={row.datestart.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'datestart', index)} className='IP-2 hidden-input' />
+                          </td>
+                          <td className="relative">
+                            <input type="date" value={row.dateend.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'dateend', index)} className='IP-2 hidden-input' />
+                          </td>
                           <td><textarea placeholder="โปรดระบุ" type="text" value={row.type} onChange={(e) => handleChange(e, 'type', index)} className='IP-1' /></td>
                           <td><textarea placeholder="โปรดระบุ" type="text" value={row.detail} onChange={(e) => handleChange(e, 'detail', index)} className='IP-1' /></td>
                           <td>
@@ -261,7 +255,7 @@ const ProductBacklog = () => {
                               <option value="Done" className="option-done">Done</option>
                             </select>
                           </td>
-                          <td><input type="date" value={row.increment} onChange={(e) => handleChange(e, 'increment', index)} className='IP-2' /></td>
+                          <td><input type="date" value={row.increment.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'increment', index)} className='IP-2' /></td>
                           <td><textarea placeholder="โปรดระบุ" type="text" value={row.remark} onChange={(e) => handleChange(e, 'remark', index)} className='IP-1' /></td>
                           <td>
                             <button onClick={() => saveEdit(index)} className='save-button'>บันทึก</button>
@@ -301,12 +295,11 @@ const ProductBacklog = () => {
                     <tr>
                       <td>{newRow.order}</td>
                       <td ><input type="number" value={newRow.sprint} onChange={(e) => handleChange(e, 'sprint')} className='IP-1' min="0" step="1" /></td>
-                      <td><input type="date" value={newRow.datestart} onChange={(e) => handleChange(e, 'datestart')} className='IP-2' /></td>
-                      <td><input type="date" value={newRow.dateend} onChange={(e) => handleChange(e, 'dateend')} className='IP-2' /></td>
+                      <td><input type="date" value={newRow.datestart.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'datestart')} className='IP-2' /></td>
+                      <td><input type="date" value={newRow.dateend.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'dateend')} className='IP-2' /></td>
                       <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.type} onChange={(e) => handleChange(e, 'type')} className='IP-1' /></td>
                       <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.detail} onChange={(e) => handleChange(e, 'detail')} className='IP-1' /></td>
                       <td>
-
                         <label className="file-input" style={{ backgroundColor: 'white' }}>
                           <input
                             type="file"
@@ -354,7 +347,8 @@ const ProductBacklog = () => {
                           <option value="Done" className="option-done">Done</option>
                         </select>
                       </td>
-                      <td><input type="date" value={newRow.increment} onChange={(e) => handleChange(e, 'increment')} className='IP-2' /></td>
+                      <td><input type="date" value={newRow.increment.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'increment')} className='IP-2' />
+                      </td>
                       <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.remark} onChange={(e) => handleChange(e, 'remark')} className='IP-1' /></td>
                       <td>
                         <button onClick={saveRow} className='save-button'>บันทึก</button>
@@ -369,12 +363,13 @@ const ProductBacklog = () => {
               {!newRow && (
                 <img src="/src/img/img_icon/plus.png" alt="Add" className='add-buttonz' onClick={addRow} />)}
             </div>
+            <div className='mb-20'></div>
           </section>
         </main>
       </div>
-      <Footer /> {/* แสดง Footer */}
-      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={closeModal} /> {/* แสดง modal สำหรับรูปภาพ */}
-    </>
+      <Footer /> 
+      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={closeModal} /> 
+    </div>
   );
 };
 

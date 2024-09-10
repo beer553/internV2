@@ -17,8 +17,8 @@ const Home = () => {
               <img src="/src/img/profile_teerapat.png" alt="Profile" className="w-[150px] h-[150px] rounded-full ml-1" />
             </div>
             <div className="ml-20">
-              <h1 className="flex items-start text-5xl font-bold text-black">Hello, Intern Teerapat</h1>
-              <div className="bg-gray-100 p-2 rounded-lg mt-2 flex items-start w-[70%] h-[150px]">
+              <h1 className="flex items-start text-5xl font-bold text-black ml-6">Hello, Intern Teerapat</h1>
+              <div className="bg-gray-100 p-2 rounded-lg mt-2 ml-5 flex items-start w-[70%] h-[150px]">
                 <p className="text-left text-gray-600 text-[20px]">
                   อยากทำโปรเจคเกี่ยวกับการออกแบบ อยากได้ประสบการณ์ในการคุยกับลูกค้าจริง ๆ
                 </p>
@@ -29,7 +29,7 @@ const Home = () => {
 
           {/* Skills Section */}
           <div className="text-right text-black">
-            <div className="flex justify-end items-center">
+            <div className="flex justify-end items-center mr-6">
               <h2 className="text-xl font-semibold">ความสามารถด้านถนัด</h2>
               <FaEdit className="ml-2 text-gray-500 cursor-pointer h-5" />
             </div>

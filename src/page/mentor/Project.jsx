@@ -30,8 +30,7 @@ function Project() {
                 </div>
                 <div className="flex justify-between items-center mb-7">
                     <div className="flex items-center">
-                        <img src="/src/img/img_icon/project.png" alt="Project" className="h-36 w-30 ml-7 " />
-                        <h2 className="text-6xl ml-6 text-[#5C5A5A] mb-3">Project</h2> {/* หัวข้อของส่วนโปรเจค */}
+                        <h2 className="text-[80px] ml-6 text-[#5C5A5A] mb-3">Project</h2> {/* หัวข้อของส่วนโปรเจค */}
                     </div>
 
                     {/* ปุ่มสำหรับเพิ่มโปรเจคใหม่ */}
@@ -42,7 +41,7 @@ function Project() {
                 </div>
 
                 {/* ตารางแสดงโปรเจค */}
-                <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
+                <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden text-black">
                     <thead>
                         <tr className='linetable'>
                             {/* หัวข้อคอลัมน์ต่างๆ ในตาราง */}
@@ -69,7 +68,7 @@ function Project() {
                             </td>
                             <td className="text-center p-4 text-[20px]">...</td> {/* แผนงาน */}
                             <td className="text-center p-4 flex justify-center items-center cursor-pointer">
-                                <img src="/src/img/img_icon/assigned.png" alt="Department" className="h-10 w-10" onClick={gotoAssignPJ}/> 
+                                <img src="/src/img/img_icon/process.png" alt="Department" className="h-10 w-10" onClick={gotoAssignPJ}/> 
                             </td>
                         </tr>
                         <tr>
@@ -84,7 +83,7 @@ function Project() {
                             </td>
                             <td className="text-center p-4 text-[20px]">...</td> {/* แผนงาน */}
                             <td className="text-center p-4 flex justify-center items-center cursor-pointer">
-                                <img src="/src/img/img_icon/assigned.png" alt="Department" className="h-10 w-10" onClick={gotoAssignPJ}/> 
+                                <img src="/src/img/img_icon/process.png" alt="Department" className="h-10 w-10" onClick={gotoAssignPJ}/> 
                             </td>
                         </tr>
                     </tbody>

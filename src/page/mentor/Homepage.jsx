@@ -1,135 +1,258 @@
-import React from 'react';
-import './Homepage.css';
-import { useNavigate } from 'react-router-dom'; // นำเข้า useNavigate สำหรับการนำทางไปยังหน้าต่างๆ
-import Footer from '../component/footer'; // นำเข้า Footer component
-import NavbarMentor from '../component/navbar_mentor'; // 
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Footer from '../component/footer';
+import NavbarMentor from '../component/navbar_mentor';
 
 function Homepage() {
-  const navigate = useNavigate(); // สร้างตัวแปร navigate เพื่อใช้ในการเปลี่ยนหน้า
+  const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false);
+  const [manpowerData, setManpowerData] = useState([
+    { id: 1, name: '0001-123456 Phurin Chairoek', status: 'รอฝึกงาน', timeline: '01/01/2024 - 31/12/2024', project: 'OT Dashboard' },
+    { id: 2, name: '0001-123456 Teerapat Wanleng', status: 'กำลังฝึกงาน', timeline: '01/01/2024 - 31/12/2024', project: 'Internship' },
+    { id: 3, name: '0001-123456 Teerapat Wanleng', status: 'กำลังฝึกงาน', timeline: '01/01/2024 - 31/12/2024', project: 'OT Dashboard' },
+    { id: 4, name: '0001-123456 Teerapat Wanleng', status: 'กำลังฝึกงาน', timeline: '01/01/2024 - 31/12/2024', project: 'Internship' },
+    { id: 5, name: '0001-123456 Teerapat Wanleng', status: 'ฝึกงานเสร็จสิ้น', timeline: '01/01/2024 - 31/12/2024', project: 'OT Dashboard' },
+    { id: 6, name: '0001-123456 Teerapat Wanleng', status: 'ฝึกงานเสร็จสิ้น', timeline: '01/01/2024 - 31/12/2024', project: 'OT Dashboard' },
+  ]);
+  const [newManpower, setNewManpower] = useState({ id: '', name: '', startDate: '', endDate: '' });
 
-  // ฟังก์ชันสำหรับนำทางไปยังหน้า IDP
-  const goToPofilePage = () => {
+  const goToProfilePage = () => {
     navigate('/IDP');
   };
 
-  // ฟังก์ชันสำหรับนำทางไปยังหน้า Product Backlog
   const gotoProductBacklog = () => {
     navigate('/PDBacklog');
   };
 
-  // ฟังก์ชันสำหรับนำทางไปยังหน้า Project
   const gotoProject = () => {
     navigate('/Project');
   };
 
-  // ฟังก์ชันสำหรับนำทางไปยังหน้า Scrum
   const gotoDailyscrum = () => {
     navigate('/Dailyscrum');
+  };
+
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'startDate' || name === 'endDate') {
+      setNewManpower({ ...newManpower, [name]: value });
+    } else if (name === 'id') {
+      const formattedId = formatId(value);
+      setNewManpower({ ...newManpower, id: formattedId });
+    } else {
+      setNewManpower({ ...newManpower, [name]: value });
+    }
+  };
+
+  const formatId = (value) => {
+    const digits = value.replace(/\D/g, '');
+    const formattedId = digits.slice(0, 4) + (digits.length > 4 ? '-' + digits.slice(4, 10) : '');
+    return formattedId;
+  };
+
+  const handleSubmit = () => {
+    if (new Date(newManpower.endDate) < new Date(newManpower.startDate)) {
+      alert('End Date cannot be earlier than Start Date');
+      return;
+    }
+
+    const formattedName = newManpower.name.replace(/\s+/g, ' ').trim();
+    const combinedIdName = `${newManpower.id} ${formattedName}`; // Combine ID and Name
+
+    const newEntry = {
+      id: manpowerData.length + 1,
+      name: combinedIdName, // Use the combined value
+      status: 'รอฝึกงาน',
+      timeline: `${formatDate(newManpower.startDate)} - ${formatDate(newManpower.endDate)}`,
+      project: 'Project Name',
+    };
+
+    setManpowerData([...manpowerData, newEntry]);
+    togglePopup();
+  };
+
+  const formatDate = (date) => {
+    const [year, month, day] = date.split('-');
+    return `${day}/${month}/${year}`;
   };
 
   return (
     <div>
       <header>
-        <NavbarMentor /> {/* แสดง NavbarIntern */}
+        <NavbarMentor />
       </header>
 
-      <div className="dashboard">
-        <div className="welcome">
-          <img src="/src/img/star.png" className="profile-img" alt="Profile" /> {/* รูปภาพโปรไฟล์ */}
-          <div className="welcome-text">
-            <h2 className='DX'>DX Manpower Management</h2> {/* ชื่อระบบ */}
-            <p className='SC'>Hello, Scrum Master STAR 👋</p> {/* ข้อความต้อนรับ */}
+      <div className="bg-white">
+        <div className="flex justify-center items-center mt-3 mb-3">
+          <img src="/src/img/star.png" className="w-24 h-24 rounded-full mt-6" alt="Profile" />
+          <div className="ml-4 mt-4">
+            <h2 className='text-4xl text-black'>DX Manpower Management</h2>
+            <p className='text-3xl mt-2 text-black'>Hello, Scrum Master STAR 👋</p>
           </div>
         </div>
 
-        <div className="dashboard-1">
-          <div className="card">
-            <div className="number6">6</div> {/* จำนวนทีมพัฒนา */}
-            <div className="label-1-">Developer Team (TTL)</div> {/* คำอธิบายทีม */}
-            <div className="blue-line"></div> {/* เส้นแบ่งสีน้ำเงิน */}
+        <div className="flex justify-around items-center w-full">
+          <div className="relative w-72 h-48 shadow-lg m-6 rounded-lg flex flex-col items-center justify-center bg-white">
+            <div className="text-[90px] font-bold text-black">6</div>
+            <div className="text-[25px] text-black mt-2">Developer Team (TTL)</div>
+            <div className="absolute bottom-0 left-0 w-full h-2 bg-blue-300"></div>
           </div>
-          <div className="card">
-            <div className="number3-1">3</div> {/* จำนวน Developer ในปีนี้ */}
-            <div className="label-2-">Developer This Year</div> {/* คำอธิบาย Developer ปีนี้ */}
-            <div className="orange-line"></div> {/* เส้นแบ่งสีส้ม */}
+
+          <div className="relative w-72 h-48 shadow-lg m-6 rounded-lg flex flex-col items-center justify-center bg-white">
+            <div className="text-[90px] font-bold text-black">3</div>
+            <div className="text-[25px] text-black mt-2">Developer This Year</div>
+            <div className="absolute bottom-0 left-0 w-full h-2 bg-orange-400"></div>
           </div>
-          <div className="card-2">
-            <div className="project-card">
-              <div className="number2">
-                <span>2</span> {/* จำนวนโปรเจกต์ */}
-              </div>
-              <div className="project-details">
-                <div className="project-item" onClick={gotoProject}>
-                  <span>Project</span> {/* คำว่า Project */}
+
+          <div className="relative w-72 h-48 shadow-lg m-6 rounded-lg bg-white">
+            <div className="flex items-center justify-center">
+              <div className="text-[90px] font-bold text-black mr-10 mt-2">2</div>
+              <div className="space-y-2 mt-4">
+                <div className="flex items-center bg-white p-3 rounded-lg shadow cursor-pointer mb-2" onClick={gotoProject}>
+                  <span className="text-[20px] text-black">Project</span>
                 </div>
-                <div className="project-item2" onClick={gotoDailyscrum }>
-                  <span>Daily Scrum</span> {/* คำว่า Daily Scrum */}
+                <div className="flex items-center bg-white p-3 rounded-lg shadow cursor-pointer" onClick={gotoDailyscrum}>
+                  <span className="text-[20px] text-black">Daily Scrum</span>
                 </div>
               </div>
-              <div className='pj-1-'><span>Project This Year (Items)</span></div> {/* คำอธิบายโปรเจกต์ปีนี้ */}
             </div>
-            <div className="cyan-line"></div> {/* เส้นแบ่งสีฟ้า */}
+            <div className="mt-3 text-center text-black text-[25px]">Project This Year (Items)</div>
+            <div className="absolute bottom-0 left-0 w-full h-2 bg-cyan-400"></div>
           </div>
-          <div className="card-1">
-            <div className="item">
-              <div className="number3">3</div> {/* จำนวน Sprint */}
-              <div className="labelz-1">Sprint</div> {/* คำอธิบาย Sprint */}
+
+          <div className="relative w-72 h-48 shadow-lg m-6 rounded-lg">
+            <div className="flex items-center">
+              <div className="text-[80px] font-bold mt-[-1px] ml-10 text-black">3</div>
+              <div className="text-[50px] text-black ml-3">Sprint</div>
             </div>
-            <div className="item">
-              <div className="number10">10</div> {/* จำนวน Product Backlog */}
-              <div className="labelz" onClick={gotoProductBacklog}>
-                <div>Product Backlog</div> {/* ลิงก์ไปยังหน้า Product Backlog */}
+            <div className="flex items-center mt-[-40px]">
+              <div className="text-[90px] font-bold mt-[-30px] ml-6 text-black">10</div>
+              <div className="text-[20px] bg-white p-3 rounded-lg shadow w-36 ml-3 cursor-pointer mt-[-20px]" onClick={gotoProductBacklog}>
+                <div className="text-black">Product Backlog</div>
               </div>
             </div>
-            <div className="PI">Product Increment (Items)</div> {/* คำอธิบาย Product Increment */}
-            <div className="Green"></div> {/* เส้นแบ่งสีเขียว */}
+            <div className="mt-[-30px] ml-2 text-black text-[25px]">Product Increment (Items)</div>
+            <div className="absolute bottom-0 left-0 w-full h-2 bg-green-400"></div>
           </div>
         </div>
 
-        <div className="manpower">
-          <div className='add-manpower'>
-            <h3 className='manpower-center'>Manpower</h3> {/* หัวข้อ Manpower */}
-            {/* <div><img src="https://cdn-icons-png.flaticon.com/128/4315/4315609.png" alt="Add" className='add-1' /></div> {/* ไอคอนเพิ่ม Manpower */}
-          </div> 
-          <table>
+        <div className="m-12">
+          <div className='flex items-center justify-between mb-4'>
+            <h3 className='text-[50px] ml-5 text-gray-600'>Manpower</h3>
+            <div>
+              <img
+                src="/src/img/img_icon/plus.png"
+                alt="Add"
+                className='w-10 cursor-pointer mr-10'
+                onClick={togglePopup} />
+            </div>
+          </div>
+
+          {showPopup && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div className="bg-white p-8 rounded-lg text-left shadow-lg w-full max-w-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <label className="block text-2xl ml-1 font-medium text-black">ID</label>
+                    <input
+                      type="text"
+                      name="id"
+                      value={newManpower.id}
+                      onChange={handleInputChange}
+                      placeholder="โปรดระบุ"
+                      className="block w-full mt-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-[20px] bg-white text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-2xl ml-1 font-medium text-black">Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={newManpower.name}
+                      onChange={handleInputChange}
+                      placeholder="โปรดระบุ"
+                      className="block w-full mt-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-[20px] bg-white text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-2xl ml-1 font-medium text-black">Start Date</label>
+                    <input
+                      type="date"
+                      name="startDate"
+                      value={newManpower.startDate}
+                      onChange={handleInputChange}
+                      placeholder="โปรดระบุ"
+                      className="block w-full mt-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-[20px] bg-white text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-2xl ml-1 font-medium text-black">End Date</label>
+                    <input
+                      type="date"
+                      name="endDate"
+                      value={newManpower.endDate}
+                      onChange={handleInputChange}
+                      placeholder="โปรดระบุ"
+                      className="block w-full mt-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-[20px] bg-white text-black"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end mt-6 text-[20px]">
+                  <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-[#4CAF50] mr-2" onClick={handleSubmit}>
+                    บันทึก
+                  </button>
+                  <button className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600" onClick={togglePopup}>
+                    ยกเลิก
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <table className="w-full border-collapse border-none">
             <thead>
               <tr>
-                <th>NO</th>
-                <th>ID Name</th>
-                <th>Status</th>
-                <th>Time Line</th>
-                <th>Project</th>
-                <th>Profile</th>
-                <th>Sprint Review</th>
-                <th>Evaluate</th>
+                <th className="text-[25px] text-center text-black border-none">NO</th>
+                <th className="text-[25px] text-center text-black border-none">ID Name</th>
+                <th className="text-[25px] text-center text-black border-none">Status</th>
+                <th className="text-[25px] text-center text-black border-none">Time Line</th>
+                <th className="text-[25px] text-center text-black border-none">Project</th>
+                <th className="text-[25px] text-center text-black border-none">Profile</th>
+                <th className="text-[25px] text-center text-black border-none">Sprint Review</th>
+                <th className="text-[25px] text-center text-black border-none">Evaluate</th>
               </tr>
             </thead>
             <tbody>
-              {/* แสดงข้อมูลนักศึกษาฝึกงานในตาราง */}
-              {[
-                { id: 1, name: 'G001-12345 Phurin Chairoek ', status: 'รอฝึกงาน', timeline: '01/01/2024 - 31/12/2024', project: 'OT Dashboard' },
-                { id: 2, name: 'G001-12345 Teerapat Wanleng ', status: 'กำลังฝึกงาน', timeline: '01/01/2024 - 31/12/2024', project: ' Internship' },
-                { id: 3, name: 'G001-12345 Teerapat Wanleng ', status: 'กำลังฝึกงาน', timeline: '01/01/2024 - 31/12/2024', project: 'OT Dashboard' },
-                { id: 4, name: 'G001-12345 Teerapat Wanleng ', status: 'กำลังฝึกงาน', timeline: '01/01/2024 - 31/12/2024', project: 'Internship' },
-                { id: 5, name: 'G001-12345 Teerapat Wanleng ', status: 'ฝึกงานเสร็จสิ้น', timeline: '01/01/2024 - 31/12/2024', project: 'OT Dashboard' },
-                { id: 6, name: 'G001-12345 Teerapat Wanleng ', status: 'ฝึกงานเสร็จสิ้น', timeline: '01/01/2024 - 31/12/2024', project: 'OT Dashboard' },
-              ].map((row, index) => (
+              {manpowerData.map((row, index) => (
                 <tr key={index}>
-                  <td>{row.id}</td> {/* แสดงหมายเลขนักศึกษา */}
-                  <td>{row.name}</td> {/* แสดงชื่อและรหัสนักศึกษา */}
-                  <td className={row.status.toLowerCase()}>{row.status}</td> {/* แสดงสถานะของนักศึกษา */}
-                  <td>{row.timeline}</td> {/* แสดงระยะเวลาฝึกงาน */}
-                  <td>{row.project}</td> {/* แสดงโปรเจกต์ที่นักศึกษาทำ */}
-                  <td><button> <img className='file' src="/src//img/img_icon/folder.png" alt="Profile" onClick={goToPofilePage} /></button></td> {/* ปุ่มเปิดโปรไฟล์ */}
-                  <td><img className='sprint' src="/src/img/img_icon/review.png" alt="Sprint Review" /></td> {/* ไอคอน Sprint Review */}
-                  <td><img className='Eva' src="/src/img/img_icon/evaluate.png" alt="Evaluate" /></td> {/* ไอคอน Evaluate */}
+                  <td className="text-[20px] text-center text-black">{row.id}</td>
+                  <td className="text-[20px] text-left pl-8 text-black">{row.name}</td>
+                  <td className={`text-[20px] text-black px-1 py-1 mt-3 rounded-full ${row.status === 'ฝึกงานเสร็จสิ้น' ? 'bg-[#4CAF50]' : row.status === 'รอฝึกงาน' ? 'bg-orange-400' : 'bg-yellow-300'} flex justify-center items-center`}>{row.status}</td>
+                  <td className="text-[20px] text-center text-black">{row.timeline}</td>
+                  <td className="text-[20px] text-left pl-8 text-black">{row.project}</td>
+                  <td className="text-center">
+                    <button>
+                      <img className='w-12 h-12 mx-auto cursor-pointer' src="/src//img/img_icon/resume.png" alt="Profile" onClick={goToProfilePage} />
+                    </button>
+                  </td>
+                  <td className="text-center">
+                    <img className='w-12 h-12 mx-auto cursor-pointer' src="/src/img/img_icon/review.png" alt="Sprint Review" />
+                  </td>
+                  <td className="text-center">
+                    <img className='w-12 h-12 mx-auto cursor-pointer' src="/src/img/img_icon/check-list.png" alt="Evaluate" />
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
-      <Footer /> {/* แสดง Footer */}
+      <Footer />
     </div>
   );
 }

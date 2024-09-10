@@ -39,7 +39,7 @@ function AssignPJ() {
               <p className="text-black">สถานศึกษา: วิทยาลัยเทคนิคทุ่งสง</p>
             </div>
             <div className="flex items-center space-x-2">
-              <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" />
+              {/* <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" /> */}
               <input type="checkbox" className="h-5 w-5" />
             </div>
           </div>
@@ -57,7 +57,7 @@ function AssignPJ() {
               <p className="text-black">สถานศึกษา: วิทยาลัยเทคนิคทุ่งสง</p>
             </div>
             <div className="flex items-center space-x-2">
-              <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" />
+              {/* <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" /> */}
               <input type="checkbox" className="h-5 w-5" />
             </div>
           </div>
@@ -75,7 +75,7 @@ function AssignPJ() {
               <p className="text-black">สถานศึกษา: วิทยาลัยเทคนิคทุ่งสง</p>
             </div>
             <div className="flex items-center space-x-2">
-              <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" />
+              {/* <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" /> */}
               <input type="checkbox" className="h-5 w-5" />
             </div>
           </div>
@@ -93,7 +93,7 @@ function AssignPJ() {
               <p className="text-black">สถานศึกษา: วิทยาลัยเทคนิคทุ่งสง</p>
             </div>
             <div className="flex items-center space-x-2">
-              <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" />
+              {/* <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" /> */}
               <input type="checkbox" className="h-5 w-5" />
             </div>
           </div>
@@ -111,7 +111,7 @@ function AssignPJ() {
               <p className="text-black">สถานศึกษา: วิทยาลัยเทคนิคทุ่งสง</p>
             </div>
             <div className="flex items-center space-x-2">
-              <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" />
+              {/* <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" /> */}
               <input type="checkbox" className="h-5 w-5" />
             </div>
           </div>
@@ -129,7 +129,7 @@ function AssignPJ() {
               <p className="text-black">สถานศึกษา: วิทยาลัยเทคนิคทุ่งสง</p>
             </div>
             <div className="flex items-center space-x-2">
-              <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" />
+              {/* <img src="/src/img/img_icon/folder.png" alt="Folder Icon" className="h-10 w-10" /> */}
               <input type="checkbox" className="h-5 w-5" />
             </div>
           </div>

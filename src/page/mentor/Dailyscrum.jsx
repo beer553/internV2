@@ -63,7 +63,7 @@ function Dailyscrum() {
                     <div className="flex items-center justify-center text-center text-[18px]">OT Dashboard</div>
                     <div className="flex items-center justify-center text-center text-[18px]">
                         {/* ไอคอน Backlog สำหรับนำทางไปยังหน้า BLProject */}
-                        <img src="/src/img/img_icon/backlog.png" alt="Backlog" className="w-8 h-8 cursor-pointer" onClick={gotoBLProject} />
+                        <img src="/src/img/img_icon/backlog-white.png" alt="Backlog" className="w-8 h-8 cursor-pointer" onClick={gotoBLProject} />
                     </div>
                 </div>
             </div>
