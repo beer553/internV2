@@ -90,7 +90,6 @@ try {
     $stmt->bindParam(':nationality', $_POST['nationality']);
     $stmt->bindParam(':religion', $_POST['religion']);
     $stmt->bindParam(':phone', $_POST['phone']);
-    // $stmt->bindParam(':facebook', $_POST['facebook']);
     $stmt->bindParam(':lineId', $_POST['lineId']);
     $stmt->bindParam(':email2', $_POST['email2']);
     $stmt->bindParam(':email3', $_POST['email3']);
@@ -132,9 +131,18 @@ try {
             "message" => "SQLSTATE: " . $errorInfo[0] . " SQL Error Code: " . $errorInfo[1] . " Error Message: " . $errorInfo[2]
         ]);
     } else {
+        // ถ้าบันทึกสำเร็จ บันทึก is_data_filled ใน user_info เป็นเลข 1
+        $updateStmt = $con->prepare("
+            UPDATE user_info 
+            SET is_data_filled = 1 
+            WHERE user_id = :internid
+        ");
+        $updateStmt->bindParam(':internid', $_POST['internid']);
+        $updateStmt->execute();
+
         echo json_encode([
             "status" => "success",
-            "message" => "Data inserted successfully!"
+            "message" => "Data inserted successfully and is_data_filled updated!"
         ]);
     }
 
