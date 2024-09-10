@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavbarIntern from '../component/navbar_intern';
 import Footer from '../component/footer';
+import { useAuth } from '../../context/AuthContext';  // Import AuthContext
 
 const Home = () => {
+  const { user } = useAuth();  // ดึงข้อมูลจาก Context
   const [internData, setInternData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,14 +13,17 @@ const Home = () => {
   const [isEditing, setIsEditing] = useState(false); // State to toggle edit mode
 
   useEffect(() => {
-    const userId = localStorage.getItem('user_id');
+    // ตรวจสอบ user_id จาก Context หรือ localStorage
+    const userId = user?.user_id || localStorage.getItem('user_id');
+
     if (userId) {
-      fetchData(userId);
+      fetchData(userId); // เรียกใช้ฟังก์ชัน fetchData พร้อม user_id
     } else {
       handleError("User ID not found in localStorage or Context");
     }
-  }, []);
+  }, [user]);
 
+  // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้จาก backend
   const fetchData = async (userId) => {
     try {
       const response = await axios.get('http://localhost/internV2/backend/intern/home.php', {
@@ -33,24 +38,27 @@ const Home = () => {
     }
   };
 
+  // ฟังก์ชันจัดการข้อผิดพลาด
   const handleError = (errorMessage) => {
     console.error("Error:", errorMessage);
     setError(errorMessage);
     setLoading(false);
   };
 
+  // ฟังก์ชันจัดการเมื่อเปลี่ยนแปลงค่า goal
   const handleGoalChange = (e) => {
     setGoal(e.target.value);
   };
 
+  // ฟังก์ชันสำหรับบันทึกค่า goal
   const handleGoalSave = async () => {
     try {
       const response = await axios.post('http://localhost/internV2/backend/intern/home.php', {
         user_id: internData.user_id,
         goal,
       });
-      setInternData({ ...internData, goal });
-      setIsEditing(false);
+      setInternData({ ...internData, goal }); // อัปเดตข้อมูลใน state
+      setIsEditing(false); // ปิดโหมดการแก้ไข
     } catch (err) {
       handleError("Error saving goal: " + err.message);
     }
@@ -59,6 +67,7 @@ const Home = () => {
   const openEditModal = () => setIsEditing(true);
   const closeModal = () => setIsEditing(false);
 
+  // ฟังก์ชันสำหรับจัดการรูปแบบวันที่
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('th-TH', {
       day: 'numeric',
@@ -67,14 +76,17 @@ const Home = () => {
     });
   };
 
+  // ฟังก์ชันคำนวณจำนวนวันทำงาน
   const calculateWorkDays = (startDate) => {
     return calculateDaysBetween(new Date(startDate), new Date());
   };
 
+  // ฟังก์ชันคำนวณจำนวนวันที่เหลือในการทำงาน
   const calculateRemainingWorkDays = (endDate) => {
     return calculateDaysBetween(new Date(), new Date(endDate));
   };
 
+  // ฟังก์ชันคำนวณจำนวนวันระหว่างสองวันที่ไม่รวมวันหยุดสุดสัปดาห์
   const calculateDaysBetween = (start, end) => {
     let count = 0;
     while (start <= end) {
@@ -85,6 +97,7 @@ const Home = () => {
     return count;
   };
 
+  // การแมปไอคอนของทักษะ
   const skillIcons = {
     Figma: "/src/img/img_icon/figma.png",
     React: "/src/img/img_icon/React.png",
@@ -94,9 +107,10 @@ const Home = () => {
     Docker: "/src/img/img_icon/docker.png",
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data: {error.message || error}</p>;
+  if (loading) return <p>Loading...</p>; // กรณีข้อมูลกำลังโหลด
+  if (error) return <p>Error loading data: {error.message || error}</p>; // กรณีเกิดข้อผิดพลาด
 
+  // แยกทักษะจากข้อมูล internData
   const skills = internData?.program ? internData.program.split(',') : [];
 
   return (
@@ -153,7 +167,8 @@ const Home = () => {
             </div>
           </div>
         </div>
-        {/* Additional fetched data section */}
+
+        {/* ข้อมูลเพิ่มเติม */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 ml-10 mr-10">
           <DataCard
             iconSrc="/src/img/img_icon/14641229.png"
@@ -171,7 +186,8 @@ const Home = () => {
             value={`${internData?.days_worked_this_month} Days / ${internData?.amount_earned_this_month} Baht`}
           />
         </div>
-        {/* Personal information section */}
+
+        {/* ข้อมูลส่วนตัว */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
           <div className="md:col-span-2">
             <PersonalInfo internData={internData} formatDate={formatDate} />
@@ -201,10 +217,9 @@ const Home = () => {
             </a>
           </div>
         </div>
-
       </div>
 
-      {/* Modal */}
+      {/* Modal สำหรับแก้ไข goal */}
       {isEditing && (
         <Modal onClose={closeModal} onSave={handleGoalSave}>
           <textarea
@@ -215,12 +230,12 @@ const Home = () => {
           />
         </Modal>
       )}
-
       <Footer />
     </>
   );
 };
 
+// ส่วนของ DataCard ที่แสดงข้อมูลต่าง ๆ
 const DataCard = ({ iconSrc, label, value }) => (
   <div className="p-6 bg-white text-center rounded-lg shadow-md border-b-4 border-[#635c5c]">
     <img src={iconSrc} alt={label} className="w-16 h-16 mx-auto" />
@@ -229,6 +244,7 @@ const DataCard = ({ iconSrc, label, value }) => (
   </div>
 );
 
+// ส่วนของ PersonalInfo ที่แสดงข้อมูลส่วนตัวของ Intern
 const PersonalInfo = ({ internData, formatDate }) => (
   <div className="p-4">
     <h2 className="font-bold">ข้อมูลส่วนตัว</h2>
@@ -253,6 +269,7 @@ const PersonalInfo = ({ internData, formatDate }) => (
   </div>
 );
 
+// ส่วนของ Modal ที่ใช้สำหรับแก้ไขข้อมูล goal
 const Modal = ({ children, onClose, onSave }) => (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">

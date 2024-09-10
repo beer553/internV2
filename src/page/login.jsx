@@ -16,48 +16,37 @@ function Login() {
     setIsSettingPassword(true);
   };
 
-  const { setUser } = useAuth(); 
-  // ดึง setUser จาก AuthContext
+  const { login } = useAuth();  // ใช้ฟังก์ชัน login จาก useAuth
 
   const handleLogin = async (event) => {
     event.preventDefault();
-  
+
     try {
       const response = await axios.post('http://localhost/internV2/backend/login.php', {
         username: username,
         password: password,
       });
-  
+
       const rawData = response.data;
-      console.log('Raw Data:', rawData);
-  
+
       const parts = rawData.split('}{').join('},{');
       const jsonData = JSON.parse(`[${parts}]`);
-  
-      const data = jsonData[1];
-      console.log('Parsed Data:', data);
-  
-      if (data.status === 'success' && data.role) {
-        // เก็บข้อมูลใน localStorage โดยใช้ user_id จากข้อมูลที่ได้รับจาก API
-        localStorage.setItem('username', username);
-        localStorage.setItem('role', data.role);
-        localStorage.setItem('user_id', data.user_id); // ใช้ user_id จาก API
-  
-        // บันทึกข้อมูลผู้ใช้ใน Context
-        setUser({ username: username, role: data.role });
-  
+
+      const data = jsonData[1]; 
+
+      if (data.status === 'success') {
+        login({ username: username, role: data.role, user_id: data.user_id });
+        
+        localStorage.setItem('user_id', data.user_id);
+
         Swal.fire({
           icon: 'success',
           title: 'Login Successful',
           showConfirmButton: false,
         });
-  
+
         setTimeout(() => {
-          if (data.role === 'intern') {
-            window.location.href = "/input_data_intern";
-          } else if (data.role === 'mentor') {
-            window.location.href = "/Homepage";
-          }
+          window.location.href = `/${data.redirect}`;
         }, 2000);
       } else {
         Swal.fire({
@@ -67,7 +56,6 @@ function Login() {
         });
       }
     } catch (error) {
-      console.log('Error during login:', error);
       Swal.fire({
         icon: 'error',
         title: 'Login Error',
@@ -75,7 +63,6 @@ function Login() {
       });
     }
   };
-  
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -114,30 +101,22 @@ function Login() {
         password: password,
       });
 
-      // แยกข้อมูลที่ส่งกลับมา
       const rawData = response.data;
-      console.log('Raw Data:', rawData);
 
-      // พยายามแยก JSON ออกมา
       const parts = rawData.split('}{').join('},{');
       const jsonData = JSON.parse(`[${parts}]`);
 
-      // ใช้เฉพาะข้อมูลส่วนที่สอง
-      const data = jsonData[1];
-      console.log('Parsed Data:', data);
+      const data = jsonData[1]; 
 
       if (data.status === 'success') {
         Swal.fire({
           icon: 'success',
           title: 'Registration Successful',
           text: `Welcome, ${username}! Your role is ${data.role}.`,
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
         }).then(() => {
-          // เมื่อผู้ใช้กด OK จะกลับไปที่ฟอร์มล็อกอิน
-          setIsRegistering(false);
+          setIsRegistering(false); 
         });
-
-        // คุณสามารถนำ role ไปใช้เพื่อจัดการสิทธิ์ใน frontend ได้ตามต้องการ
       } else {
         Swal.fire({
           icon: 'error',
@@ -146,7 +125,6 @@ function Login() {
         });
       }
     } catch (error) {
-      console.log('Error during registration:', error);
       Swal.fire({
         icon: 'error',
         title: 'Registration Error',
@@ -196,7 +174,7 @@ function Login() {
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl"
                     placeholder="Username"
-                    style={{backgroundColor:'white'}}
+                    style={{ backgroundColor: 'white' }}
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
@@ -212,7 +190,7 @@ function Login() {
                     autoComplete="current-password"
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl"
-                    style={{backgroundColor:'white'}}
+                    style={{ backgroundColor: 'white' }}
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -274,7 +252,7 @@ function Login() {
                     autoComplete="username"
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl"
-                    style={{backgroundColor:'white'}}
+                    style={{ backgroundColor: 'white' }}
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -284,12 +262,12 @@ function Login() {
                   <label htmlFor="userId" className="sr-only">Intern Student ID</label>
                   <input
                     id="userId"
-                    name="user_id"  // Ensure this matches what the PHP script expects
+                    name="user_id"  
                     type="text"
                     autoComplete="user-id"
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl"
-                    style={{backgroundColor:'white'}}
+                    style={{ backgroundColor: 'white' }}
                     placeholder="Intern Student ID"
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
@@ -299,12 +277,12 @@ function Login() {
                   <label htmlFor="password" className="sr-only">Password</label>
                   <input
                     id="password"
-                    name="password"  // Ensure this matches what the PHP script expects
+                    name="password"  
                     type="password"
                     autoComplete="new-password"
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl"
-                    style={{backgroundColor:'white'}}
+                    style={{ backgroundColor: 'white' }}
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -319,7 +297,7 @@ function Login() {
                     autoComplete="new-password"
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl"
-                    style={{backgroundColor:'white'}}
+                    style={{ backgroundColor: 'white' }}
                     placeholder="Confirm Password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -334,15 +312,6 @@ function Login() {
                   Register
                 </button>
               </div>
-              {/* <div className="text-center mt-2 text-2xl">
-                <button
-                  type="button"
-                  onClick={() => setIsRegistering(false)}  // ฟังก์ชันสำหรับกลับไปหน้าล็อกอิน
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Already have an account? Back to Sign In
-                </button>
-              </div> */}
             </form>
           ) : (
             <form className="mt-8 space-y-6" onSubmit={handleSetPassword}>
@@ -358,7 +327,7 @@ function Login() {
                     autoComplete="new-password"
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 text-xl"
-                    style={{backgroundColor:'white'}}
+                    style={{ backgroundColor: 'white' }}
                     placeholder="New Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

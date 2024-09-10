@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import NavbarIntern from '../component/navbar_intern';
 import Footer from '../component/footer';
+import Swal from 'sweetalert2';
 
 function input_data_intern() {
     const [title, setTitle] = useState('');
@@ -19,7 +20,6 @@ function input_data_intern() {
     const [nationality, setNationality] = useState('');
     const [religion, setReligion] = useState('');
     const [phone, setPhone] = useState('');
-    // const [facebook, setFacebook] = useState('');
     const [lineId, setLineId] = useState('');
     const [email2, setEmail2] = useState('');
     const [email3, setEmail3] = useState('');
@@ -50,13 +50,17 @@ function input_data_intern() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-    
+
         // ตรวจสอบจำนวนการเลือกโปรแกรม
         if (program.length < 3 && !program.includes('Other')) {
-            alert('กรุณาเลือกโปรแกรมที่ถนัดให้ครบ 3 ข้อ หรือเลือก "อื่นๆ"');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'กรุณาเลือกโปรแกรมที่ถนัดให้ครบ 3 ข้อ หรือเลือก "อื่นๆ"',
+            });
             return; // ไม่อนุญาตให้บันทึกข้อมูล
         }
-    
+
         const formData = new FormData();
         formData.append('title', title);
         formData.append('firstName', firstName);
@@ -73,7 +77,6 @@ function input_data_intern() {
         formData.append('nationality', nationality);
         formData.append('religion', religion);
         formData.append('phone', phone);
-        // formData.append('facebook', facebook);
         formData.append('lineId', lineId);
         formData.append('email2', email2);
         formData.append('email3', email3);
@@ -101,22 +104,40 @@ function input_data_intern() {
         if (resume) formData.append('resume', resume);
         if (transcript) formData.append('transcript', transcript);
         if (otherFiles) formData.append('otherFiles', otherFiles);
-    
+
         axios.post('http://localhost/internV2/backend/intern/insert_data_intern.php', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             }
         })
         .then((response) => {
+            console.log(response.data); // ตรวจสอบข้อมูลที่ได้รับ
+
             if (response.data && response.data.status === 'success') {
-                alert(response.data.message || 'ข้อมูลบันทึกสำเร็จ!');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.data.message || 'ข้อมูลบันทึกสำเร็จ!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/home'; // เปลี่ยนเส้นทางไปยังหน้า home
+                    }
+                });
             } else {
-                alert(response.data.message || 'ข้อมูลบันทึกไม่สำเร็จ');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.data.message || 'ข้อมูลบันทึกไม่สำเร็จ',
+                });
             }
         })
         .catch((error) => {
             console.error('เกิดข้อผิดพลาด!', error);
-            alert('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์',
+            });
         });
     };
 
@@ -128,7 +149,7 @@ function input_data_intern() {
             setprogram([...program, value]);
         }
     };
-    
+
     return (
         <>
             <NavbarIntern/>
@@ -210,10 +231,6 @@ function input_data_intern() {
                             <label className="block text-2xl font-medium text-gray-700">เบอร์โทรศัพท์<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        {/* <div>
-                            <label className="block text-2xl font-medium text-gray-700">Facebook<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="โปรดระบุ" required />
-                        </div> */}
                         <div>
                             <label className="block text-2xl font-medium text-gray-700">ID Line<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={lineId} onChange={(e) => setLineId(e.target.value)} placeholder="โปรดระบุ" required />
@@ -286,9 +303,12 @@ function input_data_intern() {
                             <label className="block text-2xl font-medium text-gray-700">ตำแหน่งที่สมัคร<span style={{ color: 'red' }}>*</span></label>
                             <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={position} onChange={(e) => setPosition(e.target.value)} placeholder="โปรดระบุ" required />
                         </div>
-                        <div >
+                        <div>
                             <label className="block text-2xl font-medium text-gray-700">หน่วยงานที่ฝึก<span style={{ color: 'red' }}>*</span></label>
-                            <input className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" type="text" value={section} onChange={(e) => setSection(e.target.value)} placeholder="โปรดระบุ" required />
+                            <select className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-2xl" style={{ height: '49.6px' }} value={section} onChange={(e) => setSection(e.target.value)} required>
+                                <option value="">เลือกหน่วยงาน</option>
+                                <option value="Digital Transformation">Digital Transformation</option>
+                            </select>
                         </div>
                         <div className="col-span-4">
                             <label className="block text-2xl font-medium text-gray-700">โปรดเลือกสายงานที่ถนัด<span style={{ color: 'red' }}>*</span></label>
@@ -491,16 +511,16 @@ function input_data_intern() {
                                         onChange={(e) => setOtherFiles(e.target.files[0])}
                                     />
                                 </div>
-                        <div >
-                            <label className="block text-2xl font-medium text-gray-700">ภาพโปรไฟล์<span style={{ color: 'red' }}>*</span></label>
-                            <input
-                                className="file-input file-input-bordered w-full max-w-xs col-span-4"
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => setProfile(e.target.files[0])}
-                                required
-                            />
-                        </div>
+                                <div >
+                                    <label className="block text-2xl font-medium text-gray-700">ภาพโปรไฟล์<span style={{ color: 'red' }}>*</span></label>
+                                    <input
+                                        className="file-input file-input-bordered w-full max-w-xs col-span-4"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => setProfile(e.target.files[0])}
+                                        required
+                                    />
+                                </div>
                             </div>
                         </div>
                         {profile && (

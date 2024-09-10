@@ -1,35 +1,61 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';  // ดึงข้อมูลจาก AuthContext
 
 const NavbarIntern = () => {
+    const { user, logout } = useAuth();  // ใช้ข้อมูลจาก Context และดึงฟังก์ชัน logout
     const [username, setUsername] = useState('');
     const [role, setRole] = useState('');
+    const [isLoading, setIsLoading] = useState(true); // ใช้เพื่อตรวจสอบการโหลดข้อมูล
 
     useEffect(() => {
-        // ดึงข้อมูลจาก localStorage
-        const storedUsername = localStorage.getItem('username');
-        const storedRole = localStorage.getItem('role');
+        // ตรวจสอบว่าข้อมูล user จาก Context มีหรือไม่
+        if (user) {
+            setUsername(user.username);
+            setRole(user.role);
 
-        // ตรวจสอบและตั้งค่า username และ role
-        if (storedUsername && storedRole) {
-            setUsername(storedUsername);
-            setRole(storedRole);
+            // บันทึกข้อมูลลง localStorage เผื่อกรณีที่ต้องการใช้ในอนาคต
+            localStorage.setItem('username', user.username);
+            localStorage.setItem('role', user.role);
         } else {
-            console.log('No username or role found in localStorage.');
+            // กรณีที่ไม่มี user ใน Context จะพยายามดึงจาก localStorage
+            const storedUsername = localStorage.getItem('username');
+            const storedRole = localStorage.getItem('role');
+
+
+            if (storedUsername && storedRole) {
+                setUsername(storedUsername);
+                setRole(storedRole);
+            } else {
+                console.log('No username or role found in localStorage.');
+            }
         }
-    }, []);
+
+        setIsLoading(false); // เสร็จสิ้นการโหลดข้อมูล
+    }, [user]);
 
     // ฟังก์ชันสำหรับทำการ Logout
     const handleLogout = () => {
-        // ล้างข้อมูลใน localStorage
-        localStorage.removeItem('username');
-        localStorage.removeItem('role');
+        // ล้างข้อมูลใน localStorage ทั้งหมด
+        localStorage.clear();
 
-        // นำผู้ใช้กลับไปที่หน้า login
-        window.location.href = '/';
+        // เรียกฟังก์ชัน logout จาก Context เพื่อล้างข้อมูลใน Context
+        logout();  // ฟังก์ชัน logout ที่นำมาจาก useAuth()
+
+        // นำผู้ใช้กลับไปที่หน้า login หรือหน้าเริ่มต้น
+        window.location.href = '/'; // หรือเปลี่ยนเป็นเส้นทางที่คุณต้องการ
     };
 
     // ตรวจสอบ role และกำหนดข้อความที่จะแสดง
-    const roleDisplay = role === 'intern' ? 'Team Development' : role === 'mentor' ? 'Scrum Master' : 'Unknown Role';
+    const roleDisplay = role === 'intern' 
+        ? 'Team Development' 
+        : role === 'mentor' 
+        ? 'Scrum Master' 
+        : role ? role : 'Unknown Role';  // เพิ่มการตรวจสอบค่า role
+
+    // กำหนดการแสดงผลเมื่อกำลังโหลด
+    if (isLoading) {
+        return <div>Loading...</div>; // แสดงข้อความ Loading ระหว่างที่ข้อมูลกำลังถูกดึง
+    }
 
     return (
         <>
@@ -50,8 +76,10 @@ const NavbarIntern = () => {
                 </div>
                 <div className="flex items-center ml-8">
                     <div className="mr-5 text-white text-right">
-                        <p className='text-left' style={{ height: '30px' }}>{roleDisplay}</p>
-                        <p style={{color:'#c0c0c0'}}>{username}</p>
+                        <p className='text-left' style={{ height: '30px' }}>
+                            {role ? roleDisplay : 'Loading Role...'} {/* แสดง Loading ระหว่างรอข้อมูล role */}
+                        </p>
+                        <p style={{color:'#c0c0c0'}}>{username || 'Loading Username...'}</p> {/* แสดง Loading ระหว่างรอข้อมูล username */}
                     </div>
                     <div className="bg-white w-px h-16 mx-4"></div>
                     <button onClick={handleLogout} className="text-white mr-12">Logout</button>
