@@ -61,8 +61,8 @@ function Project() {
                             <td className="text-center p-4 text-[20px]">1</td> {/* ลำดับโปรเจค */}
                             <td className="text-center p-4 text-[20px]">01/01/2024</td> {/* วันที่เริ่มโปรเจค */}
                             <td className="text-center p-4 text-[20px]">31/03/2024</td> {/* กำหนดส่งโปรเจค */}
-                            <td className="text-center p-4 text-[20px]">KM Selg-Learning</td> {/* ชื่อโปรเจค */}
-                            <td className="text-center p-4 text-[20px]">สุพรรษา มูลศิริ</td> {/* ผู้ดูแลโปรเจค */}
+                            <td className="text-left p-4 text-[20px]">KM Selg-Learning</td> {/* ชื่อโปรเจค */}
+                            <td className="text-left p-4 text-[20px]">สุพรรษา มูลศิริ</td> {/* ผู้ดูแลโปรเจค */}
                             <td className="text-center p-4 text-[20px]">
                                 <span className="bg-[#4CAF50] text-white px-3 py-1 rounded-full">กำลังดำเนินการ</span> {/* สถานะโปรเจค */}
                             </td>
@@ -76,8 +76,8 @@ function Project() {
                             <td className="text-center p-4 text-[20px]">2</td> {/* ลำดับโปรเจค */}
                             <td className="text-center p-4 text-[20px]">01/01/2024</td> {/* วันที่เริ่มโปรเจค */}
                             <td className="text-center p-4 text-[20px]">31/03/2024</td> {/* กำหนดส่งโปรเจค */}
-                            <td className="text-center p-4 text-[20px]">OT</td> {/* ชื่อโปรเจค */}
-                            <td className="text-center p-4 text-[20px]">สุพรรษา มูลศิริ</td> {/* ผู้ดูแลโปรเจค */}
+                            <td className="text-left p-4 text-[20px]">OT</td> {/* ชื่อโปรเจค */}
+                            <td className="text-left p-4 text-[20px]">สุพรรษา มูลศิริ</td> {/* ผู้ดูแลโปรเจค */}
                             <td className="text-center p-4 text-[20px]">
                                 <span className="bg-[#4CAF50] text-white px-3 py-1 rounded-full">กำลังดำเนินการ</span> {/* สถานะโปรเจค */}
                             </td>

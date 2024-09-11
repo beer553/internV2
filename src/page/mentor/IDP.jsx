@@ -189,8 +189,7 @@ const Profile = () => {
                 <label className="mb-1 text-[25px] text-left text-gray-800">โปรดกรอกเป้าหมาย</label>
                 <textarea
                   className="rounded-lg bg-white border border-gray-300 text-[20px] p-2 w-full h-28 resize-none"
-                  readOnly
-                >
+                  readOnly>
                   อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ
                 </textarea>
               </div>

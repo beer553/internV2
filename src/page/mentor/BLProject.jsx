@@ -1,19 +1,18 @@
 import React, { useState, useRef } from 'react';
-import './BLProject.css';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../component/footer';
 import NavbarMentor from '../component/navbar_mentor';
 import ImageModal from '../component/ImageModal';
 
 const ProductBacklog = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const GotoPDBacklog = () => {
-    navigate('/PDBacklog'); 
+    navigate('/PDBacklog');
   };
 
   const GotoDailyscrum = () => {
-    navigate('/Dailyscrum'); 
+    navigate('/Dailyscrum');
   };
 
   const [tableData, setTableData] = useState([
@@ -24,8 +23,8 @@ const ProductBacklog = () => {
       dateend: "22/03/2547",
       type: "Test",
       detail: "Test",
-      beforeImg: "/src/img/dasbourd.png",
-      afterImg: "/src/img/dasbourd.png",
+      beforeImg: "/src/img/dashboard.png",
+      afterImg: "/src/img/dashboard.png",
       manday: 1,
       responsible: "ซัน",
       status: "To Do",
@@ -35,11 +34,11 @@ const ProductBacklog = () => {
   ]);
 
   const [newRow, setNewRow] = useState(null);
-  const [editRowIndices, setEditRowIndices] = useState([]); 
-  const [orderCounter, setOrderCounter] = useState(tableData.length + 1); 
-  const [modalImageUrl, setModalImageUrl] = useState(null); 
-  const beforeImgRef = useRef([]); 
-  const afterImgRef = useRef([]); 
+  const [editRowIndices, setEditRowIndices] = useState([]);
+  const [orderCounter, setOrderCounter] = useState(tableData.length + 1);
+  const [modalImageUrl, setModalImageUrl] = useState(null);
+  const beforeImgRef = useRef([]);
+  const afterImgRef = useRef([]);
 
   const addRow = () => {
     setNewRow({
@@ -64,11 +63,11 @@ const ProductBacklog = () => {
     const isValid = requiredFields.every(field => newRow[field]);
 
     if (isValid) {
-      setTableData([...tableData, newRow]); 
-      setNewRow(null); 
-      setOrderCounter(orderCounter + 1); 
+      setTableData([...tableData, newRow]);
+      setNewRow(null);
+      setOrderCounter(orderCounter + 1);
     } else {
-      alert("กรุณากรอกข้อมูลให้ครบทุกช่องก่อนบันทึก"); 
+      alert("กรุณากรอกข้อมูลให้ครบทุกช่องก่อนบันทึก");
     }
   };
 
@@ -84,7 +83,7 @@ const ProductBacklog = () => {
       const [year, month, day] = value.split('-');
       value = `${day}/${month}/${year}`;
     }
-    
+
     if (index !== null) {
       const updatedTableData = tableData.map((row, i) =>
         i === index ? { ...row, [field]: value } : row
@@ -133,17 +132,17 @@ const ProductBacklog = () => {
   };
 
   const startEdit = (index) => {
-    setEditRowIndices(prevIndices => [...prevIndices, index]); 
+    setEditRowIndices(prevIndices => [...prevIndices, index]);
   };
 
   const saveEdit = (index) => {
-    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index)); 
+    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index));
   };
 
   const deleteRow = (index) => {
-    const updatedTableData = tableData.filter((_, i) => i !== index); 
+    const updatedTableData = tableData.filter((_, i) => i !== index);
     setTableData(updatedTableData);
-    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index)); 
+    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index));
   };
 
   const openModal = (imageUrl) => {
@@ -156,38 +155,36 @@ const ProductBacklog = () => {
 
   return (
     <div>
-      <NavbarMentor /> 
-      <div>
-
-        <main className='MBL'>
-          <div className='h1-1'>ProductBacklog</div>
-          <div className='h2-1'>น้องแดนนี่, น้องกาฟิวส์, น้องเบียร์</div>
-          <div className='h3-1'>KM Selg-Learning</div>
+      <NavbarMentor />
+      <div className='container mx-auto'>
+        <main className=''>
+          <div className='text-gray-600 text-[45px]'>ProductBacklog</div>
+          <div className='text-gray-600 text-[25px]'>น้องแดนนี่, น้องกาฟิวส์, น้องเบียร์</div>
+          <div className='mt-1 text-gray-600 text-[25px]'>KM Selg-Learning</div>
           <div className="flex justify-between items-center w-full mt-5 mb-5">
             <img src="/src/img/img_icon/left-arrow.png" className='w-7 ml-10' onClick={GotoPDBacklog} />
             <img src="/src/img/img_icon/left-arrow.png" className="w-7 mr-10 transform rotate-180" onClick={GotoDailyscrum} />
-            
           </div>
 
-          <section className="backlog-table">
-            <div className="table-container text-black">
-              <table className="fixed-table">
+          <section className="overflow-x-auto">
+            <div className="overflow-x-auto">
+              <table className="table-auto w-[190%]">
                 <thead >
-                  <tr className='linetable'>
-                    <th>Number</th>
-                    <th>Sprint</th>
-                    <th>Notification Date</th>
-                    <th>Completion Date</th>
-                    <th>Type of work</th>
-                    <th>Details</th>
-                    <th>Before</th>
-                    <th>After</th>
-                    <th>Manday</th>
-                    <th>Responsible Person</th>
-                    <th>Status</th>
-                    <th>Product Increment</th>
-                    <th>Note</th>
-                    <th>Edit</th>
+                  <tr className='border-b-2 border-black text-[25px]'>
+                    <th className="w-[5%] h-8">Number</th>
+                    <th className="w-[5%] h-8">Sprint</th>
+                    <th className="w-[5%] h-8">Notification Date</th>
+                    <th className="w-[5%] h-8">Completion Date</th>
+                    <th className="w-[5%] h-8">Type of work</th>
+                    <th className="w-[5%] h-8">Details</th>
+                    <th className="w-[5%] h-8">Before</th>
+                    <th className="w-[5%] h-8">After</th>
+                    <th className="w-[5%] h-8">Manday</th>
+                    <th className="w-[5%] h-8">Responsible Person</th>
+                    <th className="w-[5%] h-8">Status</th>
+                    <th className="w-[5%] h-8">Product Increment</th>
+                    <th className="w-[5%] h-8">Note</th>
+                    <th className="w-[5%] h-8">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -195,97 +192,100 @@ const ProductBacklog = () => {
                     <tr key={index}>
                       {editRowIndices.includes(index) ? (
                         <>
-                          <td>{row.order}</td>
-                          <td><input type="number" value={row.sprint} onChange={(e) => handleChange(e, 'sprint', index)} className='IP-1' min="0" step="1" /></td>
+                          <td className='text-[20px]'>{row.order}</td>
+                          <td><input type="number" value={row.sprint} onChange={(e) => handleChange(e, 'sprint', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' min="0" step="1" /></td>
                           <td className="relative">
-                            <input type="date" value={row.datestart.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'datestart', index)} className='IP-2 hidden-input' />
+                            <input type="date" value={row.datestart.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'datestart', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' />
                           </td>
                           <td className="relative">
-                            <input type="date" value={row.dateend.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'dateend', index)} className='IP-2 hidden-input' />
+                            <input type="date" value={row.dateend.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'dateend', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' />
                           </td>
-                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.type} onChange={(e) => handleChange(e, 'type', index)} className='IP-1' /></td>
-                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.detail} onChange={(e) => handleChange(e, 'detail', index)} className='IP-1' /></td>
+                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.type} onChange={(e) => handleChange(e, 'type', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[20px]' /></td>
+                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.detail} onChange={(e) => handleChange(e, 'detail', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[20px]' /></td>
                           <td>
-                            <label className="file-input" style={{ backgroundColor: 'white' }}>
+                            <label className="w-full bg-white flex flex-col items-center">
                               <input
                                 type="file"
                                 onChange={(e) => handleImageChange(e, 'beforeImg', index)}
                                 ref={el => beforeImgRef.current[index] = el}
+                                className="hidden"
                               />
                               {row.beforeImg ? (
                                 <>
-                                  <img src={row.beforeImg} alt="Before Preview" className='img-KM-1' onClick={() => openModal(row.beforeImg)} style={{ width: '95px', height: '45px' }} />
-                                  <img src="/src/img/img_icon/bin.png" alt="Delete" className='delete-icon' onClick={() => handleImageDelete('beforeImg', index)} />
+                                  <img src={row.beforeImg} alt="Before Preview" className='object-cover w-28 h-16 cursor-pointer mt-5' onClick={() => openModal(row.beforeImg)} />
+                                  <img src="/src/img/img_icon/bin.png" alt="Delete" className='w-6 h-6 cursor-pointer mt-2' onClick={() => handleImageDelete('beforeImg', index)} />
                                 </>
                               ) : (
-                                <img src="/src/img/img_icon/add-button.png" alt="Upload" className='UL-IM' />
+                                <img src="/src/img/img_icon/add-button.png" alt="Upload" className='w-6 h-6 cursor-pointer' />
                               )}
                             </label>
                           </td>
                           <td>
-                            <label className="file-input" style={{ backgroundColor: 'white' }}>
+                            <label className="w-full bg-white flex flex-col items-center">
                               <input
                                 type="file"
                                 onChange={(e) => handleImageChange(e, 'afterImg', index)}
                                 ref={el => afterImgRef.current[index] = el}
+                                className="hidden"
                               />
                               {row.afterImg ? (
                                 <>
-                                  <img src={row.afterImg} alt="After Preview" className='img-KM-1' onClick={() => openModal(row.afterImg)} style={{ width: '95px', height: '45px' }} />
-                                  <img src="/src/img/img_icon/bin.png" alt="Delete" className='delete-icon' onClick={() => handleImageDelete('afterImg', index)} />
+                                  <img src={row.afterImg} alt="After Preview" className='object-cover w-28 h-16 cursor-pointer mt-5' onClick={() => openModal(row.afterImg)} />
+                                  <img src="/src/img/img_icon/bin.png" alt="Delete" className='w-6 h-6 cursor-pointer mt-2' onClick={() => handleImageDelete('afterImg', index)} />
                                 </>
                               ) : (
-                                <img src="/src/img/img_icon/add-button.png" alt="Upload" className='UL-IM' />
+                                <img src="/src/img/img_icon/add-button.png" alt="Upload" className='w-6 h-6 cursor-pointer' />
                               )}
                             </label>
                           </td>
-                          <td><input type="number" value={row.manday} onChange={(e) => handleChange(e, 'manday', index)} className='IP-1' min="0" step="1" /></td>
-                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.responsible} onChange={(e) => handleChange(e, 'responsible', index)} className='IP-1' /></td>
+                          <td><input type="number" value={row.manday} onChange={(e) => handleChange(e, 'manday', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' min="0" step="1" /></td>
+                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.responsible} onChange={(e) => handleChange(e, 'responsible', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[20px]' /></td>
                           <td>
                             <select
-                              value={row.status || ""}
+                              value={row.status}
                               onChange={(e) => handleChange(e, 'status', index)}
-                              className='IP-1'
-                              style={{
-                                color: row.status === 'To do' ? 'blue' : row.status === 'Done' ? 'green' : ''
-                              }}
+                              className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3'
+                              style={{ color: row.status === 'To Do' ? 'blue' : row.status === 'Done' ? 'green' : '' }}
                             >
-                              <option value="" disabled hidden>เลือกสถานะ</option>
-                              <option value="To do" className="option-todo">To do</option>
-                              <option value="Done" className="option-done">Done</option>
+                              <option value="To Do" className="text-blue-500">To Do</option>
+                              <option value="Done" className="text-green-500">Done</option>
                             </select>
                           </td>
-                          <td><input type="date" value={row.increment.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'increment', index)} className='IP-2' /></td>
-                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.remark} onChange={(e) => handleChange(e, 'remark', index)} className='IP-1' /></td>
+
+                          <td><input type="date" value={row.increment.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'increment', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' /></td>
+                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.remark} onChange={(e) => handleChange(e, 'remark', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[20px]' /></td>
                           <td>
-                            <button onClick={() => saveEdit(index)} className='save-button'>บันทึก</button>
-                            <button onClick={() => deleteRow(index)} className='Deleterow-button'>ลบ</button>
+                            <button onClick={() => saveEdit(index)} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[25px]'>บันทึก</button>
+                            <button onClick={() => deleteRow(index)} className='bg-red-500 text-white rounded-lg h-10 w-24 mt-1 text-[25px] ml-2'>ลบ</button>
                           </td>
                         </>
                       ) : (
                         <>
-                          <td>{row.order}</td>
-                          <td>{row.sprint}</td>
-                          <td>{formatDate(row.datestart)}</td>
-                          <td>{formatDate(row.dateend)}</td>
-                          <td>{row.type}</td>
-                          <td>{row.detail}</td>
-                          <td><img src={row.beforeImg} alt="Before" className='img-KM' onClick={() => openModal(row.beforeImg)} /></td>
-                          <td><img src={row.afterImg} alt="After" className='img-KM' onClick={() => openModal(row.afterImg)} /></td>
-                          <td>{row.manday}</td>
-                          <td>{row.responsible}</td>
-                          <td
-                            className={row.status === "To Do" ? "option-todo" : "option-done"}
-                            style={{
-                              color: row.status === 'To do' ? 'blue' : row.status === 'Done' ? 'green' : ''
-                            }}
-                          >
-                            {row.status}
-                          </td>
-                          <td>{formatDate(row.increment)}</td>
-                          <td>{row.remark}</td>
+                          <td className='text-[20px]'>{row.order}</td>
+                          <td className='text-[20px]'>{row.sprint}</td>
+                          <td className='text-[20px]'>{formatDate(row.datestart)}</td>
+                          <td className='text-[20px]'>{formatDate(row.dateend)}</td>
+                          <td className='text-[20px]'>{row.type}</td>
+                          <td className='text-[20px]'>{row.detail}</td>
                           <td>
-                            <img src="/src/img/img_icon/Edit.png" alt="Edit" className='edit-icon' onClick={() => startEdit(index)} />
+                            <div className="flex justify-center items-center mt-3">
+                              <img src={row.beforeImg} alt="Before" className='object-cover w-28 h-16 cursor-pointer' onClick={() => openModal(row.beforeImg)} />
+                            </div>
+                          </td>
+                          <td>
+                            <div className="flex justify-center items-center mt-3">
+                              <img src={row.afterImg} alt="After" className='object-cover w-28 h-16 cursor-pointer' onClick={() => openModal(row.afterImg)} />
+                            </div>
+                          </td>
+                          <td className='text-[20px]'>{row.manday}</td>
+                          <td className='text-[20px]'>{row.responsible}</td>
+                          <td className={row.status === "To Do" ? "text-blue-500 text-[20px]" : "text-green-500 text-[20px]"}>{row.status}</td>
+                          <td className='text-[20px]'>{formatDate(row.increment)}</td>
+                          <td className='text-[20px]'>{row.remark}</td>
+                          <td>
+                            <div className="flex justify-center items-center mt-3">
+                              <img src="/src/img/img_icon/Edit.png" alt="Edit" className='w-10 h-10 cursor-pointer' onClick={() => startEdit(index)} />
+                            </div>
                           </td>
                         </>
                       )}
@@ -293,82 +293,83 @@ const ProductBacklog = () => {
                   ))}
                   {newRow && (
                     <tr>
-                      <td>{newRow.order}</td>
-                      <td ><input type="number" value={newRow.sprint} onChange={(e) => handleChange(e, 'sprint')} className='IP-1' min="0" step="1" /></td>
-                      <td><input type="date" value={newRow.datestart.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'datestart')} className='IP-2' /></td>
-                      <td><input type="date" value={newRow.dateend.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'dateend')} className='IP-2' /></td>
-                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.type} onChange={(e) => handleChange(e, 'type')} className='IP-1' /></td>
-                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.detail} onChange={(e) => handleChange(e, 'detail')} className='IP-1' /></td>
+                      <td className='text-[20px]'>{newRow.order}</td>
+                      <td><input type="number" value={newRow.sprint} onChange={(e) => handleChange(e, 'sprint')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' min="0" step="1" /></td>
+                      <td><input type="date" value={newRow.datestart.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'datestart')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' /></td>
+                      <td><input type="date" value={newRow.dateend.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'dateend')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' /></td>
+                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.type} onChange={(e) => handleChange(e, 'type')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[22px]' /></td>
+                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.detail} onChange={(e) => handleChange(e, 'detail')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[22px]' /></td>
                       <td>
-                        <label className="file-input" style={{ backgroundColor: 'white' }}>
+                        <label className="w-full bg-white flex flex-col items-center">
                           <input
                             type="file"
                             onChange={(e) => handleImageChange(e, 'beforeImg')}
+                            className="hidden"
                           />
                           {newRow.beforeImg ? (
                             <>
-                              <img src={newRow.beforeImg} alt="Before Preview" className='img-KM-1' onClick={() => openModal(newRow.beforeImg)} style={{ width: '95px', height: '45px' }} />
-                              <img src="/src/img/img_icon/bin.png" alt="Delete" className='delete-icon' onClick={() => handleImageDelete('beforeImg')} />
+                              <img src={newRow.beforeImg} alt="Before Preview" className='object-cover w-28 h-16 cursor-pointer mt-5' onClick={() => openModal(newRow.beforeImg)} />
+                              <img src="/src/img/img_icon/bin.png" alt="Delete" className='w-6 h-6 cursor-pointer mt-2' onClick={() => handleImageDelete('beforeImg')} />
                             </>
                           ) : (
-                            <img src="/src/img/img_icon/add-button.png" alt="Upload" className='UL-IM' />
+                            <img src="/src/img/img_icon/add-button.png" alt="Upload" className='w-6 h-6 cursor-pointer' />
                           )}
                         </label>
                       </td>
                       <td>
-                        <label className="file-input" style={{ backgroundColor: 'white' }}>
+                        <label className="w-full bg-white flex flex-col items-center">
                           <input
                             type="file"
                             onChange={(e) => handleImageChange(e, 'afterImg')}
+                            className="hidden"
                           />
                           {newRow.afterImg ? (
                             <>
-                              <img src={newRow.afterImg} alt="After Preview" className='img-KM-1' onClick={() => openModal(newRow.afterImg)} style={{ width: '95px', height: '45px' }} />
-                              <img src="/src/img/img_icon/bin.png" alt="Delete" className='delete-icon' onClick={() => handleImageDelete('afterImg')} />
+                              <img src={newRow.afterImg} alt="After Preview" className='object-cover w-28 h-16 cursor-pointer mt-5' onClick={() => openModal(newRow.afterImg)} />
+                              <img src="/src/img/img_icon/bin.png" alt="Delete" className='w-6 h-6 cursor-pointer mt-2' onClick={() => handleImageDelete('afterImg')} />
                             </>
                           ) : (
-                            <img src="/src/img/img_icon/add-button.png" alt="Upload" className='UL-IM' />
+                            <img src="/src/img/img_icon/add-button.png" alt="Upload" className='w-6 h-6 cursor-pointer' />
                           )}
                         </label>
                       </td>
-                      <td><input type="number" value={newRow.manday} onChange={(e) => handleChange(e, 'manday')} className='IP-1' min="0" step="1" /></td>
-                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.responsible} onChange={(e) => handleChange(e, 'responsible')} className='IP-1' /></td>
+                      <td><input type="number" value={newRow.manday} onChange={(e) => handleChange(e, 'manday')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' min="0" step="1" /></td>
+                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.responsible} onChange={(e) => handleChange(e, 'responsible')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[22px]' /></td>
                       <td>
                         <select
                           value={newRow.status || ""}
                           onChange={(e) => handleChange(e, 'status')}
-                          className='IP-1'
+                          className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3'
                           style={{
-                            color: newRow.status === 'To do' ? 'blue' : newRow.status === 'Done' ? 'green' : ''
+                            color: newRow.status === 'To Do' ? 'blue' : newRow.status === 'Done' ? 'green' : ''
                           }}
                         >
-                          <option value="" disabled hidden>เลือกสถานะ</option>
-                          <option value="To do" className="option-todo">To do</option>
-                          <option value="Done" className="option-done">Done</option>
+                          <option value="To Do" className="text-blue-500">To Do</option>
+                          <option value="Done" className="text-green-500">Done</option>
                         </select>
                       </td>
-                      <td><input type="date" value={newRow.increment.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'increment')} className='IP-2' />
-                      </td>
-                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.remark} onChange={(e) => handleChange(e, 'remark')} className='IP-1' /></td>
+
+                      <td><input type="date" value={newRow.increment.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'increment')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-3' /></td>
+                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.remark} onChange={(e) => handleChange(e, 'remark')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[22px]' /></td>
                       <td>
-                        <button onClick={saveRow} className='save-button'>บันทึก</button>
-                        <button onClick={cancelRow} className='cancel-button'>ยกเลิก</button>
+                        <button onClick={saveRow} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[25px]'>บันทึก</button>
+                        <button onClick={cancelRow} className='bg-red-500 text-white rounded-lg h-10 w-24 mt-1 text-[25px] ml-2'>ยกเลิก</button>
                       </td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
-            <div style={{display:'flex',justifyContent:'right', marginRight:'50px'}}>
+            <div className='flex justify-end mr-12'>
               {!newRow && (
-                <img src="/src/img/img_icon/plus.png" alt="Add" className='add-buttonz' onClick={addRow} />)}
+                <img src="/src/img/img_icon/plus.png" alt="Add" className='w-10 h-10 mt-8 mb-16 cursor-pointer' onClick={addRow} />)}
             </div>
             <div className='mb-20'></div>
           </section>
         </main>
       </div>
-      <Footer /> 
-      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={closeModal} /> 
+      <Footer />
+      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={closeModal} />
     </div>
   );
 };

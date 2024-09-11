@@ -4,19 +4,13 @@ import NavbarIntern from '../component/navbar_intern';
 import Footer from '../component/footer';
 
 function Document() {
-    const [showPopup, setShowPopup] = useState(false); // สร้าง state สำหรับแสดงหรือซ่อน Pop-up
-    const [showEditPopup, setShowEditPopup] = useState(false); // สำหรับ pop-up edit
+    const [showPopup, setShowPopup] = useState(false);
+    const [showEditPopup, setShowEditPopup] = useState(false);
     const [showReadPopup, setShowReadPopup] = useState(false);
-    const [checkedItems, setCheckedItems] = useState({
-        selectAll: false,
-        file1: false,
-        file2: false,
-        file3: false,
-    });
+    const [checkedItems, setCheckedItems] = useState({});
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const [uploadedFile, setUploadedFile] = useState(null); // state สำหรับเก็บไฟล์ที่อัปโหลด
-    const [uploadedFiles, setUploadedFiles] = useState([]); // เก็บไฟล์ที่อัปโหลด
-    const [errorMessage, setErrorMessage] = useState(""); // เก็บข้อความแสดงข้อผิดพลาด
 
     const navigate = useNavigate(); // ต้องมี useNavigate ใช้ navigate ไปยังหน้า home
 
@@ -54,43 +48,67 @@ function Document() {
         setShowReadPopup(!showReadPopup);
     };
 
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        if (file && (file.type === "application/pdf" || file.type === "application/msword" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+            setUploadedFiles((prevFiles) => {
+                const newFiles = [...prevFiles, file];
+                const updatedCheckedItems = {
+                    ...checkedItems,
+                    [file.name]: false, // เพิ่มไฟล์ใหม่พร้อมกับค่าเริ่มต้น false ใน checkedItems
+                };
+                setCheckedItems(updatedCheckedItems);
+                return newFiles;
+            });
+            setErrorMessage("");
+        } else {
+            setErrorMessage("Invalid file type. Please upload a PDF, DOC, or DOCX file.");
+        }
+    };
+
     const handleCheckboxChange = (event) => {
         const { id, checked } = event.target;
 
         if (id === 'selectAll') {
+            // เมื่อเลือก 'selectAll' หรือยกเลิก ให้เลือกหรือยกเลิกทุกไฟล์
+            const updatedCheckedItems = {};
+            uploadedFiles.forEach((file) => {
+                updatedCheckedItems[file.name] = checked;
+            });
             setCheckedItems({
+                ...updatedCheckedItems,
                 selectAll: checked,
-                file1: checked,
-                file2: checked,
-                file3: checked,
             });
         } else {
-            setCheckedItems((prev) => ({
-                ...prev,
-                [id]: checked,
-                selectAll: prev.file1 && prev.file2 && prev.file3 && checked
-            }));
+            // เมื่อเลือกไฟล์ทีละไฟล์
+            setCheckedItems((prev) => {
+                const updatedItems = {
+                    ...prev,
+                    [id]: checked,
+                };
+
+                // ตรวจสอบว่าไฟล์ทั้งหมดถูกเลือกหรือไม่
+                const allFilesChecked = uploadedFiles.every((file) => updatedItems[file.name]);
+                updatedItems.selectAll = allFilesChecked;
+
+                return updatedItems;
+            });
         }
     };
 
     const downloadFiles = () => {
-        // Logic สำหรับดาวน์โหลดไฟล์
-        console.log("Downloading selected files...");
-        setShowPopup(false); // ปิด Pop-up หลังจากดาวน์โหลดไฟล์
-    };
+        const selectedFiles = uploadedFiles.filter(file => checkedItems[file.name]);
 
-    const handleFileUpload = (event) => {
-        const file = event.target.files[0];
-        if (file && (file.type === "application/pdf" || file.type === "application/msword" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
-            setUploadedFile(file);
-            setErrorMessage(""); // เคลียร์ข้อความ error เมื่อเลือกไฟล์ถูกต้อง
-        } else {
-            setUploadedFile(null);
-        }
-    };
+        selectedFiles.forEach((file) => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(file);
+            link.download = file.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
 
-    const deleteFile = (fileName) => {
-        setUploadedFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
+        setShowPopup(false);
     };
 
     return (
@@ -121,20 +139,20 @@ function Document() {
                     </div>
                     <div className="flex items-center justify-between mt-4">
                         <img src="/src/img/img_icon/flowchart.png" alt="Flowchart Icon" className="w-16 h-16 mb-3" />
-                        <div className="flex space-x-8">
-                            <div className="flex flex-col items-center text-black">
+                        <div className="flex space-x-8 items-center justify-center">
+                            <button className="flex flex-col items-center text-black" onChange={handleFileUpload} >
                                 <label htmlFor="uploadFlowchart">
-                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 cursor-pointer'></img>
+                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 h-7 cursor-pointer'></img>
                                 </label>
-                                <input type="file" id="uploadFlowchart" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
+                                <input type="file" id="uploadFlowchart" accept=".pdf,.doc,.docx" className="hidden" />
                                 <span className="text-[20px]">Upload</span>
-                            </div>
+                            </button>
                             <button className="flex flex-col items-center text-black" onClick={togglePopup}>
-                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-7'></img>
+                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-8 h-[30px]'></img>
                                 <span className="text-[20px]">Download</span>
                             </button>
                             <button className="flex flex-col items-center text-black" onClick={toggleReadPopup}>
-                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7'></img>
+                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7 h-7 mt-1'></img>
                                 <span className="text-[20px]">Read</span>
                             </button>
                         </div>
@@ -152,20 +170,20 @@ function Document() {
                     </div>
                     <div className="flex items-center justify-between mt-4">
                         <img src="/src/img/img_icon/swimlane.png" alt="Swimlane Icon" className="w-16 h-16 mb-3" />
-                        <div className="flex space-x-8">
-                            <div className="flex flex-col items-center text-black">
-                                <label htmlFor="uploadSwimlane">
-                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 cursor-pointer'></img>
+                        <div className="flex space-x-8 items-center justify-center">
+                            <button className="flex flex-col items-center text-black" onChange={handleFileUpload} >
+                                <label htmlFor="uploadFlowchart">
+                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 h-7 cursor-pointer'></img>
                                 </label>
-                                <input type="file" id="uploadSwimlane" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
+                                <input type="file" id="uploadFlowchart" accept=".pdf,.doc,.docx" className="hidden" />
                                 <span className="text-[20px]">Upload</span>
-                            </div>
+                            </button>
                             <button className="flex flex-col items-center text-black" onClick={togglePopup}>
-                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-7'></img>
+                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-8 h-[30px]'></img>
                                 <span className="text-[20px]">Download</span>
                             </button>
                             <button className="flex flex-col items-center text-black" onClick={toggleReadPopup}>
-                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7'></img>
+                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7 h-7 mt-1'></img>
                                 <span className="text-[20px]">Read</span>
                             </button>
                         </div>
@@ -183,20 +201,20 @@ function Document() {
                     </div>
                     <div className="flex items-center justify-between mt-4">
                         <img src="/src/img/img_icon/prototype.png" alt="Prototype Icon" className="w-16 h-16 mb-3" />
-                        <div className="flex space-x-8">
-                            <div className="flex flex-col items-center text-black">
-                                <label htmlFor="uploadPrototype">
-                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 cursor-pointer'></img>
+                        <div className="flex space-x-8 items-center justify-center">
+                            <button className="flex flex-col items-center text-black">
+                                <label htmlFor="uploadFlowchart">
+                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 h-7 cursor-pointer'></img>
                                 </label>
-                                <input type="file" id="uploadPrototype" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
+                                <input type="file" id="uploadFlowchart" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
                                 <span className="text-[20px]">Upload</span>
-                            </div>
+                            </button>
                             <button className="flex flex-col items-center text-black" onClick={togglePopup}>
-                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-7'></img>
+                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-8 h-[30px]'></img>
                                 <span className="text-[20px]">Download</span>
                             </button>
                             <button className="flex flex-col items-center text-black" onClick={toggleReadPopup}>
-                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7'></img>
+                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7 h-7 mt-1'></img>
                                 <span className="text-[20px]">Read</span>
                             </button>
                         </div>
@@ -214,20 +232,20 @@ function Document() {
                     </div>
                     <div className="flex items-center justify-between mt-4">
                         <img src="/src/img/img_icon/exploration.png" alt="Data dic Icon" className="w-16 h-16 mb-3" />
-                        <div className="flex space-x-8">
-                            <div className="flex flex-col items-center text-black">
-                                <label htmlFor="uploadDataDic">
-                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 cursor-pointer'></img>
+                        <div className="flex space-x-8 items-center justify-center">
+                            <button className="flex flex-col items-center text-black">
+                                <label htmlFor="uploadFlowchart">
+                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 h-7 cursor-pointer'></img>
                                 </label>
-                                <input type="file" id="uploadDataDic" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
+                                <input type="file" id="uploadFlowchart" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
                                 <span className="text-[20px]">Upload</span>
-                            </div>
+                            </button>
                             <button className="flex flex-col items-center text-black" onClick={togglePopup}>
-                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-7'></img>
+                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-8 h-[30px]'></img>
                                 <span className="text-[20px]">Download</span>
                             </button>
                             <button className="flex flex-col items-center text-black" onClick={toggleReadPopup}>
-                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7'></img>
+                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7 h-7 mt-1'></img>
                                 <span className="text-[20px]">Read</span>
                             </button>
                         </div>
@@ -245,20 +263,20 @@ function Document() {
                     </div>
                     <div className="flex items-center justify-between mt-4">
                         <img src="/src/img/img_icon/er_diagram.png" alt="ER-Diagram Icon" className="w-16 h-16 mb-3" />
-                        <div className="flex space-x-8">
-                            <div className="flex flex-col items-center text-black">
-                                <label htmlFor="uploadERDiagram">
-                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 cursor-pointer'></img>
+                        <div className="flex space-x-8 items-center justify-center">
+                            <button className="flex flex-col items-center text-black">
+                                <label htmlFor="uploadFlowchart">
+                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 h-7 cursor-pointer'></img>
                                 </label>
-                                <input type="file" id="uploadERDiagram" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
+                                <input type="file" id="uploadFlowchart" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
                                 <span className="text-[20px]">Upload</span>
-                            </div>
+                            </button>
                             <button className="flex flex-col items-center text-black" onClick={togglePopup}>
-                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-7'></img>
+                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-8 h-[30px]'></img>
                                 <span className="text-[20px]">Download</span>
                             </button>
                             <button className="flex flex-col items-center text-black" onClick={toggleReadPopup}>
-                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7'></img>
+                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7 h-7 mt-1'></img>
                                 <span className="text-[20px]">Read</span>
                             </button>
                         </div>
@@ -276,20 +294,20 @@ function Document() {
                     </div>
                     <div className="flex items-center justify-between mt-4">
                         <img src="/src/img/img_icon/documents.png" alt="Other Documents Icon" className="w-16 h-16 mb-3" />
-                        <div className="flex space-x-8">
-                            <div className="flex flex-col items-center text-black">
-                                <label htmlFor="uploadOtherDocuments">
-                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 cursor-pointer'></img>
+                        <div className="flex space-x-8 items-center justify-center">
+                            <button className="flex flex-col items-center text-black">
+                                <label htmlFor="uploadFlowchart">
+                                    <img src='/src/img/img_icon/upload.png' alt='Upload' className='w-7 h-7 cursor-pointer'></img>
                                 </label>
-                                <input type="file" id="uploadOtherDocuments" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
+                                <input type="file" id="uploadFlowchart" accept=".pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
                                 <span className="text-[20px]">Upload</span>
-                            </div>
+                            </button>
                             <button className="flex flex-col items-center text-black" onClick={togglePopup}>
-                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-7'></img>
+                                <img src='/src/img/img_icon/download.png' alt='Download' className='w-8 h-[30px]'></img>
                                 <span className="text-[20px]">Download</span>
                             </button>
                             <button className="flex flex-col items-center text-black" onClick={toggleReadPopup}>
-                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7'></img>
+                                <img src='/src/img/img_icon/read.png' alt='Read' className='w-7 h-7 mt-1'></img>
                                 <span className="text-[20px]">Read</span>
                             </button>
                         </div>
@@ -306,51 +324,42 @@ function Document() {
                         </div>
                         <h2 className="text-[25px] mb-4 text-center">เลือกไฟล์ที่ต้องการดาวน์โหลด</h2>
                         <form className='text-left'>
-                            <div className="mb-4">
-                                <input
-                                    type="checkbox"
-                                    id="selectAll"
-                                    className="mr-2"
-                                    checked={checkedItems.selectAll}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label htmlFor="selectAll" className='ml-3'>All</label>
-                            </div>
-                            <div className="mb-4">
-                                <input
-                                    type="checkbox"
-                                    id="file1"
-                                    className="mr-2"
-                                    checked={checkedItems.file1}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label htmlFor="file1" className='ml-3'>Test.pdf</label>
-                            </div>
-                            <div className="mb-4">
-                                <input
-                                    type="checkbox"
-                                    id="file2"
-                                    className="mr-2"
-                                    checked={checkedItems.file2}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label htmlFor="file2" className='ml-3'>Test.doc</label>
-                            </div>
-                            <div className="mb-4">
-                                <input
-                                    type="checkbox"
-                                    id="file3"
-                                    className="mr-2"
-                                    checked={checkedItems.file3}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label htmlFor="file3" className='ml-3'>Test.drawio</label>
-                            </div>
+                            {uploadedFiles.length > 0 ? (
+                                <>
+                                    <div className="mb-4">
+                                        <input
+                                            type="checkbox"
+                                            id="selectAll"
+                                            className="mr-2"
+                                            checked={checkedItems.selectAll || false} // ตรวจสอบสถานะ selectAll
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        <label htmlFor="selectAll" className='ml-3'>All</label>
+                                    </div>
+                                    {uploadedFiles.map((file) => (
+                                        <div key={file.name} className="mb-4">
+                                            <input
+                                                type="checkbox"
+                                                id={file.name}
+                                                className="mr-2"
+                                                checked={!!checkedItems[file.name]} // ตรวจสอบสถานะของแต่ละไฟล์
+                                                onChange={handleCheckboxChange}
+                                            />
+                                            <label htmlFor={file.name} className='ml-3'>{file.name}</label>
+                                        </div>
+                                    ))}
+                                </>
+                            ) : (
+                                <p>No files uploaded</p>
+                            )}
                         </form>
+
                         <div className="flex justify-end mt-6 text-[23px]">
-                            <button className="bg-[#4CAF50] text-white w-[100px] h-[45px] rounded mr-4" onClick={downloadFiles}>
-                                ดาวน์โหลด
-                            </button>
+                            {uploadedFiles.length > 0 && (
+                                <button className="bg-[#4CAF50] text-white w-[100px] h-[45px] rounded mr-4" onClick={downloadFiles}>
+                                    ดาวน์โหลด
+                                </button>
+                            )}
                             <button className="bg-yellow-500 text-white w-[100px] h-[45px] rounded" onClick={togglePopup}>
                                 ยกเลิก
                             </button>
@@ -366,27 +375,50 @@ function Document() {
                             <img src="/src/img/Siam_Cement_Group_Logo.svg.png" alt="SCG Logo" className="w-[200px] h-[70px] mb-4" />
                         </div>
                         <h2 className="text-[25px] mb-4 text-center">เลือกไฟล์ที่ต้องการลบ</h2>
-                        <div className="flex flex-col items-start">
+                        <form className='text-left'>
                             {uploadedFiles.length > 0 ? (
-                                uploadedFiles.map((file) => (
-                                    <div key={file.name} className="flex justify-between items-center w-full mb-4">
-                                        <span>{file.name}</span>
-                                        <button
-                                            className="bg-red-500 text-white px-3 py-1 rounded"
-                                            onClick={() => deleteFile(file.name)}
-                                        >
-                                            Delete
-                                        </button>
+                                <>
+                                    <div className="mb-4">
+                                        <input
+                                            type="checkbox"
+                                            id="selectAll"
+                                            className="mr-2"
+                                            checked={checkedItems.selectAll || false} // ตรวจสอบสถานะ selectAll
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        <label htmlFor="selectAll" className='ml-3'>All</label>
                                     </div>
-                                ))
+                                    {uploadedFiles.map((file) => (
+                                        <div key={file.name} className="mb-4">
+                                            <input
+                                                type="checkbox"
+                                                id={file.name}
+                                                className="mr-2"
+                                                checked={!!checkedItems[file.name]} // ตรวจสอบสถานะของแต่ละไฟล์
+                                                onChange={handleCheckboxChange}
+                                            />
+                                            <label htmlFor={file.name} className='ml-3'>{file.name}</label>
+                                        </div>
+                                    ))}
+                                </>
                             ) : (
                                 <p>No files uploaded</p>
                             )}
-                        </div>
+                        </form>
                         <div className="flex justify-end mt-6 text-[23px]">
-                            <button className="bg-[#F44336] text-white w-[100px] h-[45px] rounded mr-4" onClick={downloadFiles}>
-                                ลบรายการ
-                            </button>
+                            {uploadedFiles.length > 0 && (
+                                <button
+                                    className="bg-[#F44336] text-white w-[100px] h-[45px] rounded mr-4"
+                                    onClick={() => {
+                                        const selectedFiles = Object.keys(checkedItems).filter((key) => checkedItems[key] && key !== 'selectAll');
+                                        setUploadedFiles((prevFiles) => prevFiles.filter((file) => !selectedFiles.includes(file.name)));
+                                        setCheckedItems({});
+                                        toggleEditPopup();
+                                    }}
+                                >
+                                    ลบรายการ
+                                </button>
+                            )}
                             <button className="bg-yellow-500 text-white w-[100px] h-[45px] rounded" onClick={toggleEditPopup}>
                                 ยกเลิก
                             </button>
@@ -401,20 +433,20 @@ function Document() {
                         <div className="flex justify-center">
                             <img src="/src/img/Siam_Cement_Group_Logo.svg.png" alt="SCG Logo" className="w-[200px] h-[70px] mb-4" />
                         </div>
-                        <h2 className="text-[25px] mb-4 text-center">ดูไฟล์ที่อัปโหลดทั้งหมด</h2>
+                        <h2 className="text-[25px] mb-4 text-center">ไฟล์ที่อัปโหลดทั้งหมด</h2>
                         <div className="flex flex-col items-start">
                             {uploadedFiles.length > 0 ? (
                                 uploadedFiles.map((file) => (
                                     <div key={file.name} className="flex justify-between items-center w-full mb-4">
                                         <span>{file.name}</span>
                                         <button
-                                            className="bg-blue-500 text-white px-3 py-1 rounded"
+                                            className="ml-4 bg-white text-blue-500 px-3 py-2 rounded text-[20px] transition-colors duration-300 ease-in-out hover:bg-blue-500 hover:text-white border border-blue-500"
                                             onClick={() => {
-                                                // ใส่ logic สำหรับดูไฟล์
-                                                console.log(`Reading file: ${file.name}`);
+                                                const fileURL = URL.createObjectURL(file);
+                                                window.open(fileURL, '_blank'); // เปิดไฟล์ในแท็บใหม่
                                             }}
                                         >
-                                            View
+                                            แสดง
                                         </button>
                                     </div>
                                 ))

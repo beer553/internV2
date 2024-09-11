@@ -46,30 +46,30 @@ const ProductBacklog = () => {
               <td className='p-2 text-center text-[20px]'>1</td>
               <td className='p-2 text-center text-[20px]'>01/01/2024</td>
               <td className='p-2 text-center text-[20px]'>31/03/2024</td>
-              <td className='p-2 text-center text-[20px]'>KM Selg-Learning</td>
-              <td className='p-2 text-center text-[20px]'>สุพรรษา มูลศิริ</td>
+              <td className='p-2 text-left text-[20px]'>KM Selg-Learning</td>
+              <td className='p-2 text-left text-[20px]'>สุพรรษา มูลศิริ</td>
               <td className='p-2 text-center'>
                 <span className="bg-[#4CAF50] text-white px-3 py-1 rounded-full text-[20px]">กำลังดำเนินงาน</span> {/* สถานะโปรเจค */}
               </td>
               <td className='p-2 text-center text-[20px]'>...</td>
-              <td className='p-2 text-center text-[20px]'>น้องแดนนี่, น้องกาฟิวส์, น้องเบียร์</td>
+              <td className='p-2 text-left text-[20px]'>น้องแดนนี่, น้องกาฟิวส์, น้องเบียร์</td>
               <td>
-                <span className="block w-9 h-9 mt-2 ml-7 bg-cover cursor-pointer" style={{ backgroundImage: "url('/src/img/img_icon/backlog-white.png')" }} onClick={gotoBLProject}></span>
+                <span className="block w-9 h-9 mt-2 ml-10 bg-cover cursor-pointer" style={{ backgroundImage: "url('/src/img/img_icon/checklist.png')" }} onClick={gotoBLProject}></span>
               </td>
             </tr>
             <tr>
               <td className='p-2 text-center text-[20px]'>2</td>
               <td className='p-2 text-center text-[20px]'>01/01/2024</td>
               <td className='p-2 text-center text-[20px]'>31/03/2024</td>
-              <td className='p-2 text-center text-[20px]'>Dashboard License</td>
-              <td className='p-2 text-center text-[20px]'>สุพรรษา มูลศิริ</td>
+              <td className='p-2 text-left text-[20px]'>Dashboard License</td>
+              <td className='p-2 text-left text-[20px]'>สุพรรษา มูลศิริ</td>
               <td className='p-2 text-center'>
                 <span className="bg-[#4CAF50] text-white px-3 py-1 rounded-full text-[20px]">กำลังดำเนินงาน</span> {/* สถานะโปรเจค */}
               </td>
               <td className='p-2 text-center text-[20px]'>...</td>
-              <td className='p-2 text-center text-[20px]'>น้องเจ, น้องณเดช, น้องไนท์</td>
+              <td className='p-2 text-left text-[20px]'>น้องเจ, น้องณเดช, น้องไนท์</td>
               <td>
-                <span className="block w-9 h-9 mt-2 ml-7 bg-cover cursor-pointer" style={{ backgroundImage: "url('/src/img/img_icon/backlog-white.png')" }} onClick={gotoBLProject}></span>
+                <span className="block w-9 h-9 mt-2 ml-10 bg-cover cursor-pointer" style={{ backgroundImage: "url('/src/img/img_icon/checklist.png')" }} onClick={gotoBLProject}></span>
               </td>
             </tr>
           </tbody>
