@@ -29,7 +29,7 @@ function App() {
               <Route path="/project" element={<Project />} />
               {/* <Route path="/assignproject" element={<Assignproject />} /> */}
               <Route path="/AssignPJ" element={<AssignPJ />} />
-              <Route path="/IDP" element={<IDP />} />
+              <Route path="/IDP/:user_id" element={<IDP />} />
               <Route path="/PDBacklog" element={<PDBacklog />} />
               <Route path="/BLProject" element={<BLProject />} />
             </Route>

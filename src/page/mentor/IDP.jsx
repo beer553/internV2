@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../component/footer';
-import NavbarMentor from '../component/navbar_intern';
-import ImageModal from '../component/ImageModal';
 import NavbarIntern from '../component/navbar_intern';
+import ImageModal from '../component/ImageModal';
 
 const Profile = () => {
+  const { user_id } = useParams(); // Get user_id from URL
   const navigate = useNavigate();
   const [modalImageUrl, setModalImageUrl] = useState(null);
+  const [profileData, setProfileData] = useState(null); // State to store profile data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
   const [checkboxState, setCheckboxState] = useState({
-    frontend: true,
+    frontend: false,
     backend: false,
     fullstack: false,
     dataAnalysis: false,
     dataManagement: false,
     other: false,
-    figma: true,
-    react: true,
+    figma: false,
+    react: false,
     php: false,
-    vsCode: true,
+    vsCode: false,
     sqlServer: false,
     docker: false,
   });
@@ -31,32 +34,67 @@ const Profile = () => {
     setModalImageUrl(null);
   };
 
-  const handleCheckboxChange = (id) => {
-    setCheckboxState((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id],
-    }));
+  // Function to format date to dd/mm/yyyy
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
   };
 
-  const renderCheckbox = (id, label, checked, disabled) => (
-    <div className="flex items-center ml-1">
-      <input
-        type="checkbox"
-        id={id}
-        name={id}
-        checked={checked}
-        disabled={disabled}
-        onChange={() => handleCheckboxChange(id)}
-        className={`w-6 h-6 rounded border-2 ${checked ? 'bg-green-500 border-green-500' : 'bg-white border-gray-500'}`}
-      />
-      {checked && (
-        <span className="absolute w-2 h-3 border-white border-r-2 border-b-2 transform rotate-45 top-1 left-1"></span>
-      )}
-      <label htmlFor={id} className="ml-2 text-[20px] text-gray-800">
-        {label}
-      </label>
-    </div>
-  );
+  // Fetch profile data from backend using user_id
+  useEffect(() => {
+    if (user_id) {
+      fetchProfileData(user_id);
+    }
+  }, [user_id]);
+
+  const fetchProfileData = async (user_id) => {
+    try {
+      setLoading(true); // Set loading state before fetching
+      const response = await fetch(`http://localhost/internV2/backend/intern/profile.php?user_id=${user_id}`);
+      const data = await response.json();
+
+      if (data.status === 'success' && data.data) {
+        const profile = data.data;
+
+        // แปลงสตริง goodjob และ program ให้เป็นอาร์เรย์
+        const goodJobsArray = profile.goodjob ? profile.goodjob.split(", ") : [];
+        const programsArray = profile.program ? profile.program.split(", ") : [];
+
+        // ตั้งค่า checkbox state ตามข้อมูลที่ได้รับ
+        setCheckboxState({
+          frontend: goodJobsArray.includes('Frontend'),
+          backend: goodJobsArray.includes('Backend'),
+          fullstack: goodJobsArray.includes('Full Stack'),
+          dataAnalysis: goodJobsArray.includes('Data Analysis'),
+          dataManagement: goodJobsArray.includes('Data Management'),
+          other: goodJobsArray.includes('อื่นๆ'),
+          figma: programsArray.includes('Figma'),
+          react: programsArray.includes('React'),
+          php: programsArray.includes('PHP'),
+          vsCode: programsArray.includes('VS Code'),
+          sqlServer: programsArray.includes('SQL Server'),
+          docker: programsArray.includes('Docker'),
+        });
+
+        setProfileData(profile); // Set profile data from backend
+      } else {
+        throw new Error('Profile data not found');
+      }
+    } catch (error) {
+      setError('Error fetching profile data: ' + error.message); // Set error state if fetch fails
+    } finally {
+      setLoading(false); // Set loading state to false after fetching
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading message while data is being fetched
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Show error message if there's an issue
+  }
 
   return (
     <>
@@ -69,20 +107,20 @@ const Profile = () => {
           <section className="flex justify-center bg-white border rounded-lg mb-8">
             <div className="flex p-5">
               <img
-                src="/src/img/profile_teerapat.png"
+                src={profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png'}
                 className="w-96 h-96 rounded-lg mt-5 mb-5 mr-16 cursor-pointer"
                 alt="Profile"
-                onClick={() => openModal('/src/img/profile_teerapat.png')}
+                onClick={() => openModal(profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png')}
               />
               <div className="text-left text-black mt-3">
                 <h2 className="bg-orange-500 text-white p-2 rounded-lg text-center mb-5 text-[25px]">ข้อมูลส่วนตัว</h2>
-                <div className='text-[20px] ml-2 mb-2'>ID : 0001-123456</div>
-                <div className='text-[20px] ml-2 mb-2'>ชื่อ - นามสกุล : นายธีรภัทร์ วั่นเล่ง</div>
-                <div className='text-[20px] ml-2 mb-2'>ชื่อเล่น : แดนนี่</div>
-                <div className='text-[20px] ml-2 mb-2'>อายุ : 19 ปี</div>
-                <div className='text-[20px] ml-2 mb-2'>วันเกิด : 20 / 06 / 2548</div>
-                <div className='text-[20px] ml-2 mb-2'>สัญชาติ : ไทย</div>
-                <div className='text-[20px] ml-2 mb-2'>เบอร์มือถือ : 082-337-9677</div>
+                <div className="text-[20px] ml-2 mb-2">ID : {profileData?.user_id || 'Loading...'}</div>
+                <div className="text-[20px] ml-2 mb-2">ชื่อ - นามสกุล : {profileData?.firstName} {profileData?.lastName || 'Loading...'}</div>
+                <div className="text-[20px] ml-2 mb-2">ชื่อเล่น : {profileData?.nickname || 'Loading...'}</div>
+                <div className="text-[20px] ml-2 mb-2">อายุ : {profileData?.age || 'Loading...'}</div>
+                <div className="text-[20px] ml-2 mb-2">วันเกิด : {formatDate(profileData?.birthDate)}</div> {/* Format birthDate */}
+                <div className="text-[20px] ml-2 mb-2">สัญชาติ : {profileData?.nationality || 'Loading...'}</div>
+                <div className="text-[20px] ml-2 mb-2">เบอร์มือถือ : {profileData?.phone || 'Loading...'}</div>
                 <div className="flex gap-2 mt-5">
                   {Array.from({ length: 13 }).map((_, index) => (
                     <div key={index} className="w-4 h-11 bg-orange-500"></div>
@@ -91,13 +129,14 @@ const Profile = () => {
               </div>
             </div>
           </section>
-          <div className=' bg-white p-5 rounded-lg mb-5'>
+
+          <div className='bg-white p-5 rounded-lg mb-5'>
             <div className="flex justify-between">
               <div className="flex flex-col mb-4">
                 <label className="mb-1 text-[20px] text-left text-gray-800">ตำแหน่งที่สมัคร</label>
                 <input
                   type="text"
-                  placeholder="Digital Information"
+                  value={profileData?.position || 'N/A'}
                   className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
                   readOnly
                 />
@@ -106,7 +145,7 @@ const Profile = () => {
                 <label className="mb-1 text-[20px] text-left text-gray-800">สถานศึกษาปัจจุบัน</label>
                 <input
                   type="text"
-                  placeholder="วิทยาลัยเทคนิคทุ่งสง"
+                  value={profileData?.currentEducation || 'N/A'}
                   className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
                   readOnly
                 />
@@ -115,7 +154,7 @@ const Profile = () => {
                 <label className="mb-1 text-[20px] text-left text-gray-800">วันเดือนปีเริ่มฝึกงาน</label>
                 <input
                   type="text"
-                  placeholder="13/5/2567"
+                  value={formatDate(profileData?.datestart)} // Format start date
                   className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
                   readOnly
                 />
@@ -124,7 +163,7 @@ const Profile = () => {
                 <label className="mb-1 text-[20px] text-left text-gray-800">วันเดือนปีฝึกงานวันสุดท้าย</label>
                 <input
                   type="text"
-                  placeholder="31/1/2568"
+                  value={formatDate(profileData?.dateend)} // Format end date
                   className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
                   readOnly
                 />
@@ -132,7 +171,7 @@ const Profile = () => {
               <div className="flex flex-col mb-4">
                 <label className="mb-1 text-[20px] text-left text-gray-800">GPA รวม</label>
                 <div className="border-2 border-green-600 rounded-lg p-2.5 text-[20px] text-green-600 w-64 text-center">
-                  4.00
+                  {profileData?.gpa || 'N/A'}
                 </div>
               </div>
             </div>
@@ -141,200 +180,216 @@ const Profile = () => {
               <div className="flex-1 p-5 rounded-lg mx-2">
                 <div className="flex items-center mb-11">
                   <p className="text-[20px] text-black text-left">ดู Resume</p>
-                  <img
-                    src="/src/img/img_icon/resume.png"
-                    className="w-10 h-10 ml-[330px]"
-                    alt="Resume"
-                  />
+                  <a
+                    href={profileData?.resume ? `/backend/intern/uploads/resume/${profileData.resume}` : '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center w-10 h-10 ml-[330px] text-blue-500 underline"
+                  >
+                    <img
+                      src="/src/img/img_icon/resume.png"
+                      className="w-10 h-10"
+                      alt="Resume Icon"
+                    />
+                  </a>
                 </div>
+
                 <div className="flex items-center mb-11">
                   <p className="text-[20px] text-black text-left">ดู Transcript</p>
-                  <img
-                    src="/src/img/img_icon/transcription.png"
-                    className="w-10 h-10 ml-[308px]"
-                    alt="Transcript"
-                  />
+                  <a
+                    href={profileData?.transcript ? `/backend/intern/uploads/transcript/${profileData.transcript}` : '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center w-10 h-10 ml-[308px] text-blue-500 underline"
+                  >
+                    <img
+                      src="/src/img/img_icon/transcription.png"
+                      className="w-10 h-10"
+                      alt="Transcript Icon"
+                    />
+                  </a>
                 </div>
+
                 <div className="flex items-center mb-11">
-                  <p className="text-[20px] text-black text-left">ดูประวัติส่วนตัวเพิ่มเติม</p>
-                  <img
-                    src="/src/img/img_icon/profile.png"
-                    className="w-10 h-10 ml-[240px]"
-                    alt="Profile"
-                  />
+                  <p className="text-[20px] text-black text-left">ตัวอย่าง Project ที่เคยทำ</p>
+                  <a
+                    href={profileData?.otherFiles ? `/backend/intern/uploads/otherFiles/${profileData.otherFiles}` : '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center w-10 h-10 ml-[38px] text-blue-500 underline"
+                  >
+                    <img
+                      src="/src/img/img_icon/project.png"
+                      className="w-10 h-10"
+                      alt="Project Icon"
+                    />
+                  </a>
                 </div>
-                <div className="flex items-center mb-11">
-                  <p className="text-[20px] text-black text-left">
-                    ตัวอย่าง Project ที่เคยทำมา (โปรดส่งเป็นไฟล์ PDF)
-                  </p>
-                  <img
-                    src="/src/img/img_icon/project.png"
-                    className="w-10 h-10 ml-[38px]"
-                    alt="Project"
-                  />
-                </div>
-                <div className="flex items-center mb-11">
-                  <p className="text-[20px] text-black text-left">
-                    ผลงาน link GitHub <span className="text-red-500">*ถ้ามี</span>
-                  </p>
-                  <img
-                    src="/src/img/img_icon/github.png"
-                    className="w-10 h-10 ml-[228px]"
-                    alt="Github"
-                  />
+              </div>
+            </div>
+
+            <div className="flex-1 p-5 rounded-lg mx-2">
+              <div className="flex flex-col mb-4">
+                <label className="mb-1 text-[20px] text-left text-gray-800">โปรดกรอกเป้าหมาย</label>
+                <textarea
+                  className="rounded-lg bg-white border border-gray-300 text-[18px] p-2 w-full h-28 resize-none"
+                  defaultValue="อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ"
+                />
+              </div>
+              <div className="flex justify-between">
+                <div className="flex-1 p-5 rounded-lg mx-2">
+                  <div className="flex flex-col mb-11">
+                    <label className="mb-1 text-[20px] text-left text-gray-800">โปรดเลือกงานสายงานที่ถนัด</label>
+                    <div className="grid grid-cols-3 gap-y-4 text-[18px]">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="frontend"
+                          checked={checkboxState.frontend}
+                          disabled={true} // ไม่สามารถแก้ไขได้
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        Frontend
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="backend"
+                          checked={checkboxState.backend}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        Backend
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="fullstack"
+                          checked={checkboxState.fullstack}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        Full Stack
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="dataAnalysis"
+                          checked={checkboxState.dataAnalysis}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        Data Analysis
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="dataManagement"
+                          checked={checkboxState.dataManagement}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        Data Management
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="other"
+                          checked={checkboxState.other}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        อื่นๆ
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* เงื่อนไขแสดงข้อมูลเพิ่มเติมถ้ามีการเลือก "อื่นๆ" */}
+                  {checkboxState.other && (
+                    <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                      <h3 className="text-[18px] font-bold">ข้อมูลเพิ่มเติม</h3>
+                      <p className="text-[16px] mt-2">รายละเอียดเพิ่มเติม: {profileData?.otherDetails || 'N/A'}</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="flex-1 p-5 rounded-lg mx-2">
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-[20px] text-left text-gray-800">โปรดกรอกเป้าหมาย</label>
-                  <textarea
-                    className="rounded-lg bg-white border border-gray-300 text-[18px] p-2 w-full h-28 resize-none"
-                    readOnly
-                  >
-                    อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ
-                  </textarea>
-                </div>
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-[20px] text-left text-gray-800">โปรดเลือกงานสายงานที่ถนัด</label>
-                  <div className="grid grid-cols-3 gap-y-4 text-[18px]">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="frontend"
-                        checked={checkboxState.frontend}
-                        disabled={false}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      Frontend
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="backend"
-                        checked={checkboxState.backend}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      Backend
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="full-stack"
-                        checked={checkboxState.fullstack}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      Full Stack
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="data-analysis"
-                        checked={checkboxState.dataAnalysis}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      Data Analysis
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="data-management"
-                        checked={checkboxState.dataManagement}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      Data Management
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="other"
-                        checked={checkboxState.other}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      อื่นๆ
-                    </label>
+              <div className="flex justify-between">
+                <div className="flex-1 p-5 rounded-lg mx-2">
+                  {/* Display checkboxes for job expertise */}
+                  <div className="flex flex-col mb-11">
+                    <label className="mb-1 text-[20px] text-left text-gray-800">โปรแกรมหรืองานที่ถนัด (3 อย่างที่ถนัดที่สุด)</label>
+                    <div className="grid grid-cols-3 gap-y-4 text-[18px]">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="figma"
+                          checked={checkboxState.figma}
+                          disabled={true} // ไม่สามารถแก้ไขได้
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        Figma
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="react"
+                          checked={checkboxState.react}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        React
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="php"
+                          checked={checkboxState.php}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        PHP
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="vsCode"
+                          checked={checkboxState.vsCode}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        VS Code
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="sqlServer"
+                          checked={checkboxState.sqlServer}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        SQL Server
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="docker"
+                          checked={checkboxState.docker}
+                          disabled={true}
+                          className="mr-2 h-5 w-5 rounded-md"
+                        />
+                        Docker
+                      </label>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex flex-col">
-                  <label className="mb-1 text-[20px] text-left text-gray-800">โปรแกรมหรืองานที่ถนัด (3 อย่างที่ถนัดที่สุด)</label>
-                  <div className="grid grid-cols-3 gap-y-4 text-[18px]">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="figma"
-                        checked={checkboxState.figma}
-                        disabled={false}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      Figma
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="react"
-                        checked={checkboxState.react}
-                        disabled={false}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      React
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="php"
-                        checked={checkboxState.php}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      PHP
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="vs-code"
-                        checked={checkboxState.vsCode}
-                        disabled={false}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      VS Code
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="sql-server"
-                        checked={checkboxState.sqlServer}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      SQL Server
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="docker"
-                        checked={checkboxState.docker}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      Docker
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="other"
-                        checked={checkboxState.other}
-                        disabled={true}
-                        className="mr-2 h-5 w-5 rounded-md"
-                      />
-                      อื่นๆ
-                    </label>
-                  </div>
+                  {/* Display additional info when "otherProgram" is checked */}
+                  {checkboxState.otherProgram && (
+                    <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                      <h3 className="text-[18px] font-bold">ข้อมูลโปรแกรมเพิ่มเติม</h3>
+                      <p className="text-[16px] mt-2">รายละเอียดเพิ่มเติม: {profileData?.otherProgramDetails || 'N/A'}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

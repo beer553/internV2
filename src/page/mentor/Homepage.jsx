@@ -139,9 +139,10 @@ function Homepage() {
   const togglePopup = () => {
     setShowPopup(!showPopup);
   };
-  const goToProfilePage = () => {
-    navigate('/IDP');
+  const goToProfilePage = (userId) => {
+    navigate(`/IDP/${userId}`);
   };
+
 
   const gotoProductBacklog = () => {
     navigate('/PDBacklog');
@@ -361,8 +362,8 @@ function Homepage() {
                     <td className="text-[16px] text-center text-black">{formatDate(row.datestart)} - {formatDate(row.dateend)}</td>
                     <td className="text-[16px] text-center text-black">{row.project ? row.project : 'ยังไม่มอบหมายโปรเจค'}</td>
                     <td className="text-center">
-                      <button>
-                        <img className='w-12 h-12 mx-auto cursor-pointer' src="/src//img/img_icon/9746243.png" alt="Profile" onClick={goToProfilePage} />
+                      <button onClick={() => goToProfilePage(row.user_id)}>
+                        <img className='w-12 h-12 mx-auto cursor-pointer' src="/src//img/img_icon/9746243.png" alt="Profile" />
                       </button>
                     </td>
                     <td className="text-center">
