@@ -13,9 +13,7 @@ const Home = () => {
   const [isEditing, setIsEditing] = useState(false); // State to toggle edit mode
 
   useEffect(() => {
-    // ตรวจสอบ user_id จาก Context หรือ localStorage
     const userId = user?.user_id || localStorage.getItem('user_id');
-
     if (userId) {
       fetchData(userId); // เรียกใช้ฟังก์ชัน fetchData พร้อม user_id
     } else {
@@ -23,7 +21,6 @@ const Home = () => {
     }
   }, [user]);
 
-  // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้จาก backend
   const fetchData = async (userId) => {
     try {
       const response = await axios.get('http://localhost/internV2/backend/intern/home.php', {
@@ -38,19 +35,14 @@ const Home = () => {
     }
   };
 
-  // ฟังก์ชันจัดการข้อผิดพลาด
   const handleError = (errorMessage) => {
     console.error("Error:", errorMessage);
     setError(errorMessage);
     setLoading(false);
   };
 
-  // ฟังก์ชันจัดการเมื่อเปลี่ยนแปลงค่า goal
-  const handleGoalChange = (e) => {
-    setGoal(e.target.value);
-  };
+  const handleGoalChange = (e) => setGoal(e.target.value);
 
-  // ฟังก์ชันสำหรับบันทึกค่า goal
   const handleGoalSave = async () => {
     try {
       const response = await axios.post('http://localhost/internV2/backend/intern/home.php', {
@@ -67,26 +59,16 @@ const Home = () => {
   const openEditModal = () => setIsEditing(true);
   const closeModal = () => setIsEditing(false);
 
-  // ฟังก์ชันสำหรับจัดการรูปแบบวันที่
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('th-TH', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-  };
+  const formatDate = (dateString) => new Date(dateString).toLocaleDateString('th-TH', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
-  // ฟังก์ชันคำนวณจำนวนวันทำงาน
-  const calculateWorkDays = (startDate) => {
-    return calculateDaysBetween(new Date(startDate), new Date());
-  };
+  const calculateWorkDays = (startDate) => calculateDaysBetween(new Date(startDate), new Date());
 
-  // ฟังก์ชันคำนวณจำนวนวันที่เหลือในการทำงาน
-  const calculateRemainingWorkDays = (endDate) => {
-    return calculateDaysBetween(new Date(), new Date(endDate));
-  };
+  const calculateRemainingWorkDays = (endDate) => calculateDaysBetween(new Date(), new Date(endDate));
 
-  // ฟังก์ชันคำนวณจำนวนวันระหว่างสองวันที่ไม่รวมวันหยุดสุดสัปดาห์
   const calculateDaysBetween = (start, end) => {
     let count = 0;
     while (start <= end) {
@@ -97,7 +79,6 @@ const Home = () => {
     return count;
   };
 
-  // การแมปไอคอนของทักษะ
   const skillIcons = {
     Figma: "/src/img/img_icon/figma.png",
     React: "/src/img/img_icon/React.png",
@@ -107,127 +88,81 @@ const Home = () => {
     Docker: "/src/img/img_icon/docker.png",
   };
 
-  if (loading) return <p>Loading...</p>; // กรณีข้อมูลกำลังโหลด
-  if (error) return <p>Error loading data: {error.message || error}</p>; // กรณีเกิดข้อผิดพลาด
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading data: {error.message || error}</p>;
 
-  // แยกทักษะจากข้อมูล internData
   const skills = internData?.program ? internData.program.split(',') : [];
 
   return (
     <>
       <NavbarIntern />
+      {/* ข้อมูลเพิ่มเติม */}
+      <div className="max-w-[95%] mx-auto mt-12 mb-5 p-2 bg-white shadow-lg rounded-lg items-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-5 ml-5 mr-5 mb-5">
+          <DataCard
+            label="ฝึกงานไปแล้วกี่วัน"
+            value={`${calculateWorkDays(internData?.datestart)}`}
+            unit={"Day"}
+            className="bg-[#259EBB]"
+          />
+          <DataCard
+            label="จำนวนวันเหลือในการฝึกงาน"
+            value={`${calculateRemainingWorkDays(internData?.dateend)}`}
+            unit={"Day"}
+            className="bg-[#042F46]"
+          />
+          <DataCard
+            label="สร้างมูลค่าเพิ่ม"
+            value={`${(calculateWorkDays(internData?.datestart) * 500).toLocaleString()}`}
+            unit={"Baht"}
+            className="bg-[#BB6C26]"
+          />
+        </div>
+      </div>
+
       <div className="max-w-[95%] mx-auto mt-12 mb-5 p-2 bg-white shadow-lg rounded-lg">
-        <div className="flex justify-between items-center w-[95%] ml-16 p-6">
-          <div className="flex mt-2">
-            <div className="mt-5">
-              <img
-                src={`/backend/intern/uploads/profile/${internData?.profile}`}
-                alt="Profile"
-                className="w-[200px] h-[200px] rounded ml-1"
-              />
+        <div className="grid grid-cols-[48%_20%_32%] p-6">
+          <div className="flex">
+            <div>
+              <img src={`/backend/intern/uploads/profile/${internData?.profile}`} alt="Profile" className="w-[200px] h-[200px] rounded ml-1" />
             </div>
-            <div className="ml-20">
-              <h1 className="text-5xl font-bold text-black text-left">
-                Hello, Intern {internData?.firstNameEng}
-              </h1>
-              <div className="bg-gray-100 p-2 rounded-lg mt-2 w-[70%] h-[150px] relative">
-                <p className="text-gray-600 text-[20px] text-left">
-                  {internData?.goal}
-                </p>
-                <button
-                  onClick={openEditModal}
-                  className="absolute bottom-2 right-2"
-                >
-                  <img
-                    src="/src/img/img_icon/editing.png"
-                    alt="Edit"
-                    className="w-5 h-5"
-                  />
+            <div className="ml-10 w-[400px] mr-10">
+              <h1 className="text-2xl font-bold text-black text-left"> {internData?.nickname} : {internData?.firstName}  {internData?.lastName}</h1>
+              <div className="bg-gray-100 p-2 rounded-lg mt-2 h-[150px] relative">
+                <p className="text-gray-600 text-[20px] text-left">{internData?.goal}</p>
+                <button onClick={openEditModal} className="absolute bottom-2 right-2">
+                  <img src="/src/img/img_icon/editing.png" alt="Edit" className="w-5 h-5" />
                 </button>
               </div>
             </div>
           </div>
-          <div className=" text-black mr-16">
-            <h2 className="text-[25px] font-semibold">TOP 3 เครื่องมือที่ถนัด</h2>
-            <div className="mt-2 ">
+
+          <div className="text-black">
+            <h2 className="text-[20px] font-semibold">TOP 3 เครื่องมือที่ถนัด</h2>
+            <div className="mt-2">
               {skills.map((skill, index) => (
-                <div key={index} className="flex items-center mt-2 text-[20px] ">
-                  <img
-                    src={skillIcons[skill.trim()]}
-                    alt={skill.trim()}
-                    className="w-8"
-                  />
-                  <p className="ml-2">
-                    {skill.trim() === "Other"
-                      ? internData?.otherprogram
-                      : skill.trim()}
-                  </p>
+                <div key={index} className="flex items-center mt-2 text-[20px]">
+                  <img src={skillIcons[skill.trim()]} alt={skill.trim()} className="w-8" />
+                  <p className="ml-2">{skill.trim() === "Other" ? internData?.otherprogram : skill.trim()}</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* ข้อมูลเพิ่มเติม */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 ml-10 mr-10">
-          <DataCard
-            iconSrc="/src/img/img_icon/14641229.png"
-            label="ฝึกงานไปแล้วกี่วัน"
-            value={`${calculateWorkDays(internData?.datestart)} Days`}
-          />
-          <DataCard
-            iconSrc="/src/img/img_icon/1329799.png"
-            label="จำนวนวันเหลือในการฝึกงาน"
-            value={`${calculateRemainingWorkDays(internData?.dateend)} Days`}
-          />
-          <DataCard
-            iconSrc="/src/img/img_icon/10822463.png"
-            label="จำนวนเงินที่ทำได้ในเดือนนี้"
-            value={`${internData?.days_worked_this_month} Days / ${internData?.amount_earned_this_month} Baht`}
-          />
-        </div>
-
-        {/* ข้อมูลส่วนตัว */}
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
-          <div className="md:col-span-2">
-            <PersonalInfo internData={internData} formatDate={formatDate} />
-          </div>
-
-          {/* ActionLinks div content */}
-          <div className="grid grid-cols-2 gap-4 max-h-[50%] mr-16 my-24 md:col-span-3">
-            <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-              <img src="/src/img/img_icon/5084621.png" alt="ดู Back log" className="w-12 h-12" />
-              <p className="ml-4 text-lg font-semibold">ดู Back log</p>
+          {/* ActionLinks */}
+          <div>
+            <div className="grid grid-cols-2 gap-4 md:col-span-3">
+              <ActionLink label="Back log" colorClass="bg-[#8DB9CA]" />
+              <ActionLink label="SCRUM" colorClass="bg-[#A2CDCD]" />
+              <ActionLink href="src\page\intern\uploads\ใบรับเงิน.pdf" label="เบิกงบเบี้ยเลี้ยง" colorClass="bg-[#CEE5D0]" />
+              <ActionLink href="https://forms.office.com/pages/responsepage.aspx?id=Dr-4XZKF0E6CsqbU13kz1HWtqYCabT1PkbKI66xW345UMTBTWDBPMk4zUENSOVQyNlBNRDVJSkk3OC4u&route=shorturl" label="แจ้งลา / WFH" colorClass="bg-[#CACCD1]" />
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-              <img src="/src/img/img_icon/scrum(1).png" alt="SCRUM" className="w-12 h-12" />
-              <p className="ml-4 text-lg font-semibold">SCRUM</p>
-            </div>
-            <a href="src\page\intern\uploads\ใบรับเงิน.pdf" download>
-              <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-                <img src="/src/img/img_icon/1358533.png" alt="เบิกงบเบี้ยเลี้ยง" className="w-12 h-12" />
-                <p className="ml-4 text-lg font-semibold">เบิกงบเบี้ยเลี้ยง</p>
-              </div>
-            </a>
-            <a href="https://forms.office.com/pages/responsepage.aspx?id=Dr-4XZKF0E6CsqbU13kz1HWtqYCabT1PkbKI66xW345UMTBTWDBPMk4zUENSOVQyNlBNRDVJSkk3OC4u&route=shorturl" target="_blank" rel="noopener noreferrer">
-              <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-                <img src="/src/img/img_icon/684831.png" alt="แจ้งลา / Work For Home" className="w-12 h-12" />
-                <p className="ml-4 text-lg font-semibold">แจ้งลา / Work For Home</p>
-              </div>
-            </a>
           </div>
         </div>
       </div>
-
-      {/* Modal สำหรับแก้ไข goal */}
       {isEditing && (
         <Modal onClose={closeModal} onSave={handleGoalSave}>
-          <textarea
-            className="w-full text-2xl p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-blue-500 resize-none"
-            value={goal}
-            onChange={handleGoalChange}
-            rows={5}
-          />
+          <textarea className="w-full text-2xl p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-blue-500 resize-none" value={goal} onChange={handleGoalChange} rows={5} />
         </Modal>
       )}
       <Footer />
@@ -235,59 +170,36 @@ const Home = () => {
   );
 };
 
-// ส่วนของ DataCard ที่แสดงข้อมูลต่าง ๆ
-const DataCard = ({ iconSrc, label, value }) => (
-  <div className="p-6 bg-white text-center rounded-lg shadow-md border-b-4 border-[#635c5c]">
-    <img src={iconSrc} alt={label} className="w-16 h-16 mx-auto" />
-    <p className="mt-4 text-lg font-semibold text-gray-700">{label}</p>
-    <p className="text-2xl font-bold text-gray-800">{value}</p>
-  </div>
-);
-
-// ส่วนของ PersonalInfo ที่แสดงข้อมูลส่วนตัวของ Intern
-const PersonalInfo = ({ internData, formatDate }) => (
-  <div className="p-4">
-    <h2 className="font-bold">ข้อมูลส่วนตัว</h2>
-    <div className="mt-4 space-y-2 text-left ml-16" style={{ fontSize: '25px' }}>
-      {[
-        { label: 'ชื่อ - นามสกุล', value: `${internData?.firstName} ${internData?.lastName}` },
-        { label: 'รหัสนักศึกษาฝึกงาน', value: internData?.user_id },
-        { label: 'ชื่อเล่น', value: internData?.nickname },
-        { label: 'อายุ', value: `${internData?.age} ปี` },
-        { label: 'วันเกิด', value: internData?.birthDate ? formatDate(internData.birthDate) : '' },
-        { label: 'สัญชาติ', value: internData?.nationality },
-        { label: 'เบอร์มือถือ', value: internData?.phone },
-        { label: 'งานที่ถนัด', value: internData?.goodjob },
-        { label: 'หน่วยงาน', value: internData?.section },
-      ].map(({ label, value }, index) => (
-        <div className="flex" key={index}>
-          <p style={{ width: '160px' }}>{label}</p>
-          <p style={{ width: '210px' }}>{value}</p>
-        </div>
-      ))}
+// DataCard Component
+const DataCard = ({ label, value, unit, className }) => (
+  <div className={`p-6 h-[150px] text-center rounded-lg shadow-md border-b-4 border-[#635c5c] ${className} relative flex flex-col justify-center`}>
+    {/* Label ที่มุมซ้ายบน */}
+    <p className="absolute top-2 left-2 text-lg  text-white">{label}</p>
+    {/* Value ใหญ่อยู่ตรงกลาง */}
+    <div className="flex justify-center items-baseline">
+      <p className="text-[60px] font-bold text-white">{value}</p>
+      {/* หน่วยเล็กข้างๆตัวเลข */}
+      <span className="text-xl font-semibold ml-2 text-white">{unit}</span>
     </div>
   </div>
 );
 
-// ส่วนของ Modal ที่ใช้สำหรับแก้ไขข้อมูล goal
+// ActionLink Component
+const ActionLink = ({ label, href, colorClass }) => (
+  <a href={href} className={`p-4 rounded-lg shadow-md flex items-center justify-center text-black ${colorClass}`}>
+    <p className="text-lg text-center">{label}</p>
+  </a>
+);
+
+// Modal Component
 const Modal = ({ children, onClose, onSave }) => (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
       <h2 className="text-2xl font-bold mb-4">งานที่อยากทำ</h2>
       {children}
       <div className="flex justify-end mt-4">
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600"
-          onClick={onSave}
-        >
-          Save
-        </button>
-        <button
-          className="bg-gray-300 text-black px-4 py-2 rounded-lg hover:bg-gray-400"
-          onClick={onClose}
-        >
-          Cancel
-        </button>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600" onClick={onSave}>Save</button>
+        <button className="bg-gray-300 text-black px-4 py-2 rounded-lg hover:bg-gray-400" onClick={onClose}>Cancel</button>
       </div>
     </div>
   </div>

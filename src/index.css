@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: 'THSarabun';
-    src: url('./font/THChakraPetchBold.ttf') format('truetype');
+    src: url('./font/Sarabun-Regular.ttf') format('truetype');
   }
   #root {
     max-width: 100%;

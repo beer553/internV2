@@ -163,7 +163,7 @@ function Login() {
             <form className="mt-8 space-y-6" onSubmit={handleLogin}>
               <div className="rounded-md shadow-sm space-y-4">
                 <div>
-                  <label htmlFor="username" className="sr-only">
+                  <label htmlFor="username" className="sr-only" >
                     Username
                   </label>
                   <input
@@ -207,12 +207,12 @@ function Login() {
                   />
                   <label
                     htmlFor="remember-me"
-                    className="ml-2 block text-xl text-gray-900"
+                    className="ml-2 block text-lg text-gray-900"
                   >
                     Remember me
                   </label>
                 </div>
-                <div className="text-xl">
+                <div className="text-lg">
                   <a
                     href="#"
                     onClick={handleSetPassword}
