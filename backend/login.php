@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'status' => 'success',
                 'message' => 'Login successful',
                 'role' => $user['role'],
-                'user_id'=> $user['user_id'],
+                'user_id' => $user['user_id'],
                 'redirect' => $redirectPage
             ]);
         } else {
@@ -65,4 +65,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => 'Username and password are required']);
     }
 }
-?>

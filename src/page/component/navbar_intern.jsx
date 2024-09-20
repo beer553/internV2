@@ -82,7 +82,8 @@ const NavbarIntern = () => {
                         <p style={{color:'#c0c0c0'}}>{username || 'Loading Username...'}</p> {/* แสดง Loading ระหว่างรอข้อมูล username */}
                     </div>
                     <div className="bg-white w-px h-16 mx-4"></div>
-                    <button onClick={handleLogout} className="text-white mr-12">Logout</button>
+                    <img src="/src/img/img_icon/exit.png" alt="Log out" className="h-[25px] mr-2" />
+                    <button onClick={handleLogout} className="text-white mr-2">Logout</button>
                 </div>
             </div>
         </>
