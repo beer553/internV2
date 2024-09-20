@@ -125,7 +125,7 @@ function Project() {
 
             } else {
                 const response = await axios.post('http://localhost/internV2/backend/mentor/project.php', projectData);
-                const newProjectId = response.data.project_id; 
+                const newProjectId = response.data.project_id;
 
                 const updatedProjects = [...projects, { ...newProject, project_id: newProjectId, manager: user?.username || '' }];
                 setProjects(updatedProjects);
@@ -160,8 +160,8 @@ function Project() {
         setShowForm(false);
     };
 
-    const gotoAssignPJ = () => {
-        navigate('/AssignPJ');
+    const gotoAssignPJ = (projectId) => {
+        navigate(`/AssignPJ?project_id=${projectId}`);
     };
 
     return (
@@ -290,13 +290,13 @@ function Project() {
                                 <td className="text-left p-4 text-[18px]">{project.projectname}</td>
                                 <td className="text-center p-4 text-[18px]">{project.scrummaster}</td>
                                 <td className="flex justify-center text-[18px] ">
-                                    <div className={`w-[150px] px-3 py-1 text-center rounded-full ${getStatusColor(project.status)}`}>
+                                    <div className={`w-[150px] px-3 py-1 justify-center flex rounded-full ${getStatusColor(project.status)}`}>
                                         {project.status}
                                     </div>
                                 </td>
                                 <td className="text-center p-4">
                                     <div className='flex justify-center'>
-                                        <img src="/src/img/img_icon/development.png" alt="Team Develop" className="h-10 w-10 cursor-pointer" onClick={gotoAssignPJ} />
+                                        <img src="/src/img/img_icon/development.png" alt="Team Develop" className="h-10 w-10 cursor-pointer" onClick={() => gotoAssignPJ(project.project_id)} />
                                     </div>
                                 </td>
                             </tr>
