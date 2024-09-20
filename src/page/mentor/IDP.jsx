@@ -34,13 +34,6 @@ const Profile = () => {
     setModalImageUrl(null);
   };
 
-  // Function to format date to dd/mm/yyyy
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
-  };
-
   // Fetch profile data from backend using user_id
   useEffect(() => {
     if (user_id) {
@@ -118,7 +111,7 @@ const Profile = () => {
                 <div className="text-[20px] ml-2 mb-2">ชื่อ - นามสกุล : {profileData?.firstName} {profileData?.lastName || 'Loading...'}</div>
                 <div className="text-[20px] ml-2 mb-2">ชื่อเล่น : {profileData?.nickname || 'Loading...'}</div>
                 <div className="text-[20px] ml-2 mb-2">อายุ : {profileData?.age || 'Loading...'}</div>
-                <div className="text-[20px] ml-2 mb-2">วันเกิด : {formatDate(profileData?.birthDate)}</div> {/* Format birthDate */}
+                <div className="text-[20px] ml-2 mb-2">วันเกิด : {profileData?.birthDate || 'Loading...'}</div>
                 <div className="text-[20px] ml-2 mb-2">สัญชาติ : {profileData?.nationality || 'Loading...'}</div>
                 <div className="text-[20px] ml-2 mb-2">เบอร์มือถือ : {profileData?.phone || 'Loading...'}</div>
                 <div className="flex gap-2 mt-5">
@@ -132,51 +125,7 @@ const Profile = () => {
 
           <div className='bg-white p-5 rounded-lg mb-5'>
             <div className="flex justify-between">
-              <div className="flex flex-col mb-4">
-                <label className="mb-1 text-[20px] text-left text-gray-800">ตำแหน่งที่สมัคร</label>
-                <input
-                  type="text"
-                  value={profileData?.position || 'N/A'}
-                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
-                  readOnly
-                />
-              </div>
-              <div className="flex flex-col mb-4">
-                <label className="mb-1 text-[20px] text-left text-gray-800">สถานศึกษาปัจจุบัน</label>
-                <input
-                  type="text"
-                  value={profileData?.currentEducation || 'N/A'}
-                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
-                  readOnly
-                />
-              </div>
-              <div className="flex flex-col mb-4">
-                <label className="mb-1 text-[20px] text-left text-gray-800">วันเดือนปีเริ่มฝึกงาน</label>
-                <input
-                  type="text"
-                  value={formatDate(profileData?.datestart)} // Format start date
-                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
-                  readOnly
-                />
-              </div>
-              <div className="flex flex-col mb-4">
-                <label className="mb-1 text-[20px] text-left text-gray-800">วันเดือนปีฝึกงานวันสุดท้าย</label>
-                <input
-                  type="text"
-                  value={formatDate(profileData?.dateend)} // Format end date
-                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
-                  readOnly
-                />
-              </div>
-              <div className="flex flex-col mb-4">
-                <label className="mb-1 text-[20px] text-left text-gray-800">GPA รวม</label>
-                <div className="border-2 border-green-600 rounded-lg p-2.5 text-[20px] text-green-600 w-64 text-center">
-                  {profileData?.gpa || 'N/A'}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-between">
+              {/* ฝั่งซ้าย */}
               <div className="flex-1 p-5 rounded-lg mx-2">
                 <div className="flex items-center mb-11">
                   <p className="text-[20px] text-black text-left">ดู Resume</p>
@@ -220,177 +169,175 @@ const Profile = () => {
                   >
                     <img
                       src="/src/img/img_icon/project.png"
-                      className="w-10 h-10"
+                      className="w-10 h-10 ml-[172px]"
                       alt="Project Icon"
                     />
                   </a>
                 </div>
-              </div>
-            </div>
 
-            <div className="flex-1 p-5 rounded-lg mx-2">
-              <div className="flex flex-col mb-4">
-                <label className="mb-1 text-[20px] text-left text-gray-800">โปรดกรอกเป้าหมาย</label>
-                <textarea
-                  className="rounded-lg bg-white border border-gray-300 text-[18px] p-2 w-full h-28 resize-none"
-                  defaultValue="อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ"
-                />
+          
               </div>
-              <div className="flex justify-between">
-                <div className="flex-1 p-5 rounded-lg mx-2">
-                  <div className="flex flex-col mb-11">
-                    <label className="mb-1 text-[20px] text-left text-gray-800">โปรดเลือกงานสายงานที่ถนัด</label>
-                    <div className="grid grid-cols-3 gap-y-4 text-[18px]">
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="frontend"
-                          checked={checkboxState.frontend}
-                          disabled={true} // ไม่สามารถแก้ไขได้
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        Frontend
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="backend"
-                          checked={checkboxState.backend}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        Backend
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="fullstack"
-                          checked={checkboxState.fullstack}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        Full Stack
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="dataAnalysis"
-                          checked={checkboxState.dataAnalysis}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        Data Analysis
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="dataManagement"
-                          checked={checkboxState.dataManagement}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        Data Management
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="other"
-                          checked={checkboxState.other}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        อื่นๆ
-                      </label>
-                    </div>
-                  </div>
 
-                  {/* เงื่อนไขแสดงข้อมูลเพิ่มเติมถ้ามีการเลือก "อื่นๆ" */}
-                  {checkboxState.other && (
-                    <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-                      <h3 className="text-[18px] font-bold">ข้อมูลเพิ่มเติม</h3>
-                      <p className="text-[16px] mt-2">รายละเอียดเพิ่มเติม: {profileData?.otherDetails || 'N/A'}</p>
-                    </div>
-                  )}
+              {/* ฝั่งขวา */}
+              <div className="flex-1 p-5 rounded-lg mx-2">
+                <div className="flex flex-col mb-4">
+                  <label className="mb-1 text-[20px] text-left text-gray-800">โปรดกรอกเป้าหมาย</label>
+                  <p className="rounded-lg bg-gray-100 border border-gray-300 text-[18px] p-2 w-full h-28 text-left">
+                    {profileData?.goal || "อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ"}
+                  </p>
                 </div>
-              </div>
 
-              <div className="flex justify-between">
-                <div className="flex-1 p-5 rounded-lg mx-2">
-                  {/* Display checkboxes for job expertise */}
-                  <div className="flex flex-col mb-11">
-                    <label className="mb-1 text-[20px] text-left text-gray-800">โปรแกรมหรืองานที่ถนัด (3 อย่างที่ถนัดที่สุด)</label>
-                    <div className="grid grid-cols-3 gap-y-4 text-[18px]">
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="figma"
-                          checked={checkboxState.figma}
-                          disabled={true} // ไม่สามารถแก้ไขได้
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        Figma
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="react"
-                          checked={checkboxState.react}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        React
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="php"
-                          checked={checkboxState.php}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        PHP
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="vsCode"
-                          checked={checkboxState.vsCode}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        VS Code
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="sqlServer"
-                          checked={checkboxState.sqlServer}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        SQL Server
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="docker"
-                          checked={checkboxState.docker}
-                          disabled={true}
-                          className="mr-2 h-5 w-5 rounded-md"
-                        />
-                        Docker
-                      </label>
-                    </div>
+                <div className="flex flex-col mb-11">
+                  <label className="mb-1 text-[20px] text-left text-gray-800">โปรดเลือกงานสายงานที่ถนัด</label>
+                  <div className="grid grid-cols-3 gap-y-4 text-[18px]">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="frontend"
+                        checked={checkboxState.frontend}
+                        disabled={true} // ไม่สามารถแก้ไขได้
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      Frontend
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="backend"
+                        checked={checkboxState.backend}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      Backend
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="fullstack"
+                        checked={checkboxState.fullstack}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      Full Stack
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="dataAnalysis"
+                        checked={checkboxState.dataAnalysis}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      Data Analysis
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="dataManagement"
+                        checked={checkboxState.dataManagement}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      Data Management
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="other"
+                        checked={checkboxState.other}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      อื่นๆ
+                    </label>
                   </div>
-
-                  {/* Display additional info when "otherProgram" is checked */}
-                  {checkboxState.otherProgram && (
-                    <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-                      <h3 className="text-[18px] font-bold">ข้อมูลโปรแกรมเพิ่มเติม</h3>
-                      <p className="text-[16px] mt-2">รายละเอียดเพิ่มเติม: {profileData?.otherProgramDetails || 'N/A'}</p>
-                    </div>
-                  )}
                 </div>
+
+                {checkboxState.other && (
+                  <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                    <h3 className="text-[18px] font-bold">ข้อมูลเพิ่มเติม</h3>
+                    <p className="text-[16px] mt-2">
+                      รายละเอียดเพิ่มเติม: {profileData?.otherDetails || 'N/A'}
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex flex-col mb-11">
+                  <label className="mb-1 text-[20px] text-left text-gray-800">
+                    โปรแกรมหรืองานที่ถนัด (3 อย่างที่ถนัดที่สุด)
+                  </label>
+                  <div className="grid grid-cols-3 gap-y-4 text-[18px]">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="figma"
+                        checked={checkboxState.figma}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      Figma
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="react"
+                        checked={checkboxState.react}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      React
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="php"
+                        checked={checkboxState.php}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      PHP
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="vsCode"
+                        checked={checkboxState.vsCode}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      VS Code
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="sqlServer"
+                        checked={checkboxState.sqlServer}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      SQL Server
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="docker"
+                        checked={checkboxState.docker}
+                        disabled={true}
+                        className="mr-2 h-5 w-5 rounded-md"
+                      />
+                      Docker
+                    </label>
+                  </div>
+                </div>
+
+                {checkboxState.otherProgram && (
+                  <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                    <h3 className="text-[18px] font-bold">ข้อมูลโปรแกรมเพิ่มเติม</h3>
+                    <p className="text-[16px] mt-2">
+                      รายละเอียดเพิ่มเติม: {profileData?.otherProgramDetails || 'N/A'}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -403,3 +350,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
