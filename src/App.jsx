@@ -11,6 +11,7 @@ import Homepage from './page/mentor/Homepage';
 import IDP from './page/mentor/IDP';
 import PDBacklog from './page/mentor/PDBacklog';
 import BLProject from './page/mentor/BLProject';
+import Dailyscrum from './page/mentor/Dailyscrum';
 import Input_data_intern from './page/intern/input_data_intern';
 import Upload_doc_intern from './page/intern/upload_doc_intern';
 
@@ -29,9 +30,10 @@ function App() {
               <Route path="/project" element={<Project />} />
               {/* <Route path="/assignproject" element={<Assignproject />} /> */}
               <Route path="/AssignPJ" element={<AssignPJ />} />
-              <Route path="/IDP" element={<IDP />} />
+              <Route path="/IDP/:user_id" element={<IDP />} />
               <Route path="/PDBacklog" element={<PDBacklog />} />
               <Route path="/BLProject" element={<BLProject />} />
+              <Route path="/Dailyscrum" element={<Dailyscrum />} />
             </Route>
           </Routes>
         </Router>

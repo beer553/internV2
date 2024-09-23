@@ -23,7 +23,7 @@ const Home = () => {
 
   const fetchData = async (userId) => {
     try {
-      const response = await axios.get('http://localhost/internV2/backend/intern/home.php', {
+      const response = await axios.get('http://localhost:8080/intern/home.php', {
         params: { user_id: userId },
       });
       setInternData(response.data);

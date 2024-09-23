@@ -26,7 +26,7 @@ function Homepage() {
   // ดึงข้อมูล internData จาก backend โดยใช้ user_id
   useEffect(() => {
     if (isAuthenticated && user?.user_id) {
-      axios.get(`http://localhost/internV2/backend/mentor/homepage.php?user_id=${user.user_id}`)
+      axios.get(`http://localhost:8080/mentor/homepage.php?user_id=${user.user_id}`)
         .then(response => {
           setInternData(response.data);
         })
@@ -39,7 +39,7 @@ function Homepage() {
   // Load user status on component mount
   useEffect(() => {
     if (isAuthenticated && user?.user_id) {
-      axios.get(`http://localhost/internV2/backend/mentor/insert_data_mentor.php?user_id=${user.user_id}`)
+      axios.get(`http://localhost:8080/mentor/insert_data_mentor.php?user_id=${user.user_id}`)
         .then(response => {
           if (!response.data.completed) {
             setShowFormPopup(true);
@@ -117,7 +117,7 @@ function Homepage() {
     formDataToSend.append('profilePicture', formData.profilePicture);
     formDataToSend.append('userId', user?.user_id);
 
-    axios.post('http://localhost/internV2/backend/mentor/insert_data_mentor.php', formDataToSend, {
+    axios.post('http://localhost:8080/mentor/insert_data_mentor.php', formDataToSend, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -139,8 +139,8 @@ function Homepage() {
   const togglePopup = () => {
     setShowPopup(!showPopup);
   };
-  const goToProfilePage = () => {
-    navigate('/IDP');
+  const goToProfilePage = (userId) => {
+    navigate(`/IDP/${userId}`);
   };
 
   const gotoProductBacklog = () => {
@@ -361,8 +361,8 @@ function Homepage() {
                     <td className="text-[16px] text-center text-black">{formatDate(row.datestart)} - {formatDate(row.dateend)}</td>
                     <td className="text-[16px] text-center text-black">{row.project ? row.project : 'ยังไม่มอบหมายโปรเจค'}</td>
                     <td className="text-center">
-                      <button>
-                        <img className='w-12 h-12 mx-auto cursor-pointer' src="/src//img/img_icon/9746243.png" alt="Profile" onClick={goToProfilePage} />
+                      <button onClick={() => goToProfilePage(row.user_id)}>
+                        <img className='w-12 h-12 mx-auto cursor-pointer' src="/src//img/img_icon/9746243.png" alt="Profile" />
                       </button>
                     </td>
                     <td className="text-center">

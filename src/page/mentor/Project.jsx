@@ -49,7 +49,7 @@ function Project() {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get(`http://localhost/internV2/backend/mentor/project.php?user_id=${user.user_id}`);
+                const response = await axios.get(`http://localhost:8080/mentor/project.php?user_id=${user.user_id}`);
                 setProjects(response.data);
                 setSearchResults(response.data); // แสดงผลการค้นหาทั้งหมดโดยตั้งต้นให้เท่ากับ projects
             } catch (error) {
@@ -160,8 +160,8 @@ function Project() {
         setShowForm(false);
     };
 
-    const gotoAssignPJ = () => {
-        navigate('/AssignPJ');
+    const gotoAssignPJ = (projectId) => {
+        navigate(`/AssignPJ?project_id=${projectId}`);
     };
 
     return (
@@ -296,7 +296,7 @@ function Project() {
                                 </td>
                                 <td className="text-center p-4">
                                     <div className='flex justify-center'>
-                                        <img src="/src/img/img_icon/development.png" alt="Team Develop" className="h-10 w-10 cursor-pointer" onClick={gotoAssignPJ} />
+                                        <img src="/src/img/img_icon/development.png" alt="Team Develop" className="h-10 w-10 cursor-pointer" onClick={() => gotoAssignPJ(project.project_id)} />
                                     </div>
                                 </td>
                             </tr>

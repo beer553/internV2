@@ -5,16 +5,16 @@ header('Access-Control-Allow-Methods: GET, POST'); // อนุญาตให�
 header('Access-Control-Allow-Headers: Content-Type');
 
 // กำหนดค่าเชื่อมต่อฐานข้อมูล
-$uid = ""; // ชื่อผู้ใช้ SQL Server
-$pwd = ""; // รหัสผ่าน SQL Server
-$serverName = "CHAWANRAT"; // ชื่อเซิร์ฟเวอร์ SQL Server
-$database = "Intern"; // ชื่อฐานข้อมูล
+$uid = "SA"; // ชื่อผู้ใช้ SQL Server (ในกรณีนี้คือ SA)
+$pwd = "phurin4508!"; // รหัสผ่าน SQL Server (ที่คุณตั้งไว้ตอนสร้าง container)
+$serverName = "Intern_V2,1433"; // ชื่อเซิร์ฟเวอร์ SQL Server และ port ที่คุณใช้เชื่อมต่อ (1433)
+$database = "Intern"; // ชื่อฐานข้อมูลที่คุณต้องการเชื่อมต่อ
 
 try {
-    // สร้างการเชื่อมต่อฐานข้อมูล
+    // สร้างการเชื่อมต่อฐานข้อมูลโดยใช้ PDO กับ SQL Server
     $con = new PDO("sqlsrv:Server=$serverName;Database=$database;Encrypt=false", $uid, $pwd);
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (isset($_GET['user_id'])) {
             $id = $_GET['user_id']; 
@@ -34,7 +34,7 @@ try {
         } else {
             echo json_encode(array("error" => "ID parameter is missing."));
         }
-        exit; // หยุดการดำเนินการของ script ต่อไป
+        exit;
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ส่วนบันทึกข้อมูล goal
         $data = json_decode(file_get_contents('php://input'), true);
@@ -64,4 +64,4 @@ try {
     echo json_encode(array("error" => "Database error: " . $e->getMessage()));
     exit;
 }
-?>
+
