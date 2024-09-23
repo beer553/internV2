@@ -125,7 +125,7 @@ function Project() {
 
             } else {
                 const response = await axios.post('http://localhost/internV2/backend/mentor/project.php', projectData);
-                const newProjectId = response.data.project_id; 
+                const newProjectId = response.data.project_id;
 
                 const updatedProjects = [...projects, { ...newProject, project_id: newProjectId, manager: user?.username || '' }];
                 setProjects(updatedProjects);
@@ -290,7 +290,7 @@ function Project() {
                                 <td className="text-left p-4 text-[18px]">{project.projectname}</td>
                                 <td className="text-center p-4 text-[18px]">{project.scrummaster}</td>
                                 <td className="flex justify-center text-[18px] ">
-                                    <div className={`w-[150px] px-3 py-1 text-center rounded-full ${getStatusColor(project.status)}`}>
+                                    <div className={`w-[150px] px-3 py-1 justify-center flex rounded-full ${getStatusColor(project.status)}`}>
                                         {project.status}
                                     </div>
                                 </td>

@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../component/footer';
 import NavbarIntern from '../component/navbar_intern';
 import ImageModal from '../component/ImageModal';
+import ImageModal from '../component/ImageModal';
 
 const Profile = () => {
+  const { user_id } = useParams(); // Get user_id from URL
   const { user_id } = useParams(); // Get user_id from URL
   const navigate = useNavigate();
   const [modalImageUrl, setModalImageUrl] = useState(null);
   const [profileData, setProfileData] = useState(null); // State to store profile data
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+  const [profileData, setProfileData] = useState(null); // State to store profile data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
   const [checkboxState, setCheckboxState] = useState({
+    frontend: false,
     frontend: false,
     backend: false,
     fullstack: false,
@@ -20,7 +28,10 @@ const Profile = () => {
     other: false,
     figma: false,
     react: false,
+    figma: false,
+    react: false,
     php: false,
+    vsCode: false,
     vsCode: false,
     sqlServer: false,
     docker: false,
@@ -115,8 +126,10 @@ const Profile = () => {
             <div className="flex p-5">
               <img
                 src={profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png'}
+                src={profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png'}
                 className="w-96 h-96 rounded-lg mt-5 mb-5 mr-16 cursor-pointer"
                 alt="Profile"
+                onClick={() => openModal(profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png')}
                 onClick={() => openModal(profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png')}
               />
               <div className="text-left text-black mt-3">
@@ -184,6 +197,7 @@ const Profile = () => {
 
             {/* ฝั่งซ้าย */}
             <div className="flex justify-between">
+              {/* ฝั่งซ้าย */}
               <div className="flex-1 p-5 rounded-lg mx-2">
                 <div className="flex items-center mb-11">
                   <p className="text-[20px] text-black text-left">ดู Resume</p>
@@ -201,6 +215,7 @@ const Profile = () => {
                   </a>
                 </div>
 
+
                 <div className="flex items-center mb-11">
                   <p className="text-[20px] text-black text-left">ดู Transcript</p>
                   <a
@@ -215,7 +230,20 @@ const Profile = () => {
                       alt="Transcript Icon"
                     />
                   </a>
+                  <a
+                    href={profileData?.transcript ? `/backend/intern/uploads/transcript/${profileData.transcript}` : '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center w-10 h-10 ml-[308px] text-blue-500 underline"
+                  >
+                    <img
+                      src="/src/img/img_icon/transcription.png"
+                      className="w-10 h-10"
+                      alt="Transcript Icon"
+                    />
+                  </a>
                 </div>
+
 
                 <div className="flex items-center mb-11">
                   <p className="text-[20px] text-black text-left">ตัวอย่าง Project ที่เคยทำ</p>
@@ -235,13 +263,19 @@ const Profile = () => {
               </div>
 
               {/* ฝั่งขวา */}
+              {/* ฝั่งขวา */}
               <div className="flex-1 p-5 rounded-lg mx-2">
                 <div className="flex flex-col mb-4">
                   <label className="mb-1 text-[20px] text-left text-gray-800">โปรดกรอกเป้าหมาย</label>
                   <p className="rounded-lg bg-gray-100 border border-gray-300 text-[18px] p-2 w-full h-28 text-left">
                     {profileData?.goal || "อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ"}
                   </p>
+                  <p className="rounded-lg bg-gray-100 border border-gray-300 text-[18px] p-2 w-full h-28 text-left">
+                    {profileData?.goal || "อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ"}
+                  </p>
                 </div>
+
+                <div className="flex flex-col mb-11">
 
                 <div className="flex flex-col mb-11">
                   <label className="mb-1 text-[20px] text-left text-gray-800">โปรดเลือกงานสายงานที่ถนัด</label>
@@ -251,6 +285,7 @@ const Profile = () => {
                         type="checkbox"
                         name="frontend"
                         checked={checkboxState.frontend}
+                        disabled={true} // ไม่สามารถแก้ไขได้
                         disabled={true} // ไม่สามารถแก้ไขได้
                         className="mr-2 h-5 w-5 rounded-md"
                       />
@@ -270,6 +305,7 @@ const Profile = () => {
                       <input
                         type="checkbox"
                         name="fullstack"
+                        name="fullstack"
                         checked={checkboxState.fullstack}
                         disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
@@ -280,6 +316,7 @@ const Profile = () => {
                       <input
                         type="checkbox"
                         name="dataAnalysis"
+                        name="dataAnalysis"
                         checked={checkboxState.dataAnalysis}
                         disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
@@ -289,6 +326,7 @@ const Profile = () => {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
+                        name="dataManagement"
                         name="dataManagement"
                         checked={checkboxState.dataManagement}
                         disabled={true}
@@ -329,6 +367,7 @@ const Profile = () => {
                         name="figma"
                         checked={checkboxState.figma}
                         disabled={true}
+                        disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
                       />
                       Figma
@@ -338,6 +377,7 @@ const Profile = () => {
                         type="checkbox"
                         name="react"
                         checked={checkboxState.react}
+                        disabled={true}
                         disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
                       />
@@ -357,7 +397,9 @@ const Profile = () => {
                       <input
                         type="checkbox"
                         name="vsCode"
+                        name="vsCode"
                         checked={checkboxState.vsCode}
+                        disabled={true}
                         disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
                       />
@@ -366,6 +408,7 @@ const Profile = () => {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
+                        name="sqlServer"
                         name="sqlServer"
                         checked={checkboxState.sqlServer}
                         disabled={true}
@@ -385,6 +428,15 @@ const Profile = () => {
                     </label>
                   </div>
                 </div>
+
+                {checkboxState.otherProgram && (
+                  <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                    <h3 className="text-[18px] font-bold">ข้อมูลโปรแกรมเพิ่มเติม</h3>
+                    <p className="text-[16px] mt-2">
+                      รายละเอียดเพิ่มเติม: {profileData?.otherProgramDetails || 'N/A'}
+                    </p>
+                  </div>
+                )}
 
                 {checkboxState.otherProgram && (
                   <div className="mt-4 p-4 bg-gray-100 rounded-lg">
