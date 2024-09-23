@@ -247,7 +247,6 @@ function Project() {
                                 </select>
                             </label>
                         </form>
-
                         <div className='flex justify-center mt-6 space-x-4'>
                             <button
                                 type="submit"
@@ -296,7 +295,14 @@ function Project() {
                                 </td>
                                 <td className="text-center p-4">
                                     <div className='flex justify-center'>
-                                        <img src="/src/img/img_icon/development.png" alt="Team Develop" className="h-10 w-10 cursor-pointer" onClick={() => gotoAssignPJ(project.project_id)} />
+                                        {project.team_members ? (
+                                            // แสดงสมาชิกทีมพัฒนาหลายคน
+                                            <span className="text-[18px] text-left ">
+                                                {project.team_members}
+                                            </span>
+                                        ) : (
+                                            <img src="/src/img/img_icon/development.png" alt="Team Develop" className="h-10 w-10 cursor-pointer" onClick={() => gotoAssignPJ(project.project_id)} />
+                                        )}
                                     </div>
                                 </td>
                             </tr>

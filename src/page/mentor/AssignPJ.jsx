@@ -3,7 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom'; // ใช้ useLoc
 import Footer from '../component/footer';
 import NavbarMentor from '../component/navbar_intern';
 import axios from 'axios';
-import { useAuth } from '../../context/AuthContext'; 
+import { useAuth } from '../../context/AuthContext';
+import Swal from 'sweetalert2';
+
 
 function AssignPJ() {
   const navigate = useNavigate();
@@ -15,13 +17,13 @@ function AssignPJ() {
   console.log("Project ID:", project_id); // ตรวจสอบว่าได้ project_id ถูกต้องหรือไม่
 
   // ดึงข้อมูล user จาก AuthContext
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const user_id = user?.user_id || null;
-  console.log("User ID:", user_id); 
+  console.log("User ID:", user_id);
 
   // State สำหรับเก็บข้อมูล intern ที่จะดึงมาจาก backend
   const [interns, setInterns] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // State สำหรับเก็บ user_id ของผู้ที่ถูกเลือก
@@ -34,7 +36,7 @@ function AssignPJ() {
   const handleCheckboxChange = (userId) => {
     setSelectedUsers((prevSelectedUsers) =>
       prevSelectedUsers.includes(userId)
-        ? prevSelectedUsers.filter((id) => id !== userId) 
+        ? prevSelectedUsers.filter((id) => id !== userId)
         : [...prevSelectedUsers, userId]
     );
   };
@@ -53,7 +55,7 @@ function AssignPJ() {
         console.log("Response from backend:", response.data);
 
         if (Array.isArray(response.data)) {
-          setInterns(response.data); 
+          setInterns(response.data);
         } else {
           console.error('Response data is not an array:', response.data);
           setInterns([]);
@@ -77,17 +79,46 @@ function AssignPJ() {
   }, [user_id, project_id]);
 
   const handleSubmit = async () => {
+    if (selectedUsers.length === 0) {
+      // แจ้งเตือนหากยังไม่ได้เลือก intern
+      Swal.fire({
+        title: 'แจ้งเตือน!',
+        text: 'กรุณาเลือกผู้รับผิดชอบก่อนมอบหมาย',
+        icon: 'warning',
+        confirmButtonText: 'ตกลง'
+      });
+      return; // หยุดการทำงานถ้ายังไม่ได้เลือก intern
+    }
+  
     try {
       await axios.post('http://localhost/internV2/backend/mentor/assignintern.php', {
         selectedUsers,
         project_id
       });
-      alert('มอบหมายผู้รับผิดชอบสำเร็จ');
+  
+      // แจ้งเตือนสำเร็จด้วย SweetAlert
+      Swal.fire({
+        title: 'สำเร็จ!',
+        text: 'มอบหมายผู้รับผิดชอบสำเร็จ',
+        icon: 'success',
+        confirmButtonText: 'ตกลง'
+      }).then(() => {
+        // กลับไปยังหน้า project.jsx หลังจากกดปุ่มยืนยัน
+        navigate('/Project');
+      });
+  
     } catch (error) {
       console.error('Error submitting assigned users:', error);
-      alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
+  
+      // แจ้งเตือนข้อผิดพลาดด้วย SweetAlert
+      Swal.fire({
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'เกิดข้อผิดพลาดในการส่งข้อมูล',
+        icon: 'error',
+        confirmButtonText: 'ลองอีกครั้ง'
+      });
     }
-  };
+  };  
 
   return (
     <div>
@@ -115,7 +146,7 @@ function AssignPJ() {
             {interns.map((intern) => (
               <div key={intern.user_id} className="flex items-center bg-white p-4">
                 <img
-                  src={`/backend/intern/uploads/profile/${intern?.profile}`} 
+                  src={`/backend/intern/uploads/profile/${intern?.profile}`}
                   alt={intern.name}
                   className="h-[200px] w-[200px] rounded-lg object-cover"
                 />
