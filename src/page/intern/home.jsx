@@ -3,6 +3,7 @@ import axios from 'axios';
 import NavbarIntern from '../component/navbar_intern';
 import Footer from '../component/footer';
 import { useAuth } from '../../context/AuthContext';  // Import AuthContext
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const Home = () => {
   const { user } = useAuth();  // ดึงข้อมูลจาก Context
@@ -152,8 +153,8 @@ const Home = () => {
           {/* ActionLinks */}
           <div>
             <div className="grid grid-cols-2 gap-4 md:col-span-3">
-              <ActionLink label="Back log" colorClass="bg-[#8DB9CA]" />
-              <ActionLink label="SCRUM" colorClass="bg-[#A2CDCD]" />
+              <ActionLink label="Backlog" colorClass="bg-[#8DB9CA]" to="/backlog" /> {/* แก้ไขเป็นการใช้ Link */}
+              <ActionLink label="Daily Scrum" colorClass="bg-[#A2CDCD]" />
               <ActionLink href="src\page\intern\uploads\ใบรับเงิน.pdf" label="เบิกงบเบี้ยเลี้ยง" colorClass="bg-[#CEE5D0]" />
               <ActionLink href="https://forms.office.com/pages/responsepage.aspx?id=Dr-4XZKF0E6CsqbU13kz1HWtqYCabT1PkbKI66xW345UMTBTWDBPMk4zUENSOVQyNlBNRDVJSkk3OC4u&route=shorturl" label="แจ้งลา / WFH" colorClass="bg-[#CACCD1]" />
             </div>
@@ -184,11 +185,17 @@ const DataCard = ({ label, value, unit, className }) => (
   </div>
 );
 
-// ActionLink Component
-const ActionLink = ({ label, href, colorClass }) => (
-  <a href={href} className={`p-4 rounded-lg shadow-md flex items-center justify-center text-black ${colorClass}`}>
-    <p className="text-lg text-center">{label}</p>
-  </a>
+// ActionLink Component สำหรับการใช้ Link จาก react-router-dom
+const ActionLink = ({ label, href, colorClass, to }) => (
+  to ? (
+    <Link to={to} className={`p-4 rounded-lg shadow-md flex items-center justify-center text-black ${colorClass}`}>
+      <p className="text-lg text-center">{label}</p>
+    </Link>
+  ) : (
+    <a href={href} className={`p-4 rounded-lg shadow-md flex items-center justify-center text-black ${colorClass}`}>
+      <p className="text-lg text-center">{label}</p>
+    </a>
+  )
 );
 
 // Modal Component

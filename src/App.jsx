@@ -13,6 +13,7 @@ import PDBacklog from './page/mentor/PDBacklog';
 import BLProject from './page/mentor/BLProject';
 import Input_data_intern from './page/intern/input_data_intern';
 import Upload_doc_intern from './page/intern/upload_doc_intern';
+import Backlog from './page/intern/backlog';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
               <Route path="/IDP/:user_id" element={<IDP />} />
               <Route path="/PDBacklog" element={<PDBacklog />} />
               <Route path="/BLProject" element={<BLProject />} />
+              <Route path="/Backlog" element={<Backlog />} />
             </Route>
           </Routes>
         </Router>

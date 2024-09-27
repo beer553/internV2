@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';  // ดึงข้อมูลจาก AuthContext
+import { useNavigate } from 'react-router-dom'; // ใช้ useNavigate แทน useHistory
 
 const NavbarIntern = () => {
     const { user, logout } = useAuth();  // ใช้ข้อมูลจาก Context และดึงฟังก์ชัน logout
     const [username, setUsername] = useState('');
     const [role, setRole] = useState('');
     const [isLoading, setIsLoading] = useState(true); // ใช้เพื่อตรวจสอบการโหลดข้อมูล
+    const navigate = useNavigate(); // สร้าง instance ของ useNavigate สำหรับการนำทาง
 
     useEffect(() => {
         // ตรวจสอบว่าข้อมูล user จาก Context มีหรือไม่
@@ -20,7 +22,6 @@ const NavbarIntern = () => {
             // กรณีที่ไม่มี user ใน Context จะพยายามดึงจาก localStorage
             const storedUsername = localStorage.getItem('username');
             const storedRole = localStorage.getItem('role');
-
 
             if (storedUsername && storedRole) {
                 setUsername(storedUsername);
@@ -43,6 +44,18 @@ const NavbarIntern = () => {
 
         // นำผู้ใช้กลับไปที่หน้า login หรือหน้าเริ่มต้น
         window.location.href = '/'; // หรือเปลี่ยนเป็นเส้นทางที่คุณต้องการ
+    };
+
+    // ฟังก์ชันสำหรับการนำทางเมื่อคลิกโลโก้
+    const handleLogoClick = () => {
+        if (role === 'intern') {
+            navigate('/home');  // นำไปที่หน้า home สำหรับ intern
+        } else if (role === 'mentor') {
+            navigate('/homepage');  // นำไปที่หน้า homepage สำหรับ mentor
+        } else {
+            console.log('Unknown role, redirecting to default page');
+            navigate('/'); // กรณี role ไม่ถูกต้องให้กลับไปที่หน้าหลัก
+        }
     };
 
     // ตรวจสอบ role และกำหนดข้อความที่จะแสดง
@@ -71,7 +84,8 @@ const NavbarIntern = () => {
                     <img 
                         src="/src/img/Siam_Cement_Group_Logo.svg.png" 
                         alt="Logo" 
-                        className="h-16 m-4" 
+                        className="h-16 m-4 cursor-pointer" 
+                        onClick={handleLogoClick}  // เพิ่มฟังก์ชันให้คลิกโลโก้แล้วนำทาง
                     />
                 </div>
                 <div className="flex items-center ml-8">

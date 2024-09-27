@@ -211,9 +211,9 @@ function Homepage() {
       <div className="bg-white max-w-[95%] mx-auto mt-12 mb-5 p-2 shadow-lg rounded-lg items-center">
         <div className="flex justify-center items-center mt-5 mb-3">
           <img
-            src={userData?.profile_picture ? `/backend/mentor/uploads/${userData.profile_picture}` : '/src/img/star.png'}
+            src={userData?.profile_picture ? `/backend/mentor/uploads/${userData.profile_picture}` : ''}
             className="w-24 h-24 rounded-full mt-6"
-            alt="Profile"
+            alt=""
           />
           <div className="ml-4 mt-4">
             <h2 className='text-[25px] text-black font-bold'>DX Manpower Management</h2>

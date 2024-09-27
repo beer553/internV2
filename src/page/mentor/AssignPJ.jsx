@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; // ใช้ useLocation แทน useParams
+import { useNavigate, useLocation } from 'react-router-dom'; 
 import Footer from '../component/footer';
 import NavbarMentor from '../component/navbar_intern';
 import axios from 'axios';
@@ -9,25 +9,22 @@ import Swal from 'sweetalert2';
 
 function AssignPJ() {
   const navigate = useNavigate();
-  const location = useLocation(); // ใช้ useLocation เพื่อดึง query parameters
+  const location = useLocation(); 
 
-  // ดึง project_id จาก query string
   const queryParams = new URLSearchParams(location.search);
-  const project_id = queryParams.get('project_id'); // ดึงค่า project_id จาก URL
-  console.log("Project ID:", project_id); // ตรวจสอบว่าได้ project_id ถูกต้องหรือไม่
+  const project_id = queryParams.get('project_id'); 
+  console.log("Project ID:", project_id); 
 
-  // ดึงข้อมูล user จาก AuthContext
   const { user } = useAuth();
   const user_id = user?.user_id || null;
   console.log("User ID:", user_id);
 
-  // State สำหรับเก็บข้อมูล intern ที่จะดึงมาจาก backend
   const [interns, setInterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // State สำหรับเก็บ user_id ของผู้ที่ถูกเลือก
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // State สำหรับเก็บค่า search term
 
   const gotoProject = () => {
     navigate('/Project');
@@ -80,14 +77,13 @@ function AssignPJ() {
 
   const handleSubmit = async () => {
     if (selectedUsers.length === 0) {
-      // แจ้งเตือนหากยังไม่ได้เลือก intern
       Swal.fire({
         title: 'แจ้งเตือน!',
         text: 'กรุณาเลือกผู้รับผิดชอบก่อนมอบหมาย',
         icon: 'warning',
         confirmButtonText: 'ตกลง'
       });
-      return; // หยุดการทำงานถ้ายังไม่ได้เลือก intern
+      return;
     }
   
     try {
@@ -96,21 +92,18 @@ function AssignPJ() {
         project_id
       });
   
-      // แจ้งเตือนสำเร็จด้วย SweetAlert
       Swal.fire({
         title: 'สำเร็จ!',
         text: 'มอบหมายผู้รับผิดชอบสำเร็จ',
         icon: 'success',
         confirmButtonText: 'ตกลง'
       }).then(() => {
-        // กลับไปยังหน้า project.jsx หลังจากกดปุ่มยืนยัน
         navigate('/Project');
       });
   
     } catch (error) {
       console.error('Error submitting assigned users:', error);
   
-      // แจ้งเตือนข้อผิดพลาดด้วย SweetAlert
       Swal.fire({
         title: 'เกิดข้อผิดพลาด!',
         text: 'เกิดข้อผิดพลาดในการส่งข้อมูล',
@@ -119,6 +112,13 @@ function AssignPJ() {
       });
     }
   };  
+
+  // ฟังก์ชันสำหรับกรอง intern ตามคำค้นหา
+  const filteredInterns = interns.filter(intern =>
+    intern.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    intern.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    intern.nickname.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
@@ -137,13 +137,22 @@ function AssignPJ() {
       </div>
 
       <div className="px-8">
+        {/* ช่องค้นหา */}
+        <input
+          type="text"
+          placeholder="ค้นหา intern..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="mb-4 p-2 border rounded w-full"
+        />
+
         {loading ? (
           <p>กำลังโหลดข้อมูล...</p>
         ) : error ? (
           <p>{error}</p>
-        ) : interns.length > 0 ? (
+        ) : filteredInterns.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {interns.map((intern) => (
+            {filteredInterns.map((intern) => (
               <div key={intern.user_id} className="flex items-center bg-white p-4">
                 <img
                   src={`/backend/intern/uploads/profile/${intern?.profile}`}
@@ -167,9 +176,8 @@ function AssignPJ() {
             ))}
           </div>
         ) : (
-          <p>ไม่มีข้อมูล interns ที่จะแสดง</p>
+          <p>ไม่พบข้อมูลที่ตรงกับคำค้นหา</p>
         )}
-
         <div className="mt-8 mb-8 flex justify-end">
           <button onClick={handleSubmit} className="bg-green-500 text-white px-10 rounded-lg hover:bg-green-600">
             ยืนยัน

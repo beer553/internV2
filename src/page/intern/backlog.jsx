@@ -51,9 +51,8 @@ function Backlog() {
 
             <div className="w-full flex flex-col items-center mt-5">
                 {/* Profile Section */}
-                <div className="flex items-center justify-center w-full mt-5 mb-10 px-4">
+                <div className="flex items-center  w-full mt-5 mb-10 px-4">
                     <div className="flex items-center">
-                        <img src="/src/img/profile_teerapat.png" alt="profile" className="rounded-full w-[150px] h-[150px]" />
                         <div className="ml-4">
                             <div className="bg-[#5C5A5A] text-[white] px-10 py-2 rounded-lg text-[35px] font-semibold ml-7">
                                 BackLog
@@ -73,7 +72,7 @@ function Backlog() {
                         {doingBoxes.map((box, index) => (
                             <div key={index} className="bg-yellow-300 rounded-lg mb-8 border-2 border-black self-center p-2">
                                 <textarea
-                                    className="w-full bg-transparent outline-none text-black text-center text-[20px] resize-none overflow-auto h-[220px] w-[230px]"
+                                    className=" bg-transparent outline-none text-black text-center text-[20px] resize-none overflow-auto h-[220px] w-[230px]"
                                     value={box.text}
                                     onChange={(e) => handleInputChange(index, e.target.value)}
                                     rows="10"

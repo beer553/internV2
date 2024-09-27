@@ -33,8 +33,10 @@ try {
         $mentor = $stmt->fetch(PDO::FETCH_ASSOC)['mentor'];
 
         if ($mentor) {
-            // คิวรีหา intern จากตาราง intern_info โดยใช้ mentor ที่ได้มา
-            $sql = "SELECT profile,user_id,nickname,firstName, lastName, currentEducation   FROM intern_info WHERE mentor = :mentor";
+            // คิวรีหา intern ที่วันสิ้นสุดยังไม่พ้นจากวันปัจจุบัน
+            $sql = "SELECT profile, user_id, nickname, firstName, lastName, currentEducation 
+                    FROM intern_info 
+                    WHERE mentor = :mentor AND dateend >= GETDATE()";
             $stmt = $con->prepare($sql);
             $stmt->bindParam(':mentor', $mentor);
             $stmt->execute();

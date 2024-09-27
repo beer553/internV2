@@ -288,23 +288,27 @@ function Project() {
                                 <td className="text-center p-4 text-[18px]">{formatDate(project.enddate)}</td>
                                 <td className="text-left p-4 text-[18px]">{project.projectname}</td>
                                 <td className="text-center p-4 text-[18px]">{project.scrummaster}</td>
-                                <td className="flex justify-center text-[18px] ">
-                                    <div className={`w-[150px] px-3 py-1 justify-center flex rounded-full ${getStatusColor(project.status)}`}>
+                                <td className="flex justify-center items-center text-[18px] ">
+                                    <div className={`w-[150px] px-3 py-1 justify-center flex items-center rounded-full ${getStatusColor(project.status)}`}>
                                         {project.status}
                                     </div>
                                 </td>
                                 <td className="text-center p-4">
-                                    <div className='flex justify-center'>
-                                        {project.team_members ? (
-                                            // แสดงสมาชิกทีมพัฒนาหลายคน
-                                            <span className="text-[18px] text-left ">
+                                    <div className='flex justify-left items-center'>
+                                        <img
+                                            src="/src/img/img_icon/development.png"
+                                            alt="Team Develop"
+                                            className="h-10 w-10 cursor-pointer"
+                                            onClick={() => gotoAssignPJ(project.project_id)}
+                                        />
+                                        {project.team_members && (
+                                            <span className="text-[18px] text-left mr-2 ml-6">
                                                 {project.team_members}
                                             </span>
-                                        ) : (
-                                            <img src="/src/img/img_icon/development.png" alt="Team Develop" className="h-10 w-10 cursor-pointer" onClick={() => gotoAssignPJ(project.project_id)} />
                                         )}
                                     </div>
                                 </td>
+
                             </tr>
                         ))}
                     </tbody>
