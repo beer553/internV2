@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../component/footer';
 import NavbarIntern from '../component/navbar_intern';
 import ImageModal from '../component/ImageModal';
+import ImageModal from '../component/ImageModal';
 
 const Profile = () => {
+  const { user_id } = useParams(); // Get user_id from URL
   const { user_id } = useParams(); // Get user_id from URL
   const navigate = useNavigate();
   const [modalImageUrl, setModalImageUrl] = useState(null);
   const [profileData, setProfileData] = useState(null); // State to store profile data
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+  const [profileData, setProfileData] = useState(null); // State to store profile data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
   const [checkboxState, setCheckboxState] = useState({
+    frontend: false,
     frontend: false,
     backend: false,
     fullstack: false,
@@ -20,7 +28,10 @@ const Profile = () => {
     other: false,
     figma: false,
     react: false,
+    figma: false,
+    react: false,
     php: false,
+    vsCode: false,
     vsCode: false,
     sqlServer: false,
     docker: false,
@@ -39,12 +50,14 @@ const Profile = () => {
     if (user_id) {
       fetchProfileData(user_id);
     }
+    console.log(profileData); // เช็คข้อมูลที่ได้รับ
   }, [user_id]);
+
 
   const fetchProfileData = async (user_id) => {
     try {
       setLoading(true); // Set loading state before fetching
-      const response = await fetch(`http://localhost/internV2/backend/intern/profile.php?user_id=${user_id}`);
+      const response = await fetch(`http://localhost:8080/intern/profile.php?user_id=${user_id}`);
       const data = await response.json();
 
       if (data.status === 'success' && data.data) {
@@ -89,6 +102,18 @@ const Profile = () => {
     return <div>{error}</div>; // Show error message if there's an issue
   }
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+
+    // ดึงวัน, เดือน, ปี จากวันที่
+    const day = String(date.getDate()).padStart(2, '0'); // เติม 0 ข้างหน้าให้เป็นสองหลัก
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // เดือนเริ่มจาก 0 จึงต้อง +1
+    const year = date.getFullYear() + 543; // แปลงจาก ค.ศ. เป็น พ.ศ.
+
+    return `${day}/${month}/${year}`; // รูปแบบ วัน/เดือน/ปี
+  };
+
   return (
     <>
       <div>
@@ -97,12 +122,14 @@ const Profile = () => {
         </header>
 
         <main className="p-5">
-          <section className="flex justify-center bg-white border rounded-lg mb-8">
+          <section className="flex justify-center bg-white border rounded-lg mb-5">
             <div className="flex p-5">
               <img
                 src={profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png'}
+                src={profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png'}
                 className="w-96 h-96 rounded-lg mt-5 mb-5 mr-16 cursor-pointer"
                 alt="Profile"
+                onClick={() => openModal(profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png')}
                 onClick={() => openModal(profileData?.profile ? `/backend/intern/uploads/profile/${profileData.profile}` : '/src/img/default_profile.png')}
               />
               <div className="text-left text-black mt-3">
@@ -111,7 +138,7 @@ const Profile = () => {
                 <div className="text-[20px] ml-2 mb-2">ชื่อ - นามสกุล : {profileData?.firstName} {profileData?.lastName || 'Loading...'}</div>
                 <div className="text-[20px] ml-2 mb-2">ชื่อเล่น : {profileData?.nickname || 'Loading...'}</div>
                 <div className="text-[20px] ml-2 mb-2">อายุ : {profileData?.age || 'Loading...'}</div>
-                <div className="text-[20px] ml-2 mb-2">วันเกิด : {profileData?.birthDate || 'Loading...'}</div>
+                <div className="text-[20px] ml-2 mb-2">วันเกิด : {formatDate(profileData?.birthDate) || 'N/A'}</div>
                 <div className="text-[20px] ml-2 mb-2">สัญชาติ : {profileData?.nationality || 'Loading...'}</div>
                 <div className="text-[20px] ml-2 mb-2">เบอร์มือถือ : {profileData?.phone || 'Loading...'}</div>
                 <div className="flex gap-2 mt-5">
@@ -122,8 +149,53 @@ const Profile = () => {
               </div>
             </div>
           </section>
+          <div className='bg-white p-8 rounded-lg'>
+            <div className="flex justify-between max-w-[97%] mx-auto">
+              <div className="flex flex-col mb-2">
+                <label className="mb-1 text-[20px] text-left text-gray-800">ตำแหน่งที่สมัคร</label>
+                <input
+                  type="text"
+                  value={profileData?.position || 'N/A'}
+                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
+                  disabled
+                />
+              </div>
+              <div className="flex flex-col mb-2">
+                <label className="mb-1 text-[20px] text-left text-gray-800">สถานศึกษาปัจจุบัน</label>
+                <input
+                  type="text"
+                  value={profileData?.currentEducation || 'N/A'}
+                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
+                  disabled
+                />
+              </div>
+              <div className="flex flex-col mb-2">
+                <label className="mb-1 text-[20px] text-left text-gray-800">วันเดือนปีเริ่มฝึกงาน</label>
+                <input
+                  type="text"
+                  value={formatDate(profileData?.datestart)}
+                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
+                  disabled
+                />
+              </div>
+              <div className="flex flex-col mb-2">
+                <label className="mb-1 text-[20px] text-left text-gray-800">วันเดือนปีฝึกงานวันสุดท้าย</label>
+                <input
+                  type="text"
+                  value={formatDate(profileData?.dateend)}
+                  className="rounded-lg bg-white border border-gray-300 text-[20px] p-3 w-64"
+                  disabled
+                />
+              </div>
+              <div className="flex flex-col mb-2">
+                <label className="mb-1 text-[20px] text-left text-gray-800">GPA รวม</label>
+                <div className="border-2 border-green-600 rounded-lg p-2.5 text-[20px] text-green-600 w-64 text-center">
+                  {profileData?.gpa || 'N/A'}
+                </div>
+              </div>
+            </div>
 
-          <div className='bg-white p-5 rounded-lg mb-5'>
+            {/* ฝั่งซ้าย */}
             <div className="flex justify-between">
               {/* ฝั่งซ้าย */}
               <div className="flex-1 p-5 rounded-lg mx-2">
@@ -137,11 +209,12 @@ const Profile = () => {
                   >
                     <img
                       src="/src/img/img_icon/resume.png"
-                      className="w-10 h-10"
+                      className="w-10 h-10 ml-[-5px]"
                       alt="Resume Icon"
                     />
                   </a>
                 </div>
+
 
                 <div className="flex items-center mb-11">
                   <p className="text-[20px] text-black text-left">ดู Transcript</p>
@@ -157,7 +230,20 @@ const Profile = () => {
                       alt="Transcript Icon"
                     />
                   </a>
+                  <a
+                    href={profileData?.transcript ? `/backend/intern/uploads/transcript/${profileData.transcript}` : '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center w-10 h-10 ml-[308px] text-blue-500 underline"
+                  >
+                    <img
+                      src="/src/img/img_icon/transcription.png"
+                      className="w-10 h-10"
+                      alt="Transcript Icon"
+                    />
+                  </a>
                 </div>
+
 
                 <div className="flex items-center mb-11">
                   <p className="text-[20px] text-black text-left">ตัวอย่าง Project ที่เคยทำ</p>
@@ -174,10 +260,9 @@ const Profile = () => {
                     />
                   </a>
                 </div>
-
-          
               </div>
 
+              {/* ฝั่งขวา */}
               {/* ฝั่งขวา */}
               <div className="flex-1 p-5 rounded-lg mx-2">
                 <div className="flex flex-col mb-4">
@@ -185,7 +270,12 @@ const Profile = () => {
                   <p className="rounded-lg bg-gray-100 border border-gray-300 text-[18px] p-2 w-full h-28 text-left">
                     {profileData?.goal || "อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ"}
                   </p>
+                  <p className="rounded-lg bg-gray-100 border border-gray-300 text-[18px] p-2 w-full h-28 text-left">
+                    {profileData?.goal || "อยากทำโปรเจคเกี่ยวกับการออกแบบอยากได้ ประสบการณ์ในการคุยกับลูกค้าจริงๆ"}
+                  </p>
                 </div>
+
+                <div className="flex flex-col mb-11">
 
                 <div className="flex flex-col mb-11">
                   <label className="mb-1 text-[20px] text-left text-gray-800">โปรดเลือกงานสายงานที่ถนัด</label>
@@ -195,6 +285,7 @@ const Profile = () => {
                         type="checkbox"
                         name="frontend"
                         checked={checkboxState.frontend}
+                        disabled={true} // ไม่สามารถแก้ไขได้
                         disabled={true} // ไม่สามารถแก้ไขได้
                         className="mr-2 h-5 w-5 rounded-md"
                       />
@@ -214,6 +305,7 @@ const Profile = () => {
                       <input
                         type="checkbox"
                         name="fullstack"
+                        name="fullstack"
                         checked={checkboxState.fullstack}
                         disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
@@ -224,6 +316,7 @@ const Profile = () => {
                       <input
                         type="checkbox"
                         name="dataAnalysis"
+                        name="dataAnalysis"
                         checked={checkboxState.dataAnalysis}
                         disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
@@ -233,6 +326,7 @@ const Profile = () => {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
+                        name="dataManagement"
                         name="dataManagement"
                         checked={checkboxState.dataManagement}
                         disabled={true}
@@ -262,7 +356,7 @@ const Profile = () => {
                   </div>
                 )}
 
-                <div className="flex flex-col mb-11">
+                <div className="flex flex-col ">
                   <label className="mb-1 text-[20px] text-left text-gray-800">
                     โปรแกรมหรืองานที่ถนัด (3 อย่างที่ถนัดที่สุด)
                   </label>
@@ -273,6 +367,7 @@ const Profile = () => {
                         name="figma"
                         checked={checkboxState.figma}
                         disabled={true}
+                        disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
                       />
                       Figma
@@ -282,6 +377,7 @@ const Profile = () => {
                         type="checkbox"
                         name="react"
                         checked={checkboxState.react}
+                        disabled={true}
                         disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
                       />
@@ -301,7 +397,9 @@ const Profile = () => {
                       <input
                         type="checkbox"
                         name="vsCode"
+                        name="vsCode"
                         checked={checkboxState.vsCode}
+                        disabled={true}
                         disabled={true}
                         className="mr-2 h-5 w-5 rounded-md"
                       />
@@ -310,6 +408,7 @@ const Profile = () => {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
+                        name="sqlServer"
                         name="sqlServer"
                         checked={checkboxState.sqlServer}
                         disabled={true}
@@ -338,6 +437,15 @@ const Profile = () => {
                     </p>
                   </div>
                 )}
+
+                {checkboxState.otherProgram && (
+                  <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                    <h3 className="text-[18px] font-bold">ข้อมูลโปรแกรมเพิ่มเติม</h3>
+                    <p className="text-[16px] mt-2">
+                      รายละเอียดเพิ่มเติม: {profileData?.otherProgramDetails || 'N/A'}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -350,4 +458,3 @@ const Profile = () => {
 };
 
 export default Profile;
-

@@ -1,0 +1,33 @@
+services:
+  php:
+    container_name: php_container
+    image: php:8.1-apache  # เปลี่ยนเป็น php เวอร์ชันที่มี apache ติดตั้งอยู่แล้ว
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - scg_network
+    command: apache2-foreground
+
+
+  sqlserver:
+    container_name: Intern_V2
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=phurin4508!  # รหัสผ่านของผู้ใช้ SA
+      - MSSQL_PID=Express  # เลือกเป็นเวอร์ชัน Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    networks:
+      - scg_network
+
+volumes:
+  sql_data:
+
+networks:
+  scg_network:
+    driver: bridge

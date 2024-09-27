@@ -11,6 +11,7 @@ import Homepage from './page/mentor/Homepage';
 import IDP from './page/mentor/IDP';
 import PDBacklog from './page/mentor/PDBacklog';
 import BLProject from './page/mentor/BLProject';
+import Dailyscrum from './page/mentor/Dailyscrum';
 import Input_data_intern from './page/intern/input_data_intern';
 import Upload_doc_intern from './page/intern/upload_doc_intern';
 import Backlog from './page/intern/backlog';

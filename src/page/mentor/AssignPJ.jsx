@@ -18,6 +18,7 @@ function AssignPJ() {
   const { user } = useAuth();
   const user_id = user?.user_id || null;
   console.log("User ID:", user_id);
+  console.log("User ID:", user_id);
 
   const [interns, setInterns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +45,7 @@ function AssignPJ() {
       console.log("Fetching interns for user_id:", user_id);
 
       if (user_id && project_id) {
-        const response = await axios.post('http://localhost/internV2/backend/mentor/assignPJ.php', {
+        const response = await axios.post('http://localhost:8080/mentor/assignPJ.php', {
           user_id: user_id,
           project_id: project_id
         });
@@ -126,8 +127,8 @@ function AssignPJ() {
         <NavbarMentor />
       </header>
 
-      <div className="flex justify-between items-center mt-10 mb-4 bg-[#FFE177]">
-        <h1 className="text-[34px] font-bold text-center flex-1 text-black ml-[100px]">มอบหมายผู้รับผิดชอบ</h1>
+      <div className="flex justify-between items-center h-[55px] mt-7 mb-7 bg-[#FFE177] max-w-[96%] mx-auto rounded-lg">
+        <h1 className="text-[25px] font-bold text-center flex-1 text-black ml-[100px]">มอบหมายผู้รับผิดชอบ</h1>
         <img
           src="/src/img/img_icon/left-arrow.png"
           className="w-7 cursor-pointer mr-[50px]"
@@ -159,12 +160,14 @@ function AssignPJ() {
                   alt={intern.name}
                   className="h-[200px] w-[200px] rounded-lg object-cover"
                 />
-                <div className="ml-4 flex-1 text-left">
-                  <span className="bg-[#FF9B2C] text-white px-5 py-2 rounded">{intern.nickname}</span>
-                  <p className="text-black">ชื่อ-นามสกุล: {intern.firstName} {intern.lastName}</p>
-                  <p className="text-black">สถานศึกษา: {intern.currentEducation}</p>
+                <div className="ml-4 flex-1 text-left space-y-3">
+                  <span className="bg-[#FF9B2C] text-white px-5 py-2 rounded">
+                    {intern.nickname}
+                  </span>
+                  <p className="text-black">ชื่อ-นามสกุล : {intern.firstName} {intern.lastName}</p>
+                  <p className="text-black">สถานศึกษา : {intern.currentEducation}</p>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2"><mt-10></mt-10>
                   <input
                     type="checkbox"
                     className="h-5 w-5"

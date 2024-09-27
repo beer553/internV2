@@ -5,10 +5,10 @@ header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // กำหนดค่าเชื่อมต่อฐานข้อมูล
-$uid = ""; // ชื่อผู้ใช้ SQL Server
-$pwd = ""; // รหัสผ่าน SQL Server
-$serverName = "CHAWANRAT"; // ชื่อเซิร์ฟเวอร์ SQL Server
-$database = "Intern"; // ชื่อฐานข้อมูล
+$uid = "SA"; // ชื่อผู้ใช้ SQL Server (ในกรณีนี้คือ SA)
+$pwd = "phurin4508!"; // รหัสผ่าน SQL Server (ที่คุณตั้งไว้ตอนสร้าง container)
+$serverName = "Intern_V2,1433"; // ชื่อเซิร์ฟเวอร์ SQL Server และ port ที่คุณใช้เชื่อมต่อ (1433)
+$database = "Intern"; // ชื่อฐานข้อมูลที่คุณต้องการเชื่อมต่อ
 
 try {
     // สร้างการเชื่อมต่อฐานข้อมูล

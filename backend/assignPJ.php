@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST'); 
+header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // กำหนดค่าเชื่อมต่อฐานข้อมูล
@@ -15,8 +15,12 @@ try {
     $con = new PDO("sqlsrv:Server=$serverName;Database=$database;Encrypt=false", $uid, $pwd);
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // รับค่า user_id ที่ถูกส่งมาใน query string
-    $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
+    // รับค่า user_id ที่ถูกส่งมาใน body ของ POST request
+    $data = json_decode(file_get_contents('php://input'), true);
+    $user_id = isset($data['user_id']) ? $data['user_id'] : null;
+
+    // เพิ่มการ log เพื่อตรวจสอบ user_id
+    error_log("Received user_id: " . $user_id);
 
     if ($user_id) {
         // คิวรีหา mentor จากตาราง mentor_info โดยใช้ user_id
@@ -30,7 +34,7 @@ try {
 
         if ($mentor) {
             // คิวรีหา intern จากตาราง intern_info โดยใช้ mentor ที่ได้มา
-            $sql = "SELECT user_id,nickname,firstName, lastName,datestart,dateend, project FROM intern_info WHERE mentor = :mentor";
+            $sql = "SELECT profile,user_id,nickname,firstName, lastName, currentEducation   FROM intern_info WHERE mentor = :mentor";
             $stmt = $con->prepare($sql);
             $stmt->bindParam(':mentor', $mentor);
             $stmt->execute();
