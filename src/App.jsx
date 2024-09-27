@@ -35,6 +35,7 @@ function App() {
               <Route path="/PDBacklog" element={<PDBacklog />} />
               <Route path="/BLProject" element={<BLProject />} />
               <Route path="/Backlog" element={<Backlog />} />
+              <Route path="/Dailyscrum" element={<Dailyscrum />} />
             </Route>
           </Routes>
         </Router>

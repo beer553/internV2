@@ -22,7 +22,7 @@ function Login() {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8080/login.php', {
+      const response = await axios.post('http://localhost/internV2/backend/login.php', {
         username: username,
         password: password,
       });

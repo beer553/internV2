@@ -45,7 +45,7 @@ function AssignPJ() {
       console.log("Fetching interns for user_id:", user_id);
 
       if (user_id && project_id) {
-        const response = await axios.post('http://localhost:8080/mentor/assignPJ.php', {
+        const response = await axios.post('http://localhost/internV2/backend/mentor/assignPJ.php', {
           user_id: user_id,
           project_id: project_id
         });

@@ -12,10 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$dsn = "sqlsrv:server=Intern_V2,1433;database=Intern;Encrypt=false;TrustServerCertificate=true";
-$usernameDB = "SA"; // ชื่อผู้ใช้ของ SQL Server
-$passwordDB = "phurin4508!"; // รหัสผ่านของ SQL Server
-
+$dsn = "sqlsrv:server=CHAWANRAT;database=Intern";
+$usernameDB = "";
+$passwordDB = "";
 
 try {
     $con = new PDO($dsn, $usernameDB, $passwordDB);

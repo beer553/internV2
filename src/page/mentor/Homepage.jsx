@@ -26,7 +26,7 @@ function Homepage() {
   // ดึงข้อมูล internData จาก backend โดยใช้ user_id
   useEffect(() => {
     if (isAuthenticated && user?.user_id) {
-      axios.get(`http://localhost:8080/mentor/homepage.php?user_id=${user.user_id}`)
+      axios.get(`http://localhost/internV2/backend/mentor/homepage.php?user_id=${user.user_id}`)
         .then(response => {
           setInternData(response.data);
         })
@@ -39,7 +39,7 @@ function Homepage() {
   // Load user status on component mount
   useEffect(() => {
     if (isAuthenticated && user?.user_id) {
-      axios.get(`http://localhost:8080/mentor/insert_data_mentor.php?user_id=${user.user_id}`)
+      axios.get(`http://localhost/internV2/backend/mentor/insert_data_mentor.php?user_id=${user.user_id}`)
         .then(response => {
           if (!response.data.completed) {
             setShowFormPopup(true);
@@ -117,7 +117,7 @@ function Homepage() {
     formDataToSend.append('profilePicture', formData.profilePicture);
     formDataToSend.append('userId', user?.user_id);
 
-    axios.post('http://localhost:8080/mentor/insert_data_mentor.php', formDataToSend, {
+    axios.post('http://localhost/internV2/backend/mentor/insert_data_mentor.php', formDataToSend, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
