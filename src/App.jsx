@@ -33,7 +33,7 @@ function App() {
               <Route path="/AssignPJ" element={<AssignPJ />} />
               <Route path="/IDP/:user_id" element={<IDP />} />
               <Route path="/PDBacklog" element={<PDBacklog />} />
-              <Route path="/BLProject" element={<BLProject />} />
+              <Route path="/BLProject/:project_id" element={<BLProject />} />
               <Route path="/Backlog" element={<Backlog />} />
               <Route path="/Dailyscrum" element={<Dailyscrum />} />
             </Route>

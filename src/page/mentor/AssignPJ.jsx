@@ -6,26 +6,23 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 
-
 function AssignPJ() {
   const navigate = useNavigate();
   const location = useLocation(); 
 
+  // รับค่า project_id จาก URL
   const queryParams = new URLSearchParams(location.search);
   const project_id = queryParams.get('project_id'); 
   console.log("Project ID:", project_id); 
 
   const { user } = useAuth();
   const user_id = user?.user_id || null;
-  console.log("User ID:", user_id);
-  console.log("User ID:", user_id);
 
   const [interns, setInterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // State สำหรับเก็บค่า search term
+  const [searchTerm, setSearchTerm] = useState('');
 
   const gotoProject = () => {
     navigate('/Project');
@@ -44,10 +41,11 @@ function AssignPJ() {
       setLoading(true);
       console.log("Fetching interns for user_id:", user_id);
 
+      // ตรวจสอบว่ามี user_id และ project_id หรือไม่
       if (user_id && project_id) {
         const response = await axios.post('http://localhost/internV2/backend/mentor/assignPJ.php', {
           user_id: user_id,
-          project_id: project_id
+          project_id: project_id // ส่ง project_id ไปยัง backend
         });
 
         console.log("Response from backend:", response.data);
@@ -74,7 +72,7 @@ function AssignPJ() {
     if (user_id && project_id) {
       fetchInterns();
     }
-  }, [user_id, project_id]);
+  }, [user_id, project_id]); // เรียกใช้ fetchInterns เมื่อ user_id หรือ project_id เปลี่ยนแปลง
 
   const handleSubmit = async () => {
     if (selectedUsers.length === 0) {
@@ -86,13 +84,13 @@ function AssignPJ() {
       });
       return;
     }
-  
+
     try {
       await axios.post('http://localhost/internV2/backend/mentor/assignintern.php', {
         selectedUsers,
-        project_id
+        project_id // ส่ง project_id ไปยัง backend
       });
-  
+
       Swal.fire({
         title: 'สำเร็จ!',
         text: 'มอบหมายผู้รับผิดชอบสำเร็จ',
@@ -101,10 +99,10 @@ function AssignPJ() {
       }).then(() => {
         navigate('/Project');
       });
-  
+
     } catch (error) {
       console.error('Error submitting assigned users:', error);
-  
+
       Swal.fire({
         title: 'เกิดข้อผิดพลาด!',
         text: 'เกิดข้อผิดพลาดในการส่งข้อมูล',
@@ -112,7 +110,7 @@ function AssignPJ() {
         confirmButtonText: 'ลองอีกครั้ง'
       });
     }
-  };  
+  };
 
   // ฟังก์ชันสำหรับกรอง intern ตามคำค้นหา
   const filteredInterns = interns.filter(intern =>
@@ -167,7 +165,7 @@ function AssignPJ() {
                   <p className="text-black">ชื่อ-นามสกุล : {intern.firstName} {intern.lastName}</p>
                   <p className="text-black">สถานศึกษา : {intern.currentEducation}</p>
                 </div>
-                <div className="flex items-center space-x-2"><mt-10></mt-10>
+                <div className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     className="h-5 w-5"

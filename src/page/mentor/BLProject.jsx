@@ -1,44 +1,60 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Footer from '../component/footer';
 import NavbarMentor from '../component/navbar_intern';
 import ImageModal from '../component/ImageModal';
+import axios from 'axios';
 
 const ProductBacklog = () => {
   const navigate = useNavigate();
+  const { project_id } = useParams();
+  const [projects, setProjects] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const [newRow, setNewRow] = useState(null);
+  const [orderCounter, setOrderCounter] = useState(1);
+  const [modalImageUrl, setModalImageUrl] = useState(null);
+  const [editRowIndex, setEditRowIndex] = useState(null);
+  const [editRowData, setEditRowData] = useState(null);
 
   const GotoPDBacklog = () => {
     navigate('/PDBacklog');
   };
 
-  const GotoDailyscrum = () => {
-    navigate('/Dailyscrum');
-  };
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        if (project_id) {
+          const response = await axios.get(`http://localhost/internV2/backend/mentor/project.php?project_id=${project_id}`);
+          if (response.data && response.data.length > 0) {
+            setProjects(response.data);
+          } else {
+            console.error("No project data found");
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    };
+    fetchProjects();
+  }, [project_id]);
 
-  const [tableData, setTableData] = useState([
-    {
-      order: 1,
-      sprint: 1,
-      datestart: "21/03/2547",
-      dateend: "22/03/2547",
-      type: "Test",
-      detail: "Test",
-      beforeImg: "/src/img/dashboard.png",
-      afterImg: "/src/img/dashboard.png",
-      manday: 1,
-      responsible: "ซัน",
-      status: "To Do",
-      increment: "21/05/2547",
-      remark: "ด่วน",
+  useEffect(() => {
+    if (project_id) {
+      fetchTableData(project_id);
     }
-  ]);
+  }, [project_id]);
 
-  const [newRow, setNewRow] = useState(null);
-  const [editRowIndices, setEditRowIndices] = useState([]);
-  const [orderCounter, setOrderCounter] = useState(tableData.length + 1);
-  const [modalImageUrl, setModalImageUrl] = useState(null);
-  const beforeImgRef = useRef([]);
-  const afterImgRef = useRef([]);
+  const fetchTableData = async (project_id) => {
+    try {
+      const response = await axios.get(`http://localhost/internV2/backend/mentor/backlog.php?project_id=${project_id}`);
+      const data = Array.isArray(response.data) ? response.data : [];
+      setTableData(data);
+      setOrderCounter(data.length + 1);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setTableData([]);
+    }
+  };
 
   const addRow = () => {
     setNewRow({
@@ -58,14 +74,39 @@ const ProductBacklog = () => {
     });
   };
 
-  const saveRow = () => {
-    const requiredFields = ['sprint', 'datestart', 'dateend', 'type', 'detail', 'beforeImg', 'afterImg', 'manday', 'responsible', 'status', 'increment', 'remark'];
+  const saveRow = async () => {
+    const requiredFields = ['sprint', 'datestart', 'dateend', 'type', 'detail', 'manday', 'responsible', 'status', 'increment', 'remark'];
     const isValid = requiredFields.every(field => newRow[field]);
 
     if (isValid) {
-      setTableData([...tableData, newRow]);
-      setNewRow(null);
-      setOrderCounter(orderCounter + 1);
+      try {
+        const formData = new FormData();
+        formData.append('project_id', project_id);
+
+        Object.keys(newRow).forEach(key => {
+          if (key === 'beforeImg' || key === 'afterImg') {
+            if (newRow[key] instanceof File) {
+              formData.append(key, newRow[key]);
+            }
+          } else {
+            formData.append(key, newRow[key]);
+          }
+        });
+
+        const response = await axios.post('http://localhost/internV2/backend/mentor/backlog.php', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        if (response.data.backlog_id) {
+          fetchTableData(project_id);
+          setNewRow(null);
+          setOrderCounter(orderCounter + 1);
+        }
+      } catch (error) {
+        console.error("Error saving row:", error);
+      }
     } else {
       alert("กรุณากรอกข้อมูลให้ครบทุกช่องก่อนบันทึก");
     }
@@ -75,82 +116,101 @@ const ProductBacklog = () => {
     setNewRow(null);
   };
 
-  const handleChange = (e, field, index = null) => {
+  const handleNewRowChange = (e, field) => {
     let value = e.target.value;
-
-    // จัดรูปแบบวันที่เป็น "วัน/เดือน/ปี"
     if (field === 'datestart' || field === 'dateend' || field === 'increment') {
       const [year, month, day] = value.split('-');
       value = `${day}/${month}/${year}`;
     }
-
-    if (index !== null) {
-      const updatedTableData = tableData.map((row, i) =>
-        i === index ? { ...row, [field]: value } : row
-      );
-      setTableData(updatedTableData);
-    } else {
-      setNewRow({ ...newRow, [field]: value });
-    }
+    setNewRow({ ...newRow, [field]: value });
   };
 
-  const handleImageChange = (e, field, index = null) => {
+  const handleImageChange = (e, field) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      if (index !== null) {
-        const updatedTableData = tableData.map((row, i) =>
-          i === index ? { ...row, [field]: imageUrl } : row
-        );
-        setTableData(updatedTableData);
-      } else {
-        setNewRow({ ...newRow, [field]: imageUrl });
-      }
+      setNewRow({ ...newRow, [field]: file });
     }
-  };
-
-  const handleImageDelete = (field, index = null) => {
-    if (index !== null) {
-      const updatedTableData = tableData.map((row, i) =>
-        i === index ? { ...row, [field]: "" } : row
-      );
-      setTableData(updatedTableData);
-      if (field === 'beforeImg') {
-        beforeImgRef.current[index].value = null;
-      } else if (field === 'afterImg') {
-        afterImgRef.current[index].value = null;
-      }
-    } else {
-      setNewRow({ ...newRow, [field]: "" });
-    }
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const [day, month, year] = dateString.split('/');
-    return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
   };
 
   const startEdit = (index) => {
-    setEditRowIndices(prevIndices => [...prevIndices, index]);
+    setEditRowIndex(index);
+    setEditRowData({ ...tableData[index] });
   };
 
-  const saveEdit = (index) => {
-    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index));
+  const handleImageEditChange = (e, field) => {
+    const file = e.target.files[0];
+    if (file) {
+      setEditRowData({ ...editRowData, [field]: file });
+    }
   };
 
-  const deleteRow = (index) => {
-    const updatedTableData = tableData.filter((_, i) => i !== index);
-    setTableData(updatedTableData);
-    setEditRowIndices(prevIndices => prevIndices.filter(i => i !== index));
+  const saveEdit = async (index) => {
+  try {
+    const updatedRow = { ...editRowData };
+
+    const formData = new FormData();
+    
+    // backlog_id ต้องถูกส่งไปอย่างแน่นอน
+    formData.append('backlog_id', updatedRow.backlog_id);
+    formData.append('project_id', project_id);
+
+    formData.append('sprint', updatedRow.sprint || tableData[index].sprint);
+    formData.append('notificationDate', updatedRow.notificationDate ? new Date(updatedRow.notificationDate).toISOString().split('T')[0] : tableData[index].notificationDate);
+    formData.append('completionDate', updatedRow.completionDate ? new Date(updatedRow.completionDate).toISOString().split('T')[0] : tableData[index].completionDate);
+    formData.append('type_of_work', updatedRow.type_of_work || tableData[index].type_of_work);
+    formData.append('details', updatedRow.details || tableData[index].details);
+    formData.append('manday', updatedRow.manday || tableData[index].manday);
+    formData.append('teamdevelop', updatedRow.teamdevelop || tableData[index].teamdevelop);
+    formData.append('status', updatedRow.status || tableData[index].status);
+    formData.append('productIncrement', updatedRow.productIncrement ? new Date(updatedRow.productIncrement).toISOString().split('T')[0] : tableData[index].productIncrement);
+    formData.append('note', updatedRow.note || tableData[index].note);
+
+    if (updatedRow.beforeImg instanceof File) {
+      formData.append('beforeImg', updatedRow.beforeImg);
+    } else {
+      formData.append('imgBefore', tableData[index].imgBefore);
+    }
+
+    if (updatedRow.afterImg instanceof File) {
+      formData.append('afterImg', updatedRow.afterImg);
+    } else {
+      formData.append('imgAfter', tableData[index].imgAfter);
+    }
+
+    // ส่งคำขอไปยัง edit_backlog.php
+    const response = await axios.post(`http://localhost/internV2/backend/mentor/edit_backlog.php`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (response.data.message === 'Backlog updated successfully') {
+      const updatedTableData = [...tableData];
+      updatedTableData[index] = updatedRow;
+      setTableData(updatedTableData);
+      setEditRowIndex(null);
+      setEditRowData(null);
+    } else {
+      alert('Error updating backlog');
+    }
+  } catch (error) {
+    console.error('Error saving edited row:', error);
+  }
+};
+
+
+  const cancelEdit = () => {
+    setEditRowIndex(null);
+    setEditRowData(null);
   };
 
-  const openModal = (imageUrl) => {
-    setModalImageUrl(imageUrl);
-  };
-
-  const closeModal = () => {
-    setModalImageUrl(null);
+  const handleEditChange = (e, field) => {
+    let value = e.target.value;
+    if (field === 'datestart' || field === 'dateend' || field === 'increment') {
+      const [year, month, day] = value.split('-');
+      value = `${day}/${month}/${year}`;
+    }
+    setEditRowData({ ...editRowData, [field]: value });
   };
 
   return (
@@ -158,136 +218,106 @@ const ProductBacklog = () => {
       <NavbarMentor />
       <div className='container mx-auto'>
         <main>
-          <div className=' bg-white shadow-lg rounded-lg mt-8 space-y-3 p-4'>
+          <div className='space-y-3 mt-5 bg-white shadow-lg rounded-lg p-4'>
             <div className='text-gray-600 text-[30px]'>ProductBacklog</div>
-            <div className='text-gray-600 text-[20px]'>น้องแดนนี่, น้องกาฟิวส์, น้องเบียร์</div>
-            <div className='mt-1 text-gray-600 text-[20px]'>KM Selg-Learning</div>
-          </div>
-          <div className="flex justify-between items-center w-full mt-5 mb-5">
-            <img src="/src/img/img_icon/left-arrow.png" className='w-7 ml-10' onClick={GotoPDBacklog} />
-            {/* <img src="/src/img/img_icon/left-arrow.png" className="w-7 mr-10 transform rotate-180" onClick={GotoDailyscrum} /> */}
+            <div className='text-gray-600 text-[18px]'>
+              {projects.length > 0 && projects[0].projectname ? projects[0].projectname : "No Project Name"}
+            </div>
+            <div className='text-gray-600 text-[18px]'>
+              {projects.length > 0 && projects[0].team_members ? projects[0].team_members : "ยังไม่มอบหมายผู้รับผิดชอบ"}
+            </div>
           </div>
 
-          <section className="overflow-x-auto bg-white shadow-lg rounded-lg mb-8">
+          <div className="flex justify-between items-center w-full mt-5 mb-5">
+            <img src="/src/img/img_icon/left-arrow.png" className='w-7 ml-10' onClick={GotoPDBacklog} />
+            <button 
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-10"
+              onClick={addRow}
+            >
+              Add
+            </button>
+          </div>
+
+          <section className="overflow-x-auto bg-white shadow-lg rounded-lg p-3 mb-5">
             <div className="overflow-x-auto">
               <table className="table-auto w-[190%]">
-                <thead >
+                <thead>
                   <tr className='border-b-2 border-black text-[22px]'>
-                    <th className="w-[5%] h-8 p-3">Number</th>
-                    <th className="w-[5%] h-8 p-3">Sprint</th>
-                    <th className="w-[5%] h-8 p-3">Notification Date</th>
-                    <th className="w-[5%] h-8 p-3">Completion Date</th>
-                    <th className="w-[5%] h-8 p-3">Type of work</th>
-                    <th className="w-[5%] h-8 p-3">Details</th>
-                    <th className="w-[5%] h-8 p-3">Before</th>
-                    <th className="w-[5%] h-8 p-3">After</th>
-                    <th className="w-[5%] h-8 p-3">Manday</th>
-                    <th className="w-[5%] h-8 p-3">Responsible Person</th>
-                    <th className="w-[5%] h-8 p-3">Status</th>
-                    <th className="w-[5%] h-8 p-3">Product Increment</th>
-                    <th className="w-[5%] h-8 p-3">Note</th>
-                    <th className="w-[5%] h-8 p-3">Edit</th>
+                    <th className="w-[5%] h-8">Number</th>
+                    <th className="w-[5%] h-8">Sprint</th>
+                    <th className="w-[5%] h-8">Notification Date</th>
+                    <th className="w-[5%] h-8">Completion Date</th>
+                    <th className="w-[5%] h-8">Type of work</th>
+                    <th className="w-[5%] h-8">Details</th>
+                    <th className="w-[5%] h-8">Before</th>
+                    <th className="w-[5%] h-8">After</th>
+                    <th className="w-[5%] h-8">Manday</th>
+                    <th className="w-[5%] h-8">Team Develop</th>
+                    <th className="w-[5%] h-8">Status</th>
+                    <th className="w-[5%] h-8">Product Increment</th>
+                    <th className="w-[5%] h-8">Note</th>
+                    <th className="w-[5%] h-8">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tableData.map((row, index) => (
-                    <tr key={index}>_
-                      {editRowIndices.includes(index) ? (
+                    <tr key={index}>
+                      {editRowIndex === index ? (
                         <>
-                          <td className='text-[18px]'>{row.order}</td>
-                          <td><input type="number" value={row.sprint} onChange={(e) => handleChange(e, 'sprint', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' min="0" step="1" /></td>
-                          <td className="relative">
-                            <input type="date" value={row.datestart.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'datestart', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' />
-                          </td>
-                          <td className="relative">
-                            <input type="date" value={row.dateend.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'dateend', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' />
-                          </td>
-                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.type} onChange={(e) => handleChange(e, 'type', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-[20px]' /></td>
-                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.detail} onChange={(e) => handleChange(e, 'detail', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-[20px]' /></td>
+                          <td>{index + 1}</td>
+                          <td><input type="number" value={editRowData?.sprint || ''} onChange={(e) => handleEditChange(e, 'sprint')} /></td>
+                          <td><input type="date" value={(editRowData?.datestart || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'datestart')} /></td>
+                          <td><input type="date" value={(editRowData?.dateend || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'dateend')} /></td>
+                          <td><input type="text" value={editRowData?.type_of_work || ''} onChange={(e) => handleEditChange(e, 'type_of_work')} /></td>
+                          <td><input type="text" value={editRowData?.details || ''} onChange={(e) => handleEditChange(e, 'details')} /></td>
                           <td>
-                            <label className="w-full bg-white flex flex-col items-center">
-                              <input
-                                type="file"
-                                onChange={(e) => handleImageChange(e, 'beforeImg', index)}
-                                ref={el => beforeImgRef.current[index] = el}
-                                className="hidden"
-                              />
-                              {row.beforeImg ? (
-                                <>
-                                  <img src={row.beforeImg} alt="Before Preview" className='object-cover w-28 h-16 cursor-pointer mt-5' onClick={() => openModal(row.beforeImg)} />
-                                  <img src="/src/img/img_icon/bin.png" alt="Delete" className='w-6 h-6 cursor-pointer mt-2' onClick={() => handleImageDelete('beforeImg', index)} />
-                                </>
-                              ) : (
-                                <img src="/src/img/img_icon/add-button.png" alt="Upload" className='w-6 h-6 cursor-pointer' />
-                              )}
-                            </label>
+                            <input type="file" onChange={(e) => handleImageEditChange(e, 'beforeImg')} />
+                            {editRowData?.beforeImg ? (
+                              <img src={URL.createObjectURL(editRowData.beforeImg)} alt="Before" className='w-28 h-16' />
+                            ) : (
+                              row.imgBefore && <img src={`/backend/mentor/${row.imgBefore}`} alt="Before" className='w-28 h-16' />
+                            )}
                           </td>
                           <td>
-                            <label className="w-full bg-white flex flex-col items-center">
-                              <input
-                                type="file"
-                                onChange={(e) => handleImageChange(e, 'afterImg', index)}
-                                ref={el => afterImgRef.current[index] = el}
-                                className="hidden"
-                              />
-                              {row.afterImg ? (
-                                <>
-                                  <img src={row.afterImg} alt="After Preview" className='object-cover w-28 h-16 cursor-pointer mt-5' onClick={() => openModal(row.afterImg)} />
-                                  <img src="/src/img/img_icon/bin.png" alt="Delete" className='w-6 h-6 cursor-pointer mt-2' onClick={() => handleImageDelete('afterImg', index)} />
-                                </>
-                              ) : (
-                                <img src="/src/img/img_icon/add-button.png" alt="Upload" className='w-6 h-6 cursor-pointer' />
-                              )}
-                            </label>
+                            <input type="file" onChange={(e) => handleImageEditChange(e, 'afterImg')} />
+                            {editRowData?.afterImg ? (
+                              <img src={URL.createObjectURL(editRowData.afterImg)} alt="After" className='w-28 h-16' />
+                            ) : (
+                              row.imgAfter && <img src={`/backend/mentor/${row.imgAfter}`} alt="After" className='w-28 h-16' />
+                            )}
                           </td>
-                          <td><input type="number" value={row.manday} onChange={(e) => handleChange(e, 'manday', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' min="0" step="1" /></td>
-                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.responsible} onChange={(e) => handleChange(e, 'responsible', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-[18px]' /></td>
+                          <td><input type="number" value={editRowData?.manday || ''} onChange={(e) => handleEditChange(e, 'manday')} /></td>
+                          <td><input type="text" value={editRowData?.teamdevelop || ''} onChange={(e) => handleEditChange(e, 'teamdevelop')} /></td>
                           <td>
-                            <select
-                              value={row.status}
-                              onChange={(e) => handleChange(e, 'status', index)}
-                              className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3'
-                              style={{ color: row.status === 'To Do' ? 'blue' : row.status === 'Done' ? 'green' : '' }}
-                            >
-                              <option value="To Do" className="text-blue-500">To Do</option>
-                              <option value="Done" className="text-green-500">Done</option>
+                            <select value={editRowData?.status || ''} onChange={(e) => handleEditChange(e, 'status')}>
+                              <option value="To Do">To Do</option>
+                              <option value="Done">Done</option>
                             </select>
                           </td>
-
-                          <td><input type="date" value={row.increment.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'increment', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' /></td>
-                          <td><textarea placeholder="โปรดระบุ" type="text" value={row.remark} onChange={(e) => handleChange(e, 'remark', index)} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[20px] mt-[18px]' /></td>
+                          <td><input type="date" value={(editRowData?.productIncrement || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'productIncrement')} /></td>
+                          <td><input type="text" value={editRowData?.note || ''} onChange={(e) => handleEditChange(e, 'note')} /></td>
                           <td>
-                            <button onClick={() => saveEdit(index)} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[18px]'>บันทึก</button>
-                            <button onClick={() => deleteRow(index)} className='bg-red-500 text-white rounded-lg h-10 w-24 mt-1 text-[18px] ml-2'>ลบ</button>
+                            <button onClick={() => saveEdit(index)} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[18px] mr-1'>บันทึก</button>
+                            <button onClick={cancelEdit} className='bg-red-500 text-white rounded-lg h-10 w-24 text-[18px]'>ยกเลิก</button>
                           </td>
                         </>
                       ) : (
                         <>
-                          <td className='text-[18px]'>{row.order}</td>
-                          <td className='text-[18px]'>{row.sprint}</td>
-                          <td className='text-[18px]'>{formatDate(row.datestart)}</td>
-                          <td className='text-[18px]'>{formatDate(row.dateend)}</td>
-                          <td className='text-[18px]'>{row.type}</td>
-                          <td className='text-[18px]'>{row.detail}</td>
+                          <td>{index + 1}</td>
+                          <td>{row.sprint}</td>
+                          <td>{row.notificationDate}</td>
+                          <td>{row.completionDate}</td>
+                          <td>{row.type_of_work}</td>
+                          <td>{row.details}</td>
+                          <td>{row.imgBefore ? <img src={`/backend/mentor/${row.imgBefore}`} alt="Before" className='w-28 h-16' /> : 'No Image'}</td>
+                          <td>{row.imgAfter ? <img src={`/backend/mentor/${row.imgAfter}`} alt="After" className='w-28 h-16' /> : 'No Image'}</td>
+                          <td>{row.manday}</td>
+                          <td>{row.teamdevelop}</td>
+                          <td>{row.status}</td>
+                          <td>{row.productIncrement}</td>
+                          <td>{row.note}</td>
                           <td>
-                            <div className="flex justify-center items-center mt-3">
-                              <img src={row.beforeImg} alt="Before" className='object-cover w-28 h-16 cursor-pointer' onClick={() => openModal(row.beforeImg)} />
-                            </div>
-                          </td>
-                          <td>
-                            <div className="flex justify-center items-center mt-3">
-                              <img src={row.afterImg} alt="After" className='object-cover w-28 h-16 cursor-pointer' onClick={() => openModal(row.afterImg)} />
-                            </div>
-                          </td>
-                          <td className='text-[18px]'>{row.manday}</td>
-                          <td className='text-[18px]'>{row.responsible}</td>
-                          <td className={row.status === "To Do" ? "text-blue-500 text-[18px]" : "text-green-500 text-[18px]"}>{row.status}</td>
-                          <td className='text-[18px]'>{formatDate(row.increment)}</td>
-                          <td className='text-[18px]'>{row.remark}</td>
-                          <td>
-                            <div className="flex justify-center items-center mt-3">
-                              <img src="/src/img/img_icon/Edit.png" alt="Edit" className='w-10 h-10 cursor-pointer' onClick={() => startEdit(index)} />
-                            </div>
+                            <img src="/src/img/img_icon/Edit.png" alt="Edit" className='w-10 h-10 cursor-pointer' onClick={() => startEdit(index)} />
                           </td>
                         </>
                       )}
@@ -296,82 +326,37 @@ const ProductBacklog = () => {
                   {newRow && (
                     <tr>
                       <td className='text-[18px]'>{newRow.order}</td>
-                      <td><input type="number" value={newRow.sprint} onChange={(e) => handleChange(e, 'sprint')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' min="0" step="1" /></td>
-                      <td><input type="date" value={newRow.datestart.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'datestart')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' /></td>
-                      <td><input type="date" value={newRow.dateend.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'dateend')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' /></td>
-                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.type} onChange={(e) => handleChange(e, 'type')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-[22px]' /></td>
-                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.detail} onChange={(e) => handleChange(e, 'detail')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-[22px]' /></td>
+                      <td><input type="number" value={newRow.sprint} onChange={(e) => handleNewRowChange(e, 'sprint')} /></td>
+                      <td><input type="date" onChange={(e) => handleNewRowChange(e, 'datestart')} /></td>
+                      <td><input type="date" onChange={(e) => handleNewRowChange(e, 'dateend')} /></td>
+                      <td><input type="text" value={newRow.type} onChange={(e) => handleNewRowChange(e, 'type')} /></td>
+                      <td><input type="text" value={newRow.detail} onChange={(e) => handleNewRowChange(e, 'detail')} /></td>
+                      <td><input type="file" onChange={(e) => handleImageChange(e, 'beforeImg')} /></td>
+                      <td><input type="file" onChange={(e) => handleImageChange(e, 'afterImg')} /></td>
+                      <td><input type="number" value={newRow.manday} onChange={(e) => handleNewRowChange(e, 'manday')} /></td>
+                      <td><input type="text" value={newRow.responsible} onChange={(e) => handleNewRowChange(e, 'responsible')} /></td>
                       <td>
-                        <label className="w-full bg-white flex flex-col items-center">
-                          <input
-                            type="file"
-                            onChange={(e) => handleImageChange(e, 'beforeImg')}
-                            className="hidden"
-                          />
-                          {newRow.beforeImg ? (
-                            <>
-                              <img src={newRow.beforeImg} alt="Before Preview" className='object-cover w-28 h-16 cursor-pointer mt-5' onClick={() => openModal(newRow.beforeImg)} />
-                              <img src="/src/img/img_icon/bin.png" alt="Delete" className='w-6 h-6 cursor-pointer mt-2' onClick={() => handleImageDelete('beforeImg')} />
-                            </>
-                          ) : (
-                            <img src="/src/img/img_icon/add-button.png" alt="Upload" className='w-6 h-6 cursor-pointer' />
-                          )}
-                        </label>
-                      </td>
-                      <td>
-                        <label className="w-full bg-white flex flex-col items-center">
-                          <input
-                            type="file"
-                            onChange={(e) => handleImageChange(e, 'afterImg')}
-                            className="hidden"
-                          />
-                          {newRow.afterImg ? (
-                            <>
-                              <img src={newRow.afterImg} alt="After Preview" className='object-cover w-28 h-16 cursor-pointer mt-5' onClick={() => openModal(newRow.afterImg)} />
-                              <img src="/src/img/img_icon/bin.png" alt="Delete" className='w-6 h-6 cursor-pointer mt-2' onClick={() => handleImageDelete('afterImg')} />
-                            </>
-                          ) : (
-                            <img src="/src/img/img_icon/add-button.png" alt="Upload" className='w-6 h-6 cursor-pointer' />
-                          )}
-                        </label>
-                      </td>
-                      <td><input type="number" value={newRow.manday} onChange={(e) => handleChange(e, 'manday')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' min="0" step="1" /></td>
-                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.responsible} onChange={(e) => handleChange(e, 'responsible')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-[22px]' /></td>
-                      <td>
-                        <select
-                          value={newRow.status || ""}
-                          onChange={(e) => handleChange(e, 'status')}
-                          className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3'
-                          style={{
-                            color: newRow.status === 'To Do' ? 'blue' : newRow.status === 'Done' ? 'green' : ''
-                          }}
-                        >
-                          <option value="To Do" className="text-blue-500">To Do</option>
-                          <option value="Done" className="text-green-500">Done</option>
+                        <select value={newRow.status} onChange={(e) => handleNewRowChange(e, 'status')}>
+                          <option value="To Do">To Do</option>
+                          <option value="Done">Done</option>
                         </select>
                       </td>
-
-                      <td><input type="date" value={newRow.increment.split('/').reverse().join('-')} onChange={(e) => handleChange(e, 'increment')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-3' /></td>
-                      <td><textarea placeholder="โปรดระบุ" type="text" value={newRow.remark} onChange={(e) => handleChange(e, 'remark')} className='w-[95%] bg-white rounded-md h-[35px] border-2 border-gray-300 text-[18px] mt-[22px]' /></td>
+                      <td><input type="date" onChange={(e) => handleNewRowChange(e, 'increment')} /></td>
+                      <td><input type="text" value={newRow.remark} onChange={(e) => handleNewRowChange(e, 'remark')} /></td>
                       <td>
-                        <button onClick={saveRow} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[18px]'>บันทึก</button>
-                        <button onClick={cancelRow} className='bg-red-500 text-white rounded-lg h-10 w-24 mt-1 text-[18px] ml-2'>ยกเลิก</button>
+                        <button onClick={saveRow} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[18px] mr-1'>บันทึก</button>
+                        <button onClick={cancelRow} className='bg-red-500 text-white rounded-lg h-10 w-24 text-[18px]'>ยกเลิก</button>
                       </td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
-            <div className='flex justify-end mr-12'>
-              {!newRow && (
-                <img src="/src/img/img_icon/plus.png" alt="Add" className='w-10 h-10 mt-8 mb-16 cursor-pointer' onClick={addRow} />)}
-            </div>
-            <div className='mb-20'></div>
           </section>
         </main>
       </div>
       <Footer />
-      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={closeModal} />
+      <ImageModal show={modalImageUrl !== null} imageUrl={modalImageUrl} onClose={() => setModalImageUrl(null)} />
     </div>
   );
 };

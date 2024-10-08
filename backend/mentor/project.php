@@ -17,17 +17,27 @@ try {
 
     // ตรวจสอบว่าคำขอเป็น GET หรือไม่
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        // ตรวจสอบว่า user_id ถูกส่งมาหรือไม่
-        if (isset($_GET['user_id'])) {
-            $user_id = $_GET['user_id'];
-
-            // สร้างคำสั่ง SQL เพื่อดึงข้อมูลโปรเจค
-            $sql = "SELECT p.project_id, p.projectname, p.startdate, p.enddate, p.scrummaster, p.status, p.teamdevelop
-                    FROM project p
-                    WHERE p.user_id = :user_id";
+        // ตรวจสอบว่า user_id หรือ project_id ถูกส่งมาหรือไม่
+        if (isset($_GET['user_id']) || isset($_GET['project_id'])) {
+            // ถ้ามี user_id ให้ใช้ในการกรองข้อมูล
+            if (isset($_GET['user_id'])) {
+                $user_id = $_GET['user_id'];
+                $sql = "SELECT p.project_id, p.projectname, p.startdate, p.enddate, p.scrummaster, p.status, p.teamdevelop
+                        FROM project p
+                        WHERE p.user_id = :user_id";
+                $stmt = $con->prepare($sql);
+                $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+            }
+            // ถ้ามี project_id ให้ใช้ในการกรองข้อมูล
+            elseif (isset($_GET['project_id'])) {
+                $project_id = $_GET['project_id'];
+                $sql = "SELECT p.project_id, p.projectname, p.startdate, p.enddate, p.scrummaster, p.status, p.teamdevelop
+                        FROM project p
+                        WHERE p.project_id = :project_id";
+                $stmt = $con->prepare($sql);
+                $stmt->bindParam(':project_id', $project_id, PDO::PARAM_STR);
+            }
             
-            $stmt = $con->prepare($sql);
-            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
             $stmt->execute();
 
             // ดึงข้อมูลทั้งหมดจากฐานข้อมูล
@@ -63,7 +73,7 @@ try {
                 echo json_encode(['error' => 'No projects found']);
             }
         } else {
-            echo json_encode(['error' => 'user_id not provided']);
+            echo json_encode(['error' => 'user_id or project_id not provided']);
         }
     }
     // ตรวจสอบว่าคำขอเป็น POST หรือไม่
