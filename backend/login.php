@@ -12,17 +12,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$dsn = "sqlsrv:server=CHAWANRAT;database=Intern";
-$usernameDB = "";
-$passwordDB = "";
+// กำหนดข้อมูลสำหรับเชื่อมต่อ SQL Server
+$uid = "SA"; // ชื่อผู้ใช้ SQL Server
+$pwd = "phurin4508!"; // รหัสผ่าน SQL Server
+$serverName = "Intern_V2,1433"; // ชื่อเซิร์ฟเวอร์ SQL Server
+$database = "Intern"; // ชื่อฐานข้อมูล
+
+// สร้าง Data Source Name (DSN) สำหรับการเชื่อมต่อ SQL Server
+$dsn = "sqlsrv:Server=$serverName;Database=$database";
+$usernameDB = $uid;
+$passwordDB = $pwd;
 
 try {
     $con = new PDO($dsn, $usernameDB, $passwordDB);
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo json_encode(["status" => "success", "message" => "Connected successfully"]);
 } catch (PDOException $e) {
     echo json_encode(["status" => "error", "message" => "Connection failed: " . $e->getMessage()]);
     exit();
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -38,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user && password_verify($password, $user['password'])) {
             $isDataFilled = $user['is_data_filled']; // ตรวจสอบว่ากรอกข้อมูลแล้วหรือยัง
-
+        
             // กำหนดการ redirect ตาม role
             if ($user['role'] === 'intern') {
                 $redirectPage = !$isDataFilled ? 'input_data_intern' : 'home';
@@ -47,7 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $redirectPage = 'home'; // กรณีอื่นๆ ให้ไปที่ home
             }
-
+        
+            // ส่งข้อมูลกลับเพียงครั้งเดียว
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful',
@@ -61,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'message' => 'Invalid username or password'
             ]);
         }
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Username and password are required']);
-    }
+        
+    }        
 }

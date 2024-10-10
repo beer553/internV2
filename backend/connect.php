@@ -5,10 +5,10 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 
-$uid = ""; // ชื่อผู้ใช้ SQL Server
-$pwd = ""; // รหัสผ่าน SQL Server
-
-$serverName = "CHAWANRAT"; // ชื่อเซิร์ฟเวอร์ SQL Server
+// กำหนดข้อมูลสำหรับเชื่อมต่อ SQL Server
+$uid = "SA"; // ชื่อผู้ใช้ SQL Server
+$pwd = "phurin4508!"; // รหัสผ่าน SQL Server
+$serverName = "Intern_V2,1433"; // ชื่อเซิร์ฟเวอร์ SQL Server
 $database = "Intern"; // ชื่อฐานข้อมูล
 
 try {
@@ -18,10 +18,11 @@ try {
     // ตั้งค่าการจัดการข้อผิดพลาด
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // ส่งผลลัพธ์การเชื่อมต่อสำเร็จในรูปแบบ JSON
-    echo json_encode(array("status" => "success", "message" => "Connected successfully"));
+    // ลบ echo นี้ออกเพื่อไม่ให้เกิดการตอบกลับ JSON ที่ไม่จำเป็น
+    // echo json_encode(array("status" => "success", "message" => "Connected successfully"));
 } catch (PDOException $e) {
     // ส่งผลลัพธ์การเชื่อมต่อล้มเหลวในรูปแบบ JSON
     echo json_encode(array("status" => "error", "message" => "Connection failed: " . $e->getMessage()));
+    exit(); // ออกจากสคริปต์หากการเชื่อมต่อล้มเหลว
 }
 ?>

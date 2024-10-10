@@ -4,11 +4,12 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// SQL Server connection details
-$uid = ""; // SQL Server username
-$pwd = ""; // SQL Server password
-$serverName = "CHAWANRAT"; // SQL Server name
-$database = "Intern"; // Database name
+// กำหนดข้อมูลสำหรับเชื่อมต่อ SQL Server
+$uid = "SA"; // ชื่อผู้ใช้ SQL Server
+$pwd = "phurin4508!"; // รหัสผ่าน SQL Server
+$serverName = "Intern_V2,1433"; // ชื่อเซิร์ฟเวอร์ SQL Server
+$database = "Intern"; // ชื่อฐานข้อมูล
+
 
 try {
     // Connect to the database

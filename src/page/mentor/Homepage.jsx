@@ -26,20 +26,22 @@ function Homepage() {
   // ดึงข้อมูล internData จาก backend โดยใช้ user_id
   useEffect(() => {
     if (isAuthenticated && user?.user_id) {
-      axios.get(`http://localhost/internV2/backend/mentor/homepage.php?user_id=${user.user_id}`)
+      axios.get(`http://localhost:8080/mentor/homepage.php?user_id=${user.user_id}`)
         .then(response => {
+          console.log("Intern Data:", response.data); // ตรวจสอบค่าที่ได้รับ
           setInternData(response.data);
         })
         .catch(error => {
           console.error('Error fetching intern data:', error);
         });
+
     }
   }, [isAuthenticated, user?.user_id]);
 
   // Load user status on component mount
   useEffect(() => {
     if (isAuthenticated && user?.user_id) {
-      axios.get(`http://localhost/internV2/backend/mentor/insert_data_mentor.php?user_id=${user.user_id}`)
+      axios.get(`http://localhost:8080/mentor/insert_data_mentor.php?user_id=${user.user_id}`)
         .then(response => {
           if (!response.data.completed) {
             setShowFormPopup(true);
@@ -117,7 +119,7 @@ function Homepage() {
     formDataToSend.append('profilePicture', formData.profilePicture);
     formDataToSend.append('userId', user?.user_id);
 
-    axios.post('http://localhost/internV2/backend/mentor/insert_data_mentor.php', formDataToSend, {
+    axios.post('http://localhost:8080/mentor/insert_data_mentor.php', formDataToSend, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -141,19 +143,6 @@ function Homepage() {
   };
   const goToProfilePage = (userId) => {
     navigate(`/IDP/${userId}`);
-  };
-
-
-  const gotoProductBacklog = () => {
-    navigate('/PDBacklog');
-  };
-
-  const gotoProject = () => {
-    navigate('/Project');
-  };
-
-  const gotoDailyscrum = () => {
-    navigate('/Dailyscrum');
   };
 
   // ฟังก์ชันในการตรวจสอบสถานะการฝึกงาน
@@ -202,6 +191,12 @@ function Homepage() {
     return dateA - dateB;
   });
 
+  useEffect(() => {
+    console.log("User ID:", user?.user_id);
+    console.log("Is Authenticated:", isAuthenticated);
+  }, [isAuthenticated, user?.user_id]);
+
+
   return (
     <div>
       <header>
@@ -213,7 +208,6 @@ function Homepage() {
           <img
             src={userData?.profile_picture ? `/backend/mentor/uploads/${userData.profile_picture}` : ''}
             className="w-24 h-24 rounded-full mt-6"
-            alt=""
           />
           <div className="ml-4 mt-4">
             <h2 className='text-[25px] text-black font-bold'>DX Manpower Management</h2>
@@ -226,44 +220,55 @@ function Homepage() {
         <div className="flex justify-around items-center w-full">
           {/* ช่อง Developer Team (TTL) */}
           <div className="relative w-[25%] h-[170px] shadow-lg m-6 rounded-lg flex flex-col items-center justify-center bg-[#eaeaea]">
-            <div className="text-[90px] h-28 font-bold text-black mt-5">{countTotalInterns()}</div> {/* จำนวนนักศึกษาฝึกงานทั้งหมด */}
-            <div className="text-[20px] text-black mb-1">Developer Team (TTL)</div>
-            <div className="absolute bottom-0 left-0 w-full h-2 bg-blue-300"></div>
+            <div className="text-[90px] h-28 font-bold text-black mt-1">{countTotalInterns()}</div> {/* จำนวนนักศึกษาฝึกงานทั้งหมด */}
+            <div className="text-[20px] text-black mt-3">Developer Team (TTL)</div>
+            <div className="absolute bottom-0 left-0 w-full h-2 bg-blue-300 rounded-sm"></div>
           </div>
+
           {/* ช่อง Developer This Year */}
           <div className="relative w-[25%] h-[170px] shadow-lg m-6 rounded-lg flex flex-col items-center justify-center bg-[#eaeaea]">
-            <div className="text-[90px] h-28 font-bold text-black mt-5">{countInternsInTraining()}</div>  {/* จำนวนนักศึกษาที่อยู่ในสถานะ "กำลังฝึกงาน" */}
-            <div className="text-[20px] text-black mb-1">Developer This Year</div>
-            <div className="absolute bottom-0 left-0 w-full h-2 bg-orange-400"></div>
+            <div className="text-[90px] h-28 font-bold text-black mt-1">{countInternsInTraining()}</div>  {/* จำนวนนักศึกษาที่อยู่ในสถานะ "กำลังฝึกงาน" */}
+            <div className="text-[20px] text-black mt-3">Developer This Year</div>
+            <div className="absolute bottom-0 left-0 w-full h-2 bg-orange-400 rounded-sm"></div>
           </div>
+
+          {/* ช่อง Project This Year (Items) */}
           <div className="relative w-[25%] h-[170px] shadow-lg m-6 rounded-lg bg-[#eaeaea]">
             <div className="flex items-center justify-center">
-              <div className="text-[90px] h-28 font-bold text-black mr-10 mt-5">0</div>
+              <div className="text-[90px] h-28 font-bold text-black mr-10 mt-2">0</div>
               <div className="space-y-2 mt-4">
-                <div className="flex items-center bg-white p-3 rounded-lg shadow cursor-pointer mb-2" onClick={() => navigate('/Project')}>
-                  <span className="text-[18px] text-black">Project</span>
+                <div
+                  className="flex items-center bg-white p-3 rounded-lg shadow cursor-pointer mb-2 hover:bg-black hover:text-white transition-colors duration-300"
+                  onClick={() => navigate('/Project')}
+                >
+                  <span className="text-[18px]">Project</span>
                 </div>
-                <div className="flex items-center bg-white p-3 rounded-lg shadow cursor-pointer" onClick={() => navigate('/Dailyscrum')}>
-                  <span className="text-[18px] text-black">Daily Scrum</span>
+                <div
+                  className="flex items-center bg-white p-3 rounded-lg shadow cursor-pointer hover:bg-black hover:text-white transition-colors duration-300"
+                  onClick={() => navigate('/Dailyscrum')}
+                >
+                  <span className="text-[18px]">Daily Scrum</span>
                 </div>
               </div>
             </div>
-            <div className="mb-1 text-center text-black text-[20px]">Project This Year (Items)</div>
-            <div className="absolute bottom-0 left-0 w-full h-2 bg-cyan-400"></div>
+            <div className="mt-2 text-center text-black text-[20px]">Project This Year (Items)</div>
+            <div className="absolute bottom-0 left-0 w-full h-2 bg-cyan-400 rounded-sm"></div>
           </div>
+
+          {/* ช่อง Product Increment (Items) */}
           <div className="relative w-[25%] h-[170px] shadow-lg m-6 rounded-lg bg-[#eaeaea]">
             <div className="flex items-center">
-              <div className="text-[60px] h-24 font-bold mt-[-1px] ml-14 text-black">0</div>
-              <div className="text-[40px] text-black font-bold ml-[70px]">Sprint</div>
+              <div className="text-[60px] h-24 font-bold mt-[-1px] ml-[60px] text-black">0</div>
+              <div className="text-[40px] text-black font-bold ml-[40px]">Sprint</div>
             </div>
             <div className="flex items-center mt-[-40px]">
-              <div className="text-[60px] h-16 font-bold ml-[53px] text-black">0</div>
-              <div className="text-[18px] bg-white p-2 rounded-lg shadow w-36 ml-[70px] cursor-pointer mt-[40px]" onClick={() => navigate('/PDBacklog')}>
-                <div className="text-black">Product Backlog</div>
+              <div className="text-[60px] h-16 font-bold ml-[60px] text-black">0</div>
+              <div className="text-[18px] bg-white p-2 rounded-lg shadow w-36 ml-[40px] cursor-pointer mt-[35px] hover:bg-black hover:text-white transition-colors duration-300" onClick={() => navigate('/PDBacklog')}>
+                <span className="text-[18px] ">Product Backlog</span>
               </div>
             </div>
-            <div className="mt-[-5px] ml-2 text-black text-[20px] ">Product Increment (Items)</div>
-            <div className="absolute bottom-0 left-0 w-full h-2 bg-green-400"></div>
+            <div className="mt-[1px] ml-2 text-black text-[20px] ">Product Increment (Items)</div>
+            <div className="absolute bottom-0 left-0 w-full h-2 bg-green-400 rounded-sm"></div>
           </div>
         </div>
       </div>
@@ -272,69 +277,8 @@ function Homepage() {
       <div className='bg-white max-w-[95%] mx-auto mt-12 mb-5 p-2 shadow-lg rounded-lg items-center'>
         <div className="m-5">
           <div className='flex items-center justify-between mb-4'>
-            <h3 className='text-[40px] ml-5 text-gray-600'>Manpower</h3>
+            <h3 className='text-[40px] ml-3 text-gray-600'>Manpower</h3>
           </div>
-
-          {showPopup && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-white p-8 rounded-lg text-left shadow-lg w-full max-w-2xl">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label className="block text-2xl ml-1 font-medium text-black">ID</label>
-                    <input
-                      type="text"
-                      name="id"
-                      value={newManpower.id}
-                      onChange={handleInputChange}
-                      placeholder="โปรดระบุ"
-                      className="block w-full mt-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-[20px] bg-white text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-2xl ml-1 font-medium text-black">Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={newManpower.name}
-                      onChange={handleInputChange}
-                      placeholder="โปรดระบุ"
-                      className="block w-full mt-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-[20px] bg-white text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-2xl ml-1 font-medium text-black">Start Date</label>
-                    <input
-                      type="date"
-                      name="startDate"
-                      value={newManpower.startDate}
-                      onChange={handleInputChange}
-                      placeholder="โปรดระบุ"
-                      className="block w-full mt-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-[20px] bg-white text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-2xl ml-1 font-medium text-black">End Date</label>
-                    <input
-                      type="date"
-                      name="endDate"
-                      value={newManpower.endDate}
-                      onChange={handleInputChange}
-                      placeholder="โปรดระบุ"
-                      className="block w-full mt-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-[20px] bg-white text-black"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end mt-6 text-[20px]">
-                  <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-[#4CAF50] mr-2" onClick={handleSubmitManpower}>
-                    บันทึก
-                  </button>
-                  <button className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600" onClick={togglePopup}>
-                    ยกเลิก
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Table rendering manpowerData */}
           <table className="w-full border-collapse border-none">
@@ -363,14 +307,14 @@ function Homepage() {
                     <td className="text-[16px] text-center text-black">{row.project ? row.project : 'ยังไม่มอบหมายโปรเจค'}</td>
                     <td className="text-center">
                       <button onClick={() => goToProfilePage(row.user_id)}>
-                        <img className='w-12 h-12 mx-auto cursor-pointer' src="/src//img/img_icon/9746243.png" alt="Profile" />
+                        <img className='w-12 h-12 mx-auto cursor-pointer' src="/src//img/img_icon/profile1.png" alt="Profile" />
                       </button>
                     </td>
                     <td className="text-center">
-                      <img className='w-12 h-12 mx-auto cursor-pointer' src="/src/img/img_icon/4062008.png" alt="Sprint Review" />
+                      <img className='w-12 h-12 mx-auto cursor-pointer' src="/src/img/img_icon/Review1.png" alt="Sprint Review" />
                     </td>
                     <td className="text-center">
-                      <img className='w-12 h-12 mx-auto cursor-pointer' src="/src/img/img_icon/2666505.png" alt="Evaluate" />
+                      <img className='w-12 h-12 mx-auto cursor-pointer' src="/src/img/img_icon/evaluate1.png" alt="Evaluate" />
                     </td>
                   </tr>
                 ))

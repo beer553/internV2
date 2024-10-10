@@ -5,15 +5,15 @@ header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 
-
 include 'connect.php';
 
 $inputJSON = file_get_contents('php://input');
+error_log("Raw input: " . $inputJSON); // บันทึกข้อมูล JSON ที่ได้รับไปยัง log
 $input = json_decode($inputJSON, true);
 
 // ตรวจสอบว่าข้อมูล JSON ถูกต้องหรือไม่
 if (json_last_error() !== JSON_ERROR_NONE) {
-    echo json_encode(['status' => 'error', 'message' => 'รูปแบบข้อมูลไม่ถูกต้อง']);
+    echo json_encode(['status' => 'error', 'message' => 'รูปแบบข้อมูลไม่ถูกต้อง'], JSON_UNESCAPED_UNICODE);
     exit();
 }
 
@@ -24,7 +24,7 @@ $password = isset($input['password']) ? $input['password'] : null;
 
 // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
 if (empty($username) || empty($user_id) || empty($password)) {
-    echo json_encode(['status' => 'error', 'message' => 'กรุณากรอกข้อมูลให้ครบถ้วน']);
+    echo json_encode(['status' => 'error', 'message' => 'กรุณากรอกข้อมูลให้ครบถ้วน'], JSON_UNESCAPED_UNICODE);
     exit();
 }
 
@@ -44,7 +44,7 @@ try {
     $userExists = $checkStmt->fetchColumn();
 
     if ($userExists > 0) {
-        echo json_encode(['status' => 'error', 'message' => 'ชื่อผู้ใช้หรือรหัสพนักงานนี้มีอยู่แล้ว']);
+        echo json_encode(['status' => 'error', 'message' => 'ชื่อผู้ใช้หรือรหัสพนักงานนี้มีอยู่แล้ว'], JSON_UNESCAPED_UNICODE);
         exit();
     }
 
@@ -57,14 +57,14 @@ try {
 
     // ดำเนินการเพิ่มข้อมูล
     if ($stmt->execute()) {
-        echo json_encode(['status' => 'success', 'message' => 'register success', 'role' => $role]);
+        echo json_encode(['status' => 'success', 'message' => 'ลงทะเบียนสำเร็จ', 'role' => $role], JSON_UNESCAPED_UNICODE);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'sss']);
+        echo json_encode(['status' => 'error', 'message' => 'ไม่สามารถเพิ่มข้อมูลได้'], JSON_UNESCAPED_UNICODE);
     }
 
 } catch (PDOException $e) {
     // จัดการข้อผิดพลาดที่เกิดขึ้น
-    echo json_encode(['status' => 'error', 'message' => 'ddd: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'เกิดข้อผิดพลาด: ' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
     exit();
 }
 

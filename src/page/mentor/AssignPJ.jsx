@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom';
 import Footer from '../component/footer';
 import NavbarMentor from '../component/navbar_intern';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 
+
 function AssignPJ() {
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
 
-  // รับค่า project_id จาก URL
   const queryParams = new URLSearchParams(location.search);
-  const project_id = queryParams.get('project_id'); 
-  console.log("Project ID:", project_id); 
+  const project_id = queryParams.get('project_id');
+  console.log("Project ID:", project_id);
 
   const { user } = useAuth();
   const user_id = user?.user_id || null;
+  console.log("User ID:", user_id);
 
   const [interns, setInterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(''); // State สำหรับเก็บค่า search term
 
   const gotoProject = () => {
     navigate('/Project');
@@ -41,11 +43,10 @@ function AssignPJ() {
       setLoading(true);
       console.log("Fetching interns for user_id:", user_id);
 
-      // ตรวจสอบว่ามี user_id และ project_id หรือไม่
       if (user_id && project_id) {
-        const response = await axios.post('http://localhost/internV2/backend/mentor/assignPJ.php', {
+        const response = await axios.post('http://localhost:8080/mentor/assignPJ.php', {
           user_id: user_id,
-          project_id: project_id // ส่ง project_id ไปยัง backend
+          project_id: project_id
         });
 
         console.log("Response from backend:", response.data);
@@ -72,7 +73,7 @@ function AssignPJ() {
     if (user_id && project_id) {
       fetchInterns();
     }
-  }, [user_id, project_id]); // เรียกใช้ fetchInterns เมื่อ user_id หรือ project_id เปลี่ยนแปลง
+  }, [user_id, project_id]);
 
   const handleSubmit = async () => {
     if (selectedUsers.length === 0) {
@@ -86,9 +87,9 @@ function AssignPJ() {
     }
 
     try {
-      await axios.post('http://localhost/internV2/backend/mentor/assignintern.php', {
+      await axios.post('http://localhost:8080/mentor/assignintern.php', {
         selectedUsers,
-        project_id // ส่ง project_id ไปยัง backend
+        project_id
       });
 
       Swal.fire({
@@ -125,7 +126,7 @@ function AssignPJ() {
         <NavbarMentor />
       </header>
 
-      <div className="flex justify-between items-center h-[55px] mt-7 mb-7 bg-[#FFE177] max-w-[96%] mx-auto rounded-lg">
+      <div className="flex justify-between items-center mt-10 mb-4 bg-[#FFE177] rounded-lg w-[96%] ml-8 h-[50px]">
         <h1 className="text-[25px] font-bold text-center flex-1 text-black ml-[100px]">มอบหมายผู้รับผิดชอบ</h1>
         <img
           src="/src/img/img_icon/left-arrow.png"
@@ -134,17 +135,17 @@ function AssignPJ() {
           onClick={gotoProject}
         />
       </div>
+      <div className="flex justify-end mr-8">
+  <input
+    type="text"
+    placeholder="ค้นหา Intern..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="mb-4 p-3 border border-gray-300 rounded-lg w-[250px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-300"
+  />
+</div>
 
       <div className="px-8">
-        {/* ช่องค้นหา */}
-        <input
-          type="text"
-          placeholder="ค้นหา intern..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-4 p-2 border rounded w-full"
-        />
-
         {loading ? (
           <p>กำลังโหลดข้อมูล...</p>
         ) : error ? (
@@ -152,18 +153,16 @@ function AssignPJ() {
         ) : filteredInterns.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {filteredInterns.map((intern) => (
-              <div key={intern.user_id} className="flex items-center bg-white p-4">
+              <div key={intern.user_id} className="flex items-center bg-white p-5 shadow-md rounded-lg p-4">
                 <img
                   src={`/backend/intern/uploads/profile/${intern?.profile}`}
                   alt={intern.name}
                   className="h-[200px] w-[200px] rounded-lg object-cover"
                 />
-                <div className="ml-4 flex-1 text-left space-y-3">
-                  <span className="bg-[#FF9B2C] text-white px-5 py-2 rounded">
-                    {intern.nickname}
-                  </span>
-                  <p className="text-black">ชื่อ-นามสกุล : {intern.firstName} {intern.lastName}</p>
-                  <p className="text-black">สถานศึกษา : {intern.currentEducation}</p>
+                <div className="ml-4 flex-1 text-left space-y-2.5">
+                  <span className="bg-[#FF9B2C] text-white px-5 py-2 rounded">{intern.nickname}</span>
+                  <p className="text-black">ชื่อ-นามสกุล: {intern.firstName} {intern.lastName}</p>
+                  <p className="text-black">สถานศึกษา: {intern.currentEducation}</p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <input

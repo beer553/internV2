@@ -47,7 +47,7 @@ const Profile = () => {
   const fetchProfileData = async (user_id) => {
     try {
       setLoading(true); // ตั้งสถานะเป็นกำลังโหลด
-      const response = await fetch(`http://localhost/internV2/backend/intern/profile.php?user_id=${user_id}`);
+      const response = await fetch(`http://localhost:8080/intern/profile.php?user_id=${user_id}`);
       const data = await response.json();
 
       // ตรวจสอบว่าการดึงข้อมูลสำเร็จและมีข้อมูลที่ถูกต้อง

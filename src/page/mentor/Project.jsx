@@ -49,7 +49,7 @@ function Project() {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get(`http://localhost/internV2/backend/mentor/project.php?user_id=${user.user_id}`);
+                const response = await axios.get(`http://localhost:8080/mentor/project.php?user_id=${user.user_id}`);
                 setProjects(response.data);
                 setSearchResults(response.data); // แสดงผลการค้นหาทั้งหมดโดยตั้งต้นให้เท่ากับ projects
             } catch (error) {
@@ -112,7 +112,7 @@ function Project() {
 
         try {
             if (editProjectId) {
-                await axios.put(`http://localhost/internV2/backend/mentor/project.php`, {
+                await axios.put(`http://localhost:8080/mentor/project.php`, {
                     ...projectData,
                     project_id: editProjectId, // ส่ง project_id ที่ต้องการแก้ไขไปด้วย
                 });
@@ -124,7 +124,7 @@ function Project() {
                 setSearchResults(updatedProjects);
 
             } else {
-                const response = await axios.post('http://localhost/internV2/backend/mentor/project.php', projectData);
+                const response = await axios.post('http://localhost:8080/mentor/project.php', projectData);
                 const newProjectId = response.data.project_id;
 
                 const updatedProjects = [...projects, { ...newProject, project_id: newProjectId, manager: user?.username || '' }];
@@ -239,7 +239,7 @@ function Project() {
                                     required
                                     className='border rounded-lg h-12 w-full p-2 text-[16px]'
                                 >
-                                    <option value="">โปรดเลือก</option>
+                                    <option value=""disabled hidden>โปรดเลือก</option>
                                     <option value="เริ่มต้น">เริ่มต้น</option>
                                     <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
                                     <option value="เสร็จสิ้น">เสร็จสิ้น</option>
@@ -247,6 +247,7 @@ function Project() {
                                 </select>
                             </label>
                         </form>
+
                         <div className='flex justify-center mt-6 space-x-4'>
                             <button
                                 type="submit"
@@ -288,27 +289,16 @@ function Project() {
                                 <td className="text-center p-4 text-[18px]">{formatDate(project.enddate)}</td>
                                 <td className="text-left p-4 text-[18px]">{project.projectname}</td>
                                 <td className="text-center p-4 text-[18px]">{project.scrummaster}</td>
-                                <td className="flex justify-center items-center text-[18px] ">
-                                    <div className={`w-[150px] px-3 py-1 justify-center flex items-center rounded-full ${getStatusColor(project.status)}`}>
+                                <td className="flex justify-center text-[18px] ">
+                                    <div className={`w-[150px] px-3 py-1 justify-center flex rounded-full ${getStatusColor(project.status)}`}>
                                         {project.status}
                                     </div>
                                 </td>
                                 <td className="text-center p-4">
-                                    <div className='flex justify-left items-center'>
-                                        <img
-                                            src="/src/img/img_icon/development.png"
-                                            alt="Team Develop"
-                                            className="h-10 w-10 cursor-pointer"
-                                            onClick={() => gotoAssignPJ(project.project_id)}
-                                        />
-                                        {project.team_members && (
-                                            <span className="text-[18px] text-left mr-2 ml-6">
-                                                {project.team_members}
-                                            </span>
-                                        )}
+                                    <div className='flex justify-center'>
+                                        <img src="/src/img/img_icon/development.png" alt="Team Develop" className="h-10 w-10 cursor-pointer" onClick={() => gotoAssignPJ(project.project_id)} />
                                     </div>
                                 </td>
-
                             </tr>
                         ))}
                     </tbody>

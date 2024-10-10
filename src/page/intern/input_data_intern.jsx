@@ -105,7 +105,7 @@ function input_data_intern() {
         if (transcript) formData.append('transcript', transcript);
         if (otherFiles) formData.append('otherFiles', otherFiles);
 
-        axios.post('http://localhost/internV2/backend/intern/insert_data_intern.php', formData, {
+        axios.post('http://localhost:8080/intern/insert_data_intern.php', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             }

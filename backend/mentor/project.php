@@ -5,10 +5,11 @@ header('Access-Control-Allow-Methods: GET, POST, PUT');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // กำหนดข้อมูลสำหรับเชื่อมต่อ SQL Server
-$uid = ""; // ชื่อผู้ใช้ SQL Server
-$pwd = ""; // รหัสผ่าน SQL Server
-$serverName = "CHAWANRAT"; // ชื่อเซิร์ฟเวอร์ SQL Server
-$database = "Intern"; // ชื่อฐานข้อมูล 
+$uid = "SA"; // ชื่อผู้ใช้ SQL Server
+$pwd = "phurin4508!"; // รหัสผ่าน SQL Server
+$serverName = "Intern_V2,1433"; // ชื่อเซิร์ฟเวอร์ SQL Server
+$database = "Intern"; // ชื่อฐานข้อมูล
+
 
 try {
     // เชื่อมต่อฐานข้อมูล

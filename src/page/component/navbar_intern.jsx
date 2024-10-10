@@ -59,11 +59,11 @@ const NavbarIntern = () => {
     };
 
     // ตรวจสอบ role และกำหนดข้อความที่จะแสดง
-    const roleDisplay = role === 'intern' 
-        ? 'Team Development' 
-        : role === 'mentor' 
-        ? 'Scrum Master' 
-        : role ? role : 'Unknown Role';  // เพิ่มการตรวจสอบค่า role
+    const roleDisplay = role === 'intern'
+        ? 'Team Development'
+        : role === 'mentor'
+            ? 'Scrum Master'
+            : role ? role : 'Unknown Role';  // เพิ่มการตรวจสอบค่า role
 
     // กำหนดการแสดงผลเมื่อกำลังโหลด
     if (isLoading) {
@@ -73,18 +73,18 @@ const NavbarIntern = () => {
     return (
         <>
             <div className='banner-container'>
-                <img 
-                    src="/src/img/nav2.jpg" 
-                    alt="Banner Image" 
-                    style={{flex:'1',display:'flex',justifyContent:'center',alignItems:'center',backgroundSize:'cover'}} 
+                <img
+                    src="/src/img/nav2.jpg"
+                    alt="Banner Image"
+                    style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundSize: 'cover' }}
                 />
             </div>
             <div className="navbar flex justify-between items-center h-21 bg-gray-800">
                 <div className="flex items-center ml-5">
-                    <img 
-                        src="/src/img/Siam_Cement_Group_Logo.svg.png" 
-                        alt="Logo" 
-                        className="h-16 m-4 cursor-pointer" 
+                    <img
+                        src="/src/img/Siam_Cement_Group_Logo.svg.png"
+                        alt="Logo"
+                        className="h-16 m-4 cursor-pointer"
                         onClick={handleLogoClick}  // เพิ่มฟังก์ชันให้คลิกโลโก้แล้วนำทาง
                     />
                 </div>
@@ -93,11 +93,13 @@ const NavbarIntern = () => {
                         <p className='text-left' style={{ height: '30px' }}>
                             {role ? roleDisplay : 'Loading Role...'} {/* แสดง Loading ระหว่างรอข้อมูล role */}
                         </p>
-                        <p style={{color:'#c0c0c0'}}>{username || 'Loading Username...'}</p> {/* แสดง Loading ระหว่างรอข้อมูล username */}
+                        <p style={{ color: '#c0c0c0' }}>{username || 'Loading Username...'}</p> {/* แสดง Loading ระหว่างรอข้อมูล username */}
                     </div>
                     <div className="bg-white w-px h-16 mx-4"></div>
-                    <img src="/src/img/img_icon/exit.png" alt="Log out" className="h-[25px] mr-2" />
-                    <button onClick={handleLogout} className="text-white mr-2">Logout</button>
+                    <div onClick={handleLogout} className="flex items-center cursor-pointer">
+                        <img src="/src/img/img_icon/exit.png" alt="Log out" className="h-[25px] mr-2" />
+                        <button className="text-white mr-2">Logout</button>
+                    </div>
                 </div>
             </div>
         </>

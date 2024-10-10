@@ -24,7 +24,7 @@ const Home = () => {
 
   const fetchData = async (userId) => {
     try {
-      const response = await axios.get('http://localhost/internV2/backend/intern/home.php', {
+      const response = await axios.get('http://localhost:8080/backend/intern/home.php', {
         params: { user_id: userId },
       });
       setInternData(response.data);
@@ -46,7 +46,7 @@ const Home = () => {
 
   const handleGoalSave = async () => {
     try {
-      const response = await axios.post('http://localhost/internV2/backend/intern/home.php', {
+      const response = await axios.post('http://localhost:8080/intern/home.php', {
         user_id: internData.user_id,
         goal,
       });

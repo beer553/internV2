@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 const App = () => {
   useEffect(() => {
-    fetch('http://localhost/internV2/backend/connect.php') // เปลี่ยน URL ตามตำแหน่งไฟล์ PHP ของคุณ
+    fetch('http://localhost:8080/connect.php') // เปลี่ยน URL ตามตำแหน่งไฟล์ PHP ของคุณ
       .then(response => response.json())
       .then(data => {
         if (data.status === "success") {

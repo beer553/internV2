@@ -41,7 +41,7 @@ const ProductBacklog = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get(`http://localhost/internV2/backend/mentor/project.php?user_id=${user.user_id}`);
+        const response = await axios.get(`http://localhost:8080/mentor/project.php?user_id=${user.user_id}`);
         setProjects(response.data);
         setSearchResults(response.data); // แสดงผลการค้นหาทั้งหมดโดยตั้งต้นให้เท่ากับ projects
       } catch (error) {
