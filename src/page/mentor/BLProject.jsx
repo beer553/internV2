@@ -118,12 +118,10 @@ const ProductBacklog = () => {
 
   const handleNewRowChange = (e, field) => {
     let value = e.target.value;
-    if (field === 'datestart' || field === 'dateend' || field === 'increment') {
-      const [year, month, day] = value.split('-');
-      value = `${day}/${month}/${year}`;
-    }
+    e.target.style.color = value === '' ? 'black' : getStatusColor(value); // เปลี่ยนสีฟอนต์เมื่อเลือก
     setNewRow({ ...newRow, [field]: value });
   };
+
 
   const handleImageChange = (e, field) => {
     const file = e.target.files[0];
@@ -174,7 +172,7 @@ const ProductBacklog = () => {
         formData.append('imgAfter', tableData[index].imgAfter);
       }
 
-      const response = await axios.post(`http://localhost/internV2/backend/mentor/edit_backlog.php`, formData, {
+      const response = await axios.post(`http://localhost:8080/mentor/edit_backlog.php`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -208,6 +206,40 @@ const ProductBacklog = () => {
     setEditRowData({ ...editRowData, [field]: value });
   };
 
+  const formatDateToThai = (dateString) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    const buddhistYear = parseInt(year, 10) + 543; // แปลงปี ค.ศ. เป็น พ.ศ.
+    return `${day}/${month}/${buddhistYear}`;
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setModalImageUrl(imageUrl);
+  };
+
+  const getStatusColor = (status) => {
+    // ฟังก์ชันนี้จะคืนค่าสีตามสถานะ
+    return status === 'Done' ? '#155724' : '#004085'; // สีเขียวสำหรับ Done, สีฟ้าสำหรับ To Do
+  };
+
+  const deleteRow = async (index) => {
+    try {
+      const rowToDelete = tableData[index];
+      const response = await axios.post('http://localhost:8080/mentor/delete_backlog.php', {
+        backlog_id: rowToDelete.backlog_id,
+      });
+
+      if (response.data.message === 'Backlog deleted successfully') {
+        const updatedTableData = tableData.filter((_, i) => i !== index);
+        setTableData(updatedTableData);
+      } else {
+        alert('Error deleting backlog');
+      }
+    } catch (error) {
+      console.error('Error deleting row:', error);
+    }
+  };
+
   return (
     <div>
       <NavbarMentor />
@@ -232,23 +264,23 @@ const ProductBacklog = () => {
 
           <section className="overflow-x-auto bg-white shadow-lg rounded-lg p-3 mb-5">
             <div className="overflow-x-auto">
-              <table className="table-auto w-[190%]">
+              <table className="table-auto w-[180%]">
                 <thead>
                   <tr className='border-b-2 border-black text-[22px]'>
-                    <th className="w-[8%] h-8">Number</th>
-                    <th className="w-[8%] h-8">Sprint</th>
-                    <th className="w-[8%] h-8">Notification Date</th>
-                    <th className="w-[8%] h-8">Completion Date</th>
-                    <th className="w-[8%] h-8">Type of work</th>
-                    <th className="w-[8%] h-8">Details</th>
-                    <th className="w-[8%] h-8">Before</th>
-                    <th className="w-[8%] h-8">After</th>
-                    <th className="w-[8%] h-8">Manday</th>
-                    <th className="w-[8%] h-8">Team Develop</th>
-                    <th className="w-[8%] h-8">Status</th>
-                    <th className="w-[8%] h-8">Product Increment</th>
-                    <th className="w-[8%] h-8">Note</th>
-                    <th className="w-[8%] h-8">Edit</th>
+                    <th className="w-[4%] h-10">Number</th>
+                    <th className="w-[4%] h-10">Sprint</th>
+                    <th className="w-[7%] h-10">Notification Date</th>
+                    <th className="w-[7%] h-10">Completion Date</th>
+                    <th className="w-[8%] h-10">Type of work</th>
+                    <th className="w-[8%] h-10">Details</th>
+                    <th className="w-[8%] h-10">Before</th>
+                    <th className="w-[8%] h-10">After</th>
+                    <th className="w-[4%] h-10">Manday</th>
+                    <th className="w-[6%] h-10">Team Develop</th>
+                    <th className="w-[5%] h-10">Status</th>
+                    <th className="w-[7%] h-10">Product Increment</th>
+                    <th className="w-[5%] h-10 px-10">Note</th>
+                    <th className="w-[5%] h-10 px-10">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -256,12 +288,12 @@ const ProductBacklog = () => {
                     <tr key={index}>
                       {editRowIndex === index ? (
                         <>
-                          <td>{index + 1}</td>
-                          <td><input type="number" value={editRowData?.sprint || ''} onChange={(e) => handleEditChange(e, 'sprint')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                          <td><input type="date" value={(editRowData?.datestart || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'datestart')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                          <td><input type="date" value={(editRowData?.dateend || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'dateend')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                          <td><input type="text" value={editRowData?.type_of_work || ''} onChange={(e) => handleEditChange(e, 'type_of_work')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                          <td><input type="text" value={editRowData?.details || ''} onChange={(e) => handleEditChange(e, 'details')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'>{index + 1}</td>
+                          <td className='text-[18px]'><input type="number" value={editRowData?.sprint || ''} onChange={(e) => handleEditChange(e, 'sprint')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'><input type="date" value={(editRowData?.datestart || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'datestart')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'><input type="date" value={(editRowData?.dateend || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'dateend')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'><input type="text" value={editRowData?.type_of_work || ''} onChange={(e) => handleEditChange(e, 'type_of_work')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'><input type="text" value={editRowData?.details || ''} onChange={(e) => handleEditChange(e, 'details')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
                           <td>
                             <div className='relative'>
                               <input
@@ -304,44 +336,52 @@ const ProductBacklog = () => {
                               row.imgAfter && <img src={`/backend/mentor/${row.imgAfter}`} alt="After" className='w-28 h-16' />
                             )}
                           </td>
-                          <td><input type="number" value={editRowData?.manday || ''} onChange={(e) => handleEditChange(e, 'manday')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                          <td><input type="text" value={editRowData?.teamdevelop || ''} onChange={(e) => handleEditChange(e, 'teamdevelop')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                          <td>
+                          <td className='text-[18px]'><input type="number" value={editRowData?.manday || ''} onChange={(e) => handleEditChange(e, 'manday')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'><input type="text" value={editRowData?.teamdevelop || ''} onChange={(e) => handleEditChange(e, 'teamdevelop')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'>
                             <select
-                              value={editRowData?.status || ''}
+                              value={editRowData.status || ''}
                               onChange={(e) => handleEditChange(e, 'status')}
                               className='border-2 border-gray-300 p-2 rounded-lg w-full h-10'
                               style={{
-                                color: editRowData?.status === 'Done' ? '#155724' : 'inherit' // สีเขียวสำหรับ Done
+                                color: getStatusColor(editRowData.status) // เปลี่ยนสีตามสถานะ
                               }}
                             >
                               <option value="To Do" style={{ color: '#004085' }}>To Do</option>
                               <option value="Done" style={{ color: '#155724' }}>Done</option>
                             </select>
                           </td>
-                          <td><input type="date" value={(editRowData?.productIncrement || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'productIncrement')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                          <td><input type="text" value={editRowData?.note || ''} onChange={(e) => handleEditChange(e, 'note')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'><input type="date" value={(editRowData?.productIncrement || '').split('/').reverse().join('-')} onChange={(e) => handleEditChange(e, 'productIncrement')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                          <td className='text-[18px]'><input type="text" value={editRowData?.note || ''} onChange={(e) => handleEditChange(e, 'note')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
                           <td>
-                            <button onClick={() => saveEdit(index)} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[18px] mr-1'>บันทึก</button>
-                            <button onClick={cancelEdit} className='bg-red-500 text-white rounded-lg h-10 w-24 text-[18px]'>ยกเลิก</button>
+                            <button onClick={() => saveEdit(index)} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[16px]'>บันทึก</button>
+                            <button onClick={() => deleteRow(index)} className='bg-red-500 text-white rounded-lg h-10 w-24 text-[16px] mt-1'>ลบ</button>
                           </td>
                         </>
                       ) : (
                         <>
-                          <td>{index + 1}</td>
-                          <td>{row.sprint}</td>
-                          <td>{row.notificationDate}</td>
-                          <td>{row.completionDate}</td>
-                          <td>{row.type_of_work}</td>
-                          <td>{row.details}</td>
-                          <td>{row.imgBefore ? <img src={`/backend/mentor/${row.imgBefore}`} alt="Before" className='w-28 h-16' /> : 'No Image'}</td>
-                          <td>{row.imgAfter ? <img src={`/backend/mentor/${row.imgAfter}`} alt="After" className='w-28 h-16' /> : 'No Image'}</td>
-                          <td>{row.manday}</td>
-                          <td>{row.teamdevelop}</td>
-                          <td>{row.status}</td>
-                          <td>{row.productIncrement}</td>
-                          <td>{row.note}</td>
-                          <td>
+                          <td className='text-[18px]'>{index + 1}</td>
+                          <td className='text-[18px]'>{row.sprint}</td>
+                          <td className='text-[18px]'>{formatDateToThai(row.notificationDate)}</td>
+                          <td className='text-[18px]'>{formatDateToThai(row.completionDate)}</td>
+                          <td className='text-[18px]'>{row.type_of_work}</td>
+                          <td className='text-[18px]'>{row.details}</td>
+                          <td className="flex justify-center " onClick={() => handleImageClick(`/backend/mentor/${row.imgBefore}`)}>
+                            {row.imgBefore ? <img src={`/backend/mentor/${row.imgBefore}`} alt="Before" className='w-28 h-16 cursor-pointer' /> : 'No Image'}
+                          </td>
+                          <td className="text-center align-middle" onClick={() => handleImageClick(`/backend/mentor/${row.imgAfter}`)}>
+                            {row.imgAfter ? (
+                              <img src={`/backend/mentor/${row.imgAfter}`} alt="After" className="w-28 h-16 mx-auto cursor-pointer" />
+                            ) : 'No Image'}
+                          </td>
+                          <td className='text-[18px]'>{row.manday}</td>
+                          <td className='text-[18px]'>{row.teamdevelop}</td>
+                          <td className='text-[18px]' style={{ color: getStatusColor(row.status) }}>
+                            {row.status}
+                          </td>
+                          <td className='text-[18px]'>{formatDateToThai(row.productIncrement)}</td>
+                          <td className='text-[18px]'>{row.note}</td>
+                          <td className='flex justify-center mt-3.5'>
                             <img src="/src/img/img_icon/Edit.png" alt="Edit" className='w-10 h-10 cursor-pointer' onClick={() => startEdit(index)} />
                           </td>
                         </>
@@ -350,14 +390,14 @@ const ProductBacklog = () => {
                   ))}
                   {newRow && (
                     <tr>
-                      <td>{newRow.order}</td>
-                      <td><input type="number" value={newRow.sprint} onChange={(e) => handleNewRowChange(e, 'sprint')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                      <td><input type="date" onChange={(e) => handleNewRowChange(e, 'datestart')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                      <td><input type="date" onChange={(e) => handleNewRowChange(e, 'dateend')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                      <td><input type="text" value={newRow.type} onChange={(e) => handleNewRowChange(e, 'type')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                      <td><input type="text" value={newRow.detail} onChange={(e) => handleNewRowChange(e, 'detail')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'>{newRow.order}</td>
+                      <td className='text-[18px]'><input type="number" value={newRow.sprint} onChange={(e) => handleNewRowChange(e, 'sprint')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'><input type="date" onChange={(e) => handleNewRowChange(e, 'datestart')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'><input type="date" onChange={(e) => handleNewRowChange(e, 'dateend')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'><input type="text" value={newRow.type} onChange={(e) => handleNewRowChange(e, 'type')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'><input type="text" value={newRow.detail} onChange={(e) => handleNewRowChange(e, 'detail')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
                       <td>
-                        <div className='relative'>
+                        <div className='relative flex justify-center'>
                           <input
                             type="file"
                             onChange={(e) => handleImageChange(e, 'beforeImg')}
@@ -367,12 +407,12 @@ const ProductBacklog = () => {
                           <label
                             htmlFor='newBeforeImg'
                           >
-                            <img src="/src/img/img_icon/add-button.png" alt="เพิ่มรูป Before" className='w-10'/>
+                            <img src="/src/img/img_icon/add-button.png" alt="เพิ่มรูป Before" className='w-10' />
                           </label>
                         </div>
                       </td>
                       <td>
-                        <div className='relative'>
+                        <div className='relative flex justify-center'>
                           <input
                             type="file"
                             onChange={(e) => handleImageChange(e, 'afterImg')}
@@ -386,28 +426,26 @@ const ProductBacklog = () => {
                           </label>
                         </div>
                       </td>
-                      <td><input type="number" value={newRow.manday} onChange={(e) => handleNewRowChange(e, 'manday')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                      <td><input type="text" value={newRow.responsible} onChange={(e) => handleNewRowChange(e, 'responsible')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                      <td>
+                      <td className='text-[18px]'><input type="number" value={newRow.manday} onChange={(e) => handleNewRowChange(e, 'manday')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'><input type="text" value={newRow.responsible} onChange={(e) => handleNewRowChange(e, 'responsible')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'>
                         <select
                           value={newRow.status || ''}
                           onChange={(e) => handleNewRowChange(e, 'status')}
-                          className='border-2 border-gray-300 p-2 rounded-lg w-full h-10'
-                          style={{
-                            color: newRow.status === 'Done' ? '#155724' : 'inherit' // สีเขียวสำหรับ Done
-                          }}
+                          className='border-2 border-gray-300 p-2 rounded-lg w-full h-10 text-black' // เพิ่มคลาส text-black
                         >
+                          <option value="" disabled hidden>เลือกสถานะ</option>
                           <option value="To Do" style={{ color: '#004085' }}>To Do</option>
                           <option value="Done" style={{ color: '#155724' }}>Done</option>
                         </select>
                       </td>
 
 
-                      <td><input type="date" onChange={(e) => handleNewRowChange(e, 'increment')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
-                      <td><input type="text" value={newRow.remark} onChange={(e) => handleNewRowChange(e, 'remark')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'><input type="date" onChange={(e) => handleNewRowChange(e, 'increment')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
+                      <td className='text-[18px]'><input type="text" value={newRow.remark} onChange={(e) => handleNewRowChange(e, 'remark')} className='border-2 border-gray-300 p-2 rounded-lg w-full h-10' /></td>
                       <td>
-                        <button onClick={saveRow} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[18px] mt-2'>บันทึก</button>
-                        <button onClick={cancelRow} className='bg-red-500 text-white rounded-lg h-10 w-24 text-[18px] mt-2 mb-2'>ยกเลิก</button>
+                        <button onClick={saveRow} className='bg-green-500 text-white rounded-lg h-10 w-24 text-[16px] mt-1'>บันทึก</button>
+                        <button onClick={cancelRow} className='bg-red-500 text-white rounded-lg h-10 w-24 text-[16px] mt-1 mb-3.5'>ยกเลิก</button>
                       </td>
                     </tr>
                   )}
